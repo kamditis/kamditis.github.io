@@ -1,6 +1,6 @@
 # kamditis.github.io
 
-Portfolio site for Elite CAD Designs plugins and tools.
+Portfolio site for Kevin Amditis's plugins and tools.
 
 ## Live Site
 
