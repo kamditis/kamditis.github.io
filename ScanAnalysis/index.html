@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ScanAnalysis - Download</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #e4e4e4;
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: #fff;
+        }
+        .subtitle {
+            color: #888;
+            margin-bottom: 40px;
+            font-size: 1.1rem;
+        }
+        .download-card {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        .btn-download {
+            display: inline-block;
+            background: #4a9eff;
+            color: #fff;
+            padding: 15px 40px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: background 0.2s;
+        }
+        .btn-download:hover {
+            background: #3a8eef;
+        }
+        .version-info {
+            color: #888;
+            margin-top: 15px;
+            font-size: 0.9rem;
+        }
+        h2 {
+            color: #fff;
+            margin: 30px 0 15px;
+            font-size: 1.4rem;
+        }
+        .instructions {
+            background: rgba(0,0,0,0.3);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .instructions ol {
+            margin-left: 20px;
+        }
+        .instructions li {
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+        code {
+            background: rgba(255,255,255,0.1);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: 'Consolas', monospace;
+        }
+        .requirements {
+            background: rgba(74, 158, 255, 0.1);
+            border-left: 3px solid #4a9eff;
+            padding: 15px 20px;
+            border-radius: 0 8px 8px 0;
+        }
+        .requirements ul {
+            margin-left: 20px;
+            margin-top: 10px;
+        }
+        .requirements li {
+            margin-bottom: 8px;
+        }
+        a {
+            color: #4a9eff;
+        }
+        .back-link {
+            margin-top: 40px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>ScanAnalysis</h1>
+        <p class="subtitle">Point Cloud Deviation Analysis for Autodesk Revit</p>
+
+        <div class="download-card">
+            <a href="ScanAnalysis-latest.zip" class="btn-download">Download ScanAnalysis</a>
+            <p class="version-info">Supports Revit 2023, 2024, 2025, 2026 | ~4 MB</p>
+        </div>
+
+        <h2>Installation</h2>
+        <div class="instructions">
+            <ol>
+                <li>Extract the downloaded ZIP file</li>
+                <li>Right-click <code>Install-ScanAnalysis.ps1</code> and select <strong>Run with PowerShell</strong></li>
+                <li>Select your Revit version(s) when prompted</li>
+                <li>Restart Revit</li>
+                <li>Look for the <strong>Scan Analysis</strong> tab in the ribbon</li>
+            </ol>
+        </div>
+
+        <h2>Requirements</h2>
+        <div class="requirements">
+            <ul>
+                <li><strong>Autodesk Revit</strong> 2023, 2024, 2025, or 2026</li>
+                <li><strong>CloudCompare</strong> - <a href="https://cloudcompare.org/" target="_blank">Download here</a> (for deviation analysis)</li>
+                <li><strong>WebView2 Runtime</strong> - Installed automatically (for 360 panorama viewer)</li>
+            </ul>
+        </div>
+
+        <h2>Uninstall</h2>
+        <div class="instructions">
+            <p>Run the installer with the uninstall flag:</p>
+            <p style="margin-top: 10px;"><code>.\Install-ScanAnalysis.ps1 -Uninstall</code></p>
+        </div>
+
+        <div class="back-link">
+            <a href="../">Back to Elite CAD Designs</a>
+        </div>
+    </div>
+</body>
+</html>
