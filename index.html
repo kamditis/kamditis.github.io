@@ -3,224 +3,255 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Elite CAD Designs - BIM Tools & Plugins</title>
+    <title>Kevin Amditis - BIM Tools & Add-ins</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-tertiary: #334155;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --accent: #60a5fa;
+            --accent-hover: #3b82f6;
+            --border: #334155;
+        }
+
         * { margin: 0; padding: 0; box-sizing: border-box; }
+
         body {
-            font-family: 'Inter', sans-serif;
-            background: #0f172a;
-            color: #e2e8f0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
             line-height: 1.6;
             min-height: 100vh;
         }
 
         /* Header */
         header {
-            padding: 60px 20px;
-            text-align: center;
-            background: radial-gradient(ellipse at top, #1e3a5f 0%, #0f172a 70%);
+            padding: 80px 40px 60px;
+            max-width: 1000px;
+            margin: 0 auto;
         }
-        .logo {
-            font-size: 2.5rem;
+
+        header h1 {
+            font-size: 2rem;
             font-weight: 700;
             margin-bottom: 12px;
-            background: linear-gradient(135deg, #60a5fa, #a78bfa);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.02em;
         }
+
         header p {
-            color: #94a3b8;
-            font-size: 1.1rem;
+            color: var(--text-secondary);
+            font-size: 1.05rem;
             max-width: 500px;
-            margin: 0 auto;
         }
 
         /* Main content */
         main {
             max-width: 1000px;
             margin: 0 auto;
-            padding: 60px 20px;
+            padding: 0 40px 80px;
         }
 
-        .section-title {
-            font-size: 1.5rem;
+        /* Platform sections */
+        .platform-section {
+            margin-bottom: 60px;
+        }
+
+        .platform-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .platform-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .platform-icon svg {
+            width: 20px;
+            height: 20px;
+            stroke: var(--accent);
+        }
+
+        .platform-header h2 {
+            font-size: 1.25rem;
             font-weight: 600;
-            margin-bottom: 32px;
-            color: #f1f5f9;
+        }
+
+        .platform-header span {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-left: auto;
         }
 
         /* Plugin cards */
         .plugins-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 24px;
+            gap: 16px;
         }
 
         .plugin-card {
-            background: linear-gradient(145deg, #1e293b, #0f172a);
-            border: 1px solid #334155;
-            border-radius: 16px;
-            padding: 32px;
-            transition: all 0.3s;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            transition: border-color 0.2s;
             display: flex;
             flex-direction: column;
         }
-        .plugin-card:hover {
-            transform: translateY(-5px);
-            border-color: #3b82f6;
-            box-shadow: 0 20px 40px rgba(59, 130, 246, 0.15);
-        }
 
-        .plugin-icon {
-            font-size: 2.5rem;
-            margin-bottom: 16px;
+        .plugin-card:hover {
+            border-color: var(--text-muted);
         }
 
         .plugin-card h3 {
-            font-size: 1.25rem;
+            font-size: 1.1rem;
             font-weight: 600;
-            margin-bottom: 8px;
-            color: #f1f5f9;
+            margin-bottom: 6px;
+            color: var(--text-primary);
         }
 
-        .plugin-platform {
-            display: inline-block;
-            background: rgba(59, 130, 246, 0.2);
-            color: #60a5fa;
-            padding: 4px 10px;
-            border-radius: 999px;
+        .plugin-meta {
             font-size: 0.75rem;
-            font-weight: 500;
+            color: var(--text-muted);
             margin-bottom: 12px;
         }
 
         .plugin-card p {
-            color: #94a3b8;
-            font-size: 0.95rem;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
             flex-grow: 1;
             margin-bottom: 20px;
-        }
-
-        .plugin-links {
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
+            line-height: 1.5;
         }
 
         .btn {
             display: inline-flex;
             align-items: center;
-            gap: 6px;
-            padding: 10px 18px;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px 16px;
             border-radius: 8px;
             text-decoration: none;
             font-weight: 500;
             font-size: 0.875rem;
             transition: all 0.2s;
-        }
-        .btn-primary {
-            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
-            color: white;
-        }
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(59, 130, 246, 0.3);
-        }
-        .btn-secondary {
-            background: #334155;
-            color: #e2e8f0;
-        }
-        .btn-secondary:hover {
-            background: #475569;
+            border: 1px solid transparent;
         }
 
-        /* Coming soon card */
-        .plugin-card.coming-soon {
-            opacity: 0.6;
-            border-style: dashed;
+        .btn-primary {
+            background: var(--accent);
+            color: var(--bg-primary);
         }
-        .plugin-card.coming-soon:hover {
-            transform: none;
-            border-color: #334155;
-            box-shadow: none;
+
+        .btn-primary:hover {
+            background: var(--accent-hover);
         }
-        .coming-soon-badge {
-            display: inline-block;
-            background: rgba(234, 179, 8, 0.2);
-            color: #fbbf24;
-            padding: 4px 10px;
-            border-radius: 999px;
-            font-size: 0.75rem;
-            font-weight: 500;
+
+        .btn svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        /* Empty state */
+        .empty-state {
+            background: var(--bg-secondary);
+            border: 1px dashed var(--border);
+            border-radius: 12px;
+            padding: 32px;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.875rem;
         }
 
         /* Footer */
         footer {
-            padding: 40px 20px;
+            border-top: 1px solid var(--border);
+            padding: 32px 40px;
             text-align: center;
-            color: #64748b;
-            font-size: 0.875rem;
-            border-top: 1px solid #1e293b;
         }
-        footer a { color: #60a5fa; text-decoration: none; }
-        footer a:hover { text-decoration: underline; }
 
+        footer p {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        /* Responsive */
         @media (max-width: 600px) {
-            .logo { font-size: 2rem; }
-            header { padding: 40px 20px; }
-            main { padding: 40px 20px; }
+            header { padding: 60px 20px 40px; }
+            header h1 { font-size: 1.5rem; }
+            main { padding: 0 20px 60px; }
+            .platform-header span { display: none; }
         }
     </style>
 </head>
 <body>
     <header>
-        <h1 class="logo">Elite CAD Designs</h1>
-        <p>Free tools and plugins for Autodesk Revit and Navisworks</p>
+        <h1>BIM Tools & Add-ins</h1>
+        <p>Autodesk Revit and Navisworks plugins for BIM coordination and QA workflows</p>
     </header>
 
     <main>
-        <h2 class="section-title">Available Plugins</h2>
-
-        <div class="plugins-grid">
-            <!-- ScanAnalysis -->
-            <div class="plugin-card">
-                <div class="plugin-icon">📊</div>
-                <h3>ScanAnalysis</h3>
-                <span class="plugin-platform">Revit 2023-2026</span>
-                <p>Point cloud deviation analysis with per-element A-F scoring, 360° panorama viewing, and QA verification workflows.</p>
-                <div class="plugin-links">
-                    <a href="https://kamditis.github.io/ScanAnalysis/" class="btn btn-primary">Download</a>
-                    <a href="https://github.com/kamditis/ScanAnalysis" class="btn btn-secondary">GitHub</a>
+        <!-- Revit Add-ins -->
+        <section class="platform-section">
+            <div class="platform-header">
+                <div class="platform-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
                 </div>
+                <h2>Revit Add-ins</h2>
+                <span>Autodesk Revit 2023–2026</span>
             </div>
-
-            <!-- PLACEHOLDER: Add more plugins here by copying the card above -->
-            <!--
-            <div class="plugin-card">
-                <div class="plugin-icon">EMOJI</div>
-                <h3>Plugin Name</h3>
-                <span class="plugin-platform">Platform</span>
-                <p>Description of the plugin.</p>
-                <div class="plugin-links">
-                    <a href="URL" class="btn btn-primary">Download</a>
-                    <a href="URL" class="btn btn-secondary">GitHub</a>
+            <div class="plugins-grid">
+                <!-- ScanAnalysis -->
+                <div class="plugin-card">
+                    <h3>ScanAnalysis</h3>
+                    <div class="plugin-meta">Revit 2023–2026</div>
+                    <p>Point cloud deviation analysis with per-element A–F scoring, 360° panorama viewing, and QA verification workflows.</p>
+                    <a href="https://kamditis.github.io/ScanAnalysis/" class="btn btn-primary">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                        Download
+                    </a>
                 </div>
-            </div>
-            -->
 
-            <!-- Coming Soon placeholder -->
-            <div class="plugin-card coming-soon">
-                <div class="plugin-icon">🚀</div>
-                <h3>More Coming Soon</h3>
-                <span class="coming-soon-badge">In Development</span>
-                <p>Additional Revit and Navisworks plugins are in development. Check back for updates.</p>
+                <!-- Add more Revit plugins here -->
             </div>
-        </div>
+        </section>
+
+        <!-- Navisworks Add-ins -->
+        <section class="platform-section">
+            <div class="platform-header">
+                <div class="platform-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                </div>
+                <h2>Navisworks Add-ins</h2>
+                <span>Autodesk Navisworks Manage</span>
+            </div>
+            <div class="plugins-grid">
+                <div class="empty-state">
+                    Navisworks add-ins coming soon
+                </div>
+
+                <!-- Add Navisworks plugins here -->
+            </div>
+        </section>
     </main>
 
     <footer>
-        <p>&copy; 2026 Elite CAD Designs | <a href="https://github.com/kamditis">GitHub</a></p>
+        <p>Kevin Amditis</p>
     </footer>
 </body>
 </html>
