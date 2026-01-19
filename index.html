@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elite CAD Designs - BIM Tools & Plugins</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0f172a;
+            color: #e2e8f0;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        header {
+            padding: 60px 20px;
+            text-align: center;
+            background: radial-gradient(ellipse at top, #1e3a5f 0%, #0f172a 70%);
+        }
+        .logo {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+            background: linear-gradient(135deg, #60a5fa, #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        header p {
+            color: #94a3b8;
+            font-size: 1.1rem;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        /* Main content */
+        main {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 60px 20px;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 32px;
+            color: #f1f5f9;
+        }
+
+        /* Plugin cards */
+        .plugins-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 24px;
+        }
+
+        .plugin-card {
+            background: linear-gradient(145deg, #1e293b, #0f172a);
+            border: 1px solid #334155;
+            border-radius: 16px;
+            padding: 32px;
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+        }
+        .plugin-card:hover {
+            transform: translateY(-5px);
+            border-color: #3b82f6;
+            box-shadow: 0 20px 40px rgba(59, 130, 246, 0.15);
+        }
+
+        .plugin-icon {
+            font-size: 2.5rem;
+            margin-bottom: 16px;
+        }
+
+        .plugin-card h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #f1f5f9;
+        }
+
+        .plugin-platform {
+            display: inline-block;
+            background: rgba(59, 130, 246, 0.2);
+            color: #60a5fa;
+            padding: 4px 10px;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            margin-bottom: 12px;
+        }
+
+        .plugin-card p {
+            color: #94a3b8;
+            font-size: 0.95rem;
+            flex-grow: 1;
+            margin-bottom: 20px;
+        }
+
+        .plugin-links {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 10px 18px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.875rem;
+            transition: all 0.2s;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            color: white;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(59, 130, 246, 0.3);
+        }
+        .btn-secondary {
+            background: #334155;
+            color: #e2e8f0;
+        }
+        .btn-secondary:hover {
+            background: #475569;
+        }
+
+        /* Coming soon card */
+        .plugin-card.coming-soon {
+            opacity: 0.6;
+            border-style: dashed;
+        }
+        .plugin-card.coming-soon:hover {
+            transform: none;
+            border-color: #334155;
+            box-shadow: none;
+        }
+        .coming-soon-badge {
+            display: inline-block;
+            background: rgba(234, 179, 8, 0.2);
+            color: #fbbf24;
+            padding: 4px 10px;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        /* Footer */
+        footer {
+            padding: 40px 20px;
+            text-align: center;
+            color: #64748b;
+            font-size: 0.875rem;
+            border-top: 1px solid #1e293b;
+        }
+        footer a { color: #60a5fa; text-decoration: none; }
+        footer a:hover { text-decoration: underline; }
+
+        @media (max-width: 600px) {
+            .logo { font-size: 2rem; }
+            header { padding: 40px 20px; }
+            main { padding: 40px 20px; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1 class="logo">Elite CAD Designs</h1>
+        <p>Free tools and plugins for Autodesk Revit and Navisworks</p>
+    </header>
+
+    <main>
+        <h2 class="section-title">Available Plugins</h2>
+
+        <div class="plugins-grid">
+            <!-- ScanAnalysis -->
+            <div class="plugin-card">
+                <div class="plugin-icon">📊</div>
+                <h3>ScanAnalysis</h3>
+                <span class="plugin-platform">Revit 2023-2026</span>
+                <p>Point cloud deviation analysis with per-element A-F scoring, 360° panorama viewing, and QA verification workflows.</p>
+                <div class="plugin-links">
+                    <a href="https://kamditis.github.io/ScanAnalysis/" class="btn btn-primary">Download</a>
+                    <a href="https://github.com/kamditis/ScanAnalysis" class="btn btn-secondary">GitHub</a>
+                </div>
+            </div>
+
+            <!-- PLACEHOLDER: Add more plugins here by copying the card above -->
+            <!--
+            <div class="plugin-card">
+                <div class="plugin-icon">EMOJI</div>
+                <h3>Plugin Name</h3>
+                <span class="plugin-platform">Platform</span>
+                <p>Description of the plugin.</p>
+                <div class="plugin-links">
+                    <a href="URL" class="btn btn-primary">Download</a>
+                    <a href="URL" class="btn btn-secondary">GitHub</a>
+                </div>
+            </div>
+            -->
+
+            <!-- Coming Soon placeholder -->
+            <div class="plugin-card coming-soon">
+                <div class="plugin-icon">🚀</div>
+                <h3>More Coming Soon</h3>
+                <span class="coming-soon-badge">In Development</span>
+                <p>Additional Revit and Navisworks plugins are in development. Check back for updates.</p>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Elite CAD Designs | <a href="https://github.com/kamditis">GitHub</a></p>
+    </footer>
+</body>
+</html>
