@@ -4,276 +4,432 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kevin Amditis - BIM Tools & Add-ins</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-primary: #0f172a;
-            --bg-secondary: #1e293b;
-            --bg-tertiary: #334155;
-            --text-primary: #f1f5f9;
-            --text-secondary: #94a3b8;
-            --text-muted: #64748b;
-            --accent: #60a5fa;
-            --accent-hover: #3b82f6;
-            --border: #334155;
+            --bg: #0f0f12;
+            --surface: #18181d;
+            --surface-2: #222229;
+            --border: #2e2e38;
+            --border-light: #3d3d4a;
+            --text: #e8e8ed;
+            --text-dim: #9898a8;
+            --text-muted: #5a5a6a;
+            --violet: #a78bfa;
+            --violet-bright: #c4b5fd;
+            --violet-dim: rgba(167, 139, 250, 0.12);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            line-height: 1.6;
+            font-family: 'Space Grotesk', sans-serif;
+            background: var(--bg);
+            color: var(--text);
             min-height: 100vh;
         }
 
-        /* Header */
-        header {
-            padding: 80px 40px 60px;
-            max-width: 1000px;
+        /* Dot grid background */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: radial-gradient(circle, var(--border) 1px, transparent 1px);
+            background-size: 24px 24px;
+            pointer-events: none;
+            opacity: 0.5;
+        }
+
+        .container {
+            max-width: 1100px;
             margin: 0 auto;
+            padding: 0 40px;
+            position: relative;
+            z-index: 1;
         }
 
-        header h1 {
-            font-size: 2rem;
+        /* Top bar */
+        .top-bar {
+            border-bottom: 1px solid var(--border);
+            padding: 16px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Space Mono', monospace;
+            font-size: 13px;
             font-weight: 700;
-            margin-bottom: 12px;
-            letter-spacing: -0.02em;
+            color: var(--violet);
         }
 
-        header p {
-            color: var(--text-secondary);
-            font-size: 1.05rem;
-            max-width: 500px;
+        .top-nav {
+            display: flex;
+            gap: 24px;
+        }
+
+        .top-nav a {
+            font-family: 'Space Mono', monospace;
+            font-size: 11px;
+            color: var(--text-muted);
+            text-decoration: none;
+            letter-spacing: 0.05em;
+        }
+
+        .top-nav a:hover { color: var(--violet); }
+
+        /* Hero section */
+        .hero {
+            padding: 64px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .hero-label {
+            font-family: 'Space Mono', monospace;
+            font-size: 10px;
+            letter-spacing: 0.2em;
+            color: var(--violet);
+            margin-bottom: 16px;
+        }
+
+        h1 {
+            font-size: 48px;
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            margin-bottom: 16px;
+        }
+
+        .hero-desc {
+            font-size: 16px;
+            color: var(--text-dim);
+            max-width: 480px;
+            line-height: 1.7;
+        }
+
+        /* Stats row */
+        .stats-row {
+            display: flex;
+            gap: 48px;
+            margin-top: 40px;
+            padding-top: 32px;
+            border-top: 1px solid var(--border);
+        }
+
+        .stat {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .stat-value {
+            font-family: 'Space Mono', monospace;
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--violet);
+        }
+
+        .stat-label {
+            font-family: 'Space Mono', monospace;
+            font-size: 10px;
+            color: var(--text-muted);
+            letter-spacing: 0.1em;
         }
 
         /* Main content */
         main {
-            max-width: 1000px;
-            margin: 0 auto;
-            padding: 0 40px 80px;
+            padding: 48px 0 80px;
         }
 
-        /* Platform sections */
-        .platform-section {
-            margin-bottom: 60px;
+        .section {
+            margin-bottom: 48px;
         }
 
-        .platform-header {
+        .section-header {
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            gap: 12px;
-            margin-bottom: 24px;
-            padding-bottom: 16px;
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-family: 'Space Mono', monospace;
+            font-size: 11px;
+            letter-spacing: 0.15em;
+            color: var(--text-muted);
+        }
+
+        .section-line {
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+            margin-left: 20px;
+        }
+
+        /* Tool cards - horizontal full-width */
+        .tool-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            margin-bottom: 16px;
+            transition: border-color 0.2s;
+        }
+
+        .tool-card:hover {
+            border-color: var(--violet);
+        }
+
+        .tool-top {
+            display: grid;
+            grid-template-columns: 1fr auto;
             border-bottom: 1px solid var(--border);
         }
 
-        .platform-icon {
-            width: 40px;
-            height: 40px;
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            border-radius: 8px;
+        .tool-main {
+            padding: 24px;
+            border-right: 1px solid var(--border);
+        }
+
+        .tool-header {
             display: flex;
             align-items: center;
-            justify-content: center;
-        }
-
-        .platform-icon svg {
-            width: 20px;
-            height: 20px;
-            stroke: var(--accent);
-        }
-
-        .platform-header h2 {
-            font-size: 1.25rem;
-            font-weight: 600;
-        }
-
-        .platform-header span {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            margin-left: auto;
-        }
-
-        /* Plugin cards */
-        .plugins-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 16px;
-        }
-
-        .plugin-card {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 24px;
-            transition: border-color 0.2s;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .plugin-card:hover {
-            border-color: var(--text-muted);
-        }
-
-        .plugin-card h3 {
-            font-size: 1.1rem;
-            font-weight: 600;
-            margin-bottom: 6px;
-            color: var(--text-primary);
-        }
-
-        .plugin-meta {
-            font-size: 0.75rem;
-            color: var(--text-muted);
             margin-bottom: 12px;
         }
 
-        .plugin-card p {
-            color: var(--text-secondary);
-            font-size: 0.875rem;
-            flex-grow: 1;
-            margin-bottom: 20px;
-            line-height: 1.5;
+        .tool-name {
+            font-size: 22px;
+            font-weight: 600;
         }
 
+        .tool-version {
+            font-family: 'Space Mono', monospace;
+            font-size: 11px;
+            padding: 4px 10px;
+            background: var(--violet-dim);
+            color: var(--violet);
+        }
+
+        .tool-desc {
+            font-size: 14px;
+            color: var(--text-dim);
+            line-height: 1.7;
+        }
+
+        .tool-actions {
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 10px;
+            min-width: 160px;
+        }
+
+        .tool-specs {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            background: var(--surface-2);
+        }
+
+        .spec-cell {
+            padding: 16px 24px;
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .spec-cell:last-child { border-right: none; }
+
+        .spec-cell-label {
+            font-family: 'Space Mono', monospace;
+            font-size: 9px;
+            color: var(--text-muted);
+            letter-spacing: 0.1em;
+        }
+
+        .spec-cell-value {
+            font-family: 'Space Mono', monospace;
+            font-size: 13px;
+        }
+
+        .spec-cell-value.highlight { color: var(--violet); }
+
+        /* Buttons */
         .btn {
+            padding: 12px 20px;
+            font-family: 'Space Mono', monospace;
+            font-size: 11px;
+            text-decoration: none;
             display: inline-flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
-            padding: 10px 16px;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: 500;
-            font-size: 0.875rem;
-            transition: all 0.2s;
-            border: 1px solid transparent;
+            transition: all 0.15s;
         }
 
-        .btn-primary {
-            background: var(--accent);
-            color: var(--bg-primary);
+        .btn svg { width: 14px; height: 14px; }
+
+        .btn-violet {
+            background: var(--violet);
+            color: var(--bg);
         }
 
-        .btn-primary:hover {
-            background: var(--accent-hover);
-        }
+        .btn-violet:hover { background: var(--violet-bright); }
 
-        .btn-secondary {
+        .btn-outline {
             background: transparent;
-            color: var(--text-secondary);
+            color: var(--text-dim);
             border: 1px solid var(--border);
         }
 
-        .btn-secondary:hover {
-            background: var(--bg-tertiary);
-            color: var(--text-primary);
-        }
-
-        .btn svg {
-            width: 16px;
-            height: 16px;
-        }
-
-        .btn-group {
-            display: flex;
-            gap: 10px;
+        .btn-outline:hover {
+            border-color: var(--violet);
+            color: var(--violet);
         }
 
         /* Empty state */
-        .empty-state {
-            background: var(--bg-secondary);
+        .empty-card {
+            background: var(--surface);
             border: 1px dashed var(--border);
-            border-radius: 12px;
-            padding: 32px;
+            padding: 48px;
             text-align: center;
+            font-family: 'Space Mono', monospace;
+            font-size: 12px;
             color: var(--text-muted);
-            font-size: 0.875rem;
         }
 
         /* Footer */
         footer {
             border-top: 1px solid var(--border);
-            padding: 32px 40px;
-            text-align: center;
+            padding: 24px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        footer p {
-            font-size: 0.8rem;
+        .footer-text {
+            font-family: 'Space Mono', monospace;
+            font-size: 11px;
             color: var(--text-muted);
         }
 
-        /* Responsive */
-        @media (max-width: 600px) {
-            header { padding: 60px 20px 40px; }
-            header h1 { font-size: 1.5rem; }
-            main { padding: 0 20px 60px; }
-            .platform-header span { display: none; }
+        .footer-links {
+            display: flex;
+            gap: 24px;
+        }
+
+        .footer-links a {
+            font-family: 'Space Mono', monospace;
+            font-size: 11px;
+            color: var(--text-dim);
+            text-decoration: none;
+        }
+
+        .footer-links a:hover { color: var(--violet); }
+
+        @media (max-width: 800px) {
+            .container { padding: 0 20px; }
+            h1 { font-size: 32px; }
+            .stats-row { flex-wrap: wrap; gap: 24px; }
+            .stat-value { font-size: 24px; }
+            .tool-top { grid-template-columns: 1fr; }
+            .tool-main { border-right: none; border-bottom: 1px solid var(--border); }
+            .tool-actions { flex-direction: row; }
+            .tool-specs { grid-template-columns: repeat(2, 1fr); }
+            .spec-cell:nth-child(2) { border-right: none; }
+            .spec-cell:nth-child(1), .spec-cell:nth-child(2) { border-bottom: 1px solid var(--border); }
         }
     </style>
 </head>
 <body>
-    <header>
-        <h1>BIM Tools & Add-ins</h1>
-        <p>Autodesk Revit and Navisworks plugins for BIM coordination and QA workflows</p>
-    </header>
+    <div class="container">
+        <div class="top-bar">
+            <span class="logo">K.AMDITIS</span>
+            <nav class="top-nav">
+                <a href="#">TOOLS</a>
+                <a href="https://github.com/kamditis">GITHUB</a>
+            </nav>
+        </div>
 
-    <main>
-        <!-- Revit Add-ins -->
-        <section class="platform-section">
-            <div class="platform-header">
-                <div class="platform-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        <section class="hero">
+            <div class="hero-label">BIM DEVELOPMENT</div>
+            <h1>Tools & Add-ins</h1>
+            <p class="hero-desc">Autodesk Revit and Navisworks plugins for BIM coordination, QA workflows, and construction verification.</p>
+
+            <div class="stats-row">
+                <div class="stat">
+                    <span class="stat-value">1</span>
+                    <span class="stat-label">ACTIVE TOOLS</span>
                 </div>
-                <h2>Revit Add-ins</h2>
-                <span>Autodesk Revit 2022–2026</span>
+                <div class="stat">
+                    <span class="stat-value">2026</span>
+                    <span class="stat-label">LATEST SUPPORT</span>
+                </div>
             </div>
-            <div class="plugins-grid">
-                <!-- ScanAnalysis -->
-                <div class="plugin-card">
-                    <h3>ScanAnalysis</h3>
-                    <div class="plugin-meta">Revit 2022–2026</div>
-                    <p>Point cloud deviation analysis with per-element A–F scoring, 360° panorama viewing, and QA verification workflows.</p>
-                    <div class="btn-group">
-                        <a href="ScanAnalysis/ScanAnalysis-Setup.exe" class="btn btn-primary" download>
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                            Download
-                        </a>
-                        <a href="ScanAnalysis/" class="btn btn-secondary">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
-                            Docs
-                        </a>
+        </section>
+
+        <main>
+            <section class="section">
+                <div class="section-header">
+                    <span class="section-title">REVIT MODULES</span>
+                    <div class="section-line"></div>
+                </div>
+
+                <article class="tool-card">
+                    <div class="tool-top">
+                        <div class="tool-main">
+                            <div class="tool-header">
+                                <h3 class="tool-name">ScanAnalysis</h3>
+                                <span class="tool-version">v1.0.1</span>
+                            </div>
+                            <p class="tool-desc">Point cloud deviation analysis with per-element A-F scoring, 360° panorama viewing, and automated QA verification workflows.</p>
+                        </div>
+                        <div class="tool-actions">
+                            <a href="scananalysis.html" class="btn btn-violet">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                                Download
+                            </a>
+                            <a href="scananalysis.html" class="btn btn-outline">Docs</a>
+                        </div>
                     </div>
+                    <div class="tool-specs">
+                        <div class="spec-cell">
+                            <span class="spec-cell-label">VERSION</span>
+                            <span class="spec-cell-value highlight">1.0.1</span>
+                        </div>
+                        <div class="spec-cell">
+                            <span class="spec-cell-label">STATUS</span>
+                            <span class="spec-cell-value">Active</span>
+                        </div>
+                        <div class="spec-cell">
+                            <span class="spec-cell-label">PLATFORM</span>
+                            <span class="spec-cell-value">Revit 2022-2026</span>
+                        </div>
+                        <div class="spec-cell">
+                            <span class="spec-cell-label">SIZE</span>
+                            <span class="spec-cell-value">~3 MB</span>
+                        </div>
+                    </div>
+                </article>
+            </section>
+
+            <section class="section">
+                <div class="section-header">
+                    <span class="section-title">NAVISWORKS MODULES</span>
+                    <div class="section-line"></div>
                 </div>
+                <div class="empty-card">No modules available — in development</div>
+            </section>
+        </main>
 
-                <!-- Add more Revit plugins here -->
+        <footer>
+            <span class="footer-text">Kevin Amditis</span>
+            <div class="footer-links">
+                <a href="https://github.com/kamditis">GitHub</a>
             </div>
-        </section>
-
-        <!-- Navisworks Add-ins -->
-        <section class="platform-section">
-            <div class="platform-header">
-                <div class="platform-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-                </div>
-                <h2>Navisworks Add-ins</h2>
-                <span>Autodesk Navisworks Manage</span>
-            </div>
-            <div class="plugins-grid">
-                <div class="empty-state">
-                    Navisworks add-ins coming soon
-                </div>
-
-                <!-- Add Navisworks plugins here -->
-            </div>
-        </section>
-    </main>
-
-    <footer>
-        <p>Kevin Amditis</p>
-    </footer>
+        </footer>
+    </div>
 </body>
 </html>
