@@ -679,13 +679,6 @@
                                 <span class="value" id="sidebar-addin">EliteScan</span>
                             </div>
                             <div class="prop">
-                                <span class="label">Accent</span>
-                                <div class="color-value">
-                                    <div class="color-dot" id="sidebar-color-dot" style="background: var(--scan);"></div>
-                                    <span class="value" id="sidebar-color">#5ED5DD</span>
-                                </div>
-                            </div>
-                            <div class="prop">
                                 <span class="label">Revit Versions</span>
                                 <span class="value">2022 - 2026</span>
                             </div>
@@ -853,8 +846,6 @@
         const breadcrumbRegion = document.getElementById('breadcrumb-region');
         const breadcrumbTool = document.getElementById('breadcrumb-tool');
         const sidebarAddin = document.getElementById('sidebar-addin');
-        const sidebarColorDot = document.getElementById('sidebar-color-dot');
-        const sidebarColor = document.getElementById('sidebar-color');
         const downloadBtn = document.getElementById('download-btn');
         const downloadInfo = document.getElementById('download-info');
         const statusDot = document.querySelector('.status-dot');
@@ -930,18 +921,11 @@
                     </div>
                 </div>
 
-                <div class="detail-section" style="margin-bottom: 24px;">
-                    <h3>Function Description</h3>
-                    <div class="detail-box">
-                        <p>${tool.fn}</p>
-                    </div>
-                </div>
-
                 <div class="detail-grid">
                     <div class="detail-section">
-                        <h3>Video Reference</h3>
-                        <div class="detail-box mono">
-                            <p>${tool.videoRef || 'No video reference available'}</p>
+                        <h3>Function Description</h3>
+                        <div class="detail-box">
+                            <p>${tool.fn}</p>
                         </div>
                     </div>
                     <div class="detail-section">
@@ -949,6 +933,13 @@
                         <div class="detail-box mono">
                             <p>${tool.changelog || 'No changelog entries'}</p>
                         </div>
+                    </div>
+                </div>
+
+                <div class="detail-section" style="margin-top: 24px;">
+                    <h3>Video Reference</h3>
+                    <div class="detail-box mono">
+                        <p>${tool.videoRef || 'No video reference available'}</p>
                     </div>
                 </div>
             `;
@@ -973,9 +964,6 @@
             breadcrumbRegion.textContent = region.label;
             breadcrumbTool.textContent = 'Select Tool';
             sidebarAddin.textContent = region.name;
-            sidebarColorDot.style.background = region.colorVar;
-            sidebarColor.textContent = region.color;
-            sidebarColor.style.color = region.color;
             statusDot.style.background = region.colorVar;
 
             // Update download
