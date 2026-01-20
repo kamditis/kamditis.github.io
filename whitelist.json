@@ -8,5 +8,17 @@
     "scottbN7Y68",
     "tommY5349",
     "david54HS2"
-  ]
+  ],
+  "authorized_domains": [
+    "@elitecaddesign.net"
+  ],
+  "features": {
+    "EliteScan": ["*"],
+    "EliteDraft": ["*"],
+    "EliteCoord": ["*"],
+    "EliteCore": ["*"],
+    "EliteClashManager": ["*"],
+    "EliteCADNavisTools": ["*"],
+    "EliteCAD.Navis.IFCExport": ["*"]
+  }
 }
