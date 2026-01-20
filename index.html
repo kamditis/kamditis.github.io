@@ -855,19 +855,19 @@
                     {
                         title: 'Annotation',
                         tools: [
-                            { id: 'tag_size', label: 'Tag Size', icon: 'tag', fn: 'Places or updates size tags on selected ductwork/piping showing dimensions (e.g., "24x12", "6" Ø").', videoRef: '', changelog: '', requirements: [] },
-                            { id: 'tag_lengths', label: 'Tag Lengths', icon: 'ruler', fn: 'Tags pipe/duct segments with their lengths. Useful for cut lists and quantity takeoffs.', videoRef: '', changelog: '', requirements: [] },
-                            { id: 'elbow_extension', label: 'Elbow Extension', icon: 'corner-down-right', fn: 'Annotates elbows with extension/takeoff dimensions for fabrication. Shows centerline-to-end measurements.', videoRef: '', changelog: '', requirements: [] },
-                            { id: 'transition', label: 'Transition', icon: 'filter', fn: 'Tags transition fittings with size change information (e.g., "12×8 to 10×6").', videoRef: '', changelog: '', requirements: [] },
-                            { id: 'batch_spools', label: 'Batch Spools', icon: 'list-ordered', fn: 'Automatically generates spool tags/numbers for piping assemblies. Creates fabrication spool drawings.', videoRef: '', changelog: '', requirements: [] },
-                            { id: 'renumber', label: 'Renumber', icon: 'hash', fn: 'Renumbers selected tags or elements sequentially. Allows setting start number and prefix.', videoRef: '', changelog: '', requirements: [] },
+                            { id: 'tag_size', label: 'Tag Size', icon: 'tag', fn: 'Places or updates size tags on selected ductwork/piping showing dimensions (e.g., "24x12", "6" Ø").', videoRef: '', changelog: '', requirements: ['Fabrication ducts in view', 'Family: SIZE tag'] },
+                            { id: 'tag_lengths', label: 'Tag Lengths', icon: 'ruler', fn: 'Tags pipe/duct segments with their lengths. Useful for cut lists and quantity takeoffs.', videoRef: '', changelog: '', requirements: ['Fabrication ducts in view', 'Family: LENGTH tag'] },
+                            { id: 'elbow_extension', label: 'Elbow Extension', icon: 'corner-down-right', fn: 'Annotates elbows with extension/takeoff dimensions for fabrication. Shows centerline-to-end measurements.', videoRef: '', changelog: '', requirements: ['Fabrication parts in view', 'Param: SM - Top Extension', 'Param: SM - Bottom Extension'] },
+                            { id: 'transition', label: 'Transition', icon: 'filter', fn: 'Tags transition fittings with size change information (e.g., "12×8 to 10×6").', videoRef: '', changelog: '', requirements: ['Fabrication parts in view', 'Param: SM - OFFSET', 'Param: SM - TRANSITION'] },
+                            { id: 'batch_spools', label: 'Batch Spools', icon: 'list-ordered', fn: 'Automatically generates spool tags/numbers for piping assemblies. Creates fabrication spool drawings.', videoRef: '', changelog: '', requirements: ['Assemblies selected', 'Family: ECD - SPOOL template', 'Family: Item Number tag'] },
+                            { id: 'renumber', label: 'Renumber', icon: 'hash', fn: 'Renumbers selected tags or elements sequentially. Allows setting start number and prefix.', videoRef: '', changelog: '', requirements: ['Assemblies selected'] },
                         ]
                     },
                     {
                         title: 'View',
                         tools: [
-                            { id: 'isolate_service', label: 'Isolate Service', icon: 'eye', fn: 'Isolates elements by system/service type in the current view. Quick filter for mechanical systems.', videoRef: '', changelog: '', requirements: [] },
-                            { id: 'hide_service', label: 'Hide Service', icon: 'eye-off', fn: 'Hides elements by system/service type in the current view. Opposite of Isolate.', videoRef: '', changelog: '', requirements: [] },
+                            { id: 'isolate_service', label: 'Isolate Service', icon: 'eye', fn: 'Isolates elements by system/service type in the current view. Quick filter for mechanical systems.', videoRef: '', changelog: '', requirements: ['Fabrication parts in view'] },
+                            { id: 'hide_service', label: 'Hide Service', icon: 'eye-off', fn: 'Hides elements by system/service type in the current view. Opposite of Isolate.', videoRef: '', changelog: '', requirements: ['Fabrication parts in view'] },
                         ]
                     }
                 ]
