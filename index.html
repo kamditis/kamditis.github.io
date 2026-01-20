@@ -814,14 +814,16 @@
                         title: 'Export',
                         tools: [
                             { id: 'dwg_overrides', label: 'DWG Overrides', icon: 'file-output', fn: 'Configures layer/color mappings for DWG export. Ensures consistent CAD standards when exporting.', videoRef: '', changelog: '' },
+                            { id: 'apply_colors', label: 'Apply Colors', icon: 'paintbrush', fn: 'Applies configured DWG color overrides to imported DWG layers in the active view.', videoRef: '', changelog: '' },
                             { id: 'material_mapping', label: 'Material Mapping', icon: 'palette', fn: 'Maps Revit materials to Navisworks appearance definitions for consistent visualization in coordination models.', videoRef: '', changelog: '' },
+                            { id: 'apply_materials', label: 'Apply Materials', icon: 'wand', fn: 'Assigns materials to fabrication parts based on saved material configuration and filter rules.', videoRef: '', changelog: '' },
                         ]
                     },
                     {
                         title: 'Views',
                         tools: [
-                            { id: 'section_box', label: 'Section Box', icon: 'box', fn: 'Creates a 3D view with section box tightly cropped to selected elements. Quick coordination box.', videoRef: '', changelog: '' },
-                            { id: '3d_view', label: '3D View', icon: 'cuboid', fn: 'Creates a new 3D view from current camera position or selected scope. Quick view generation.', videoRef: '', changelog: '' },
+                            { id: 'create_scopes', label: 'Create Scopes', icon: 'box', fn: 'Creates 3D isometric views with per-level section boxes for coordination.', videoRef: '', changelog: '' },
+                            { id: 'reset_scope', label: 'Reset Scope', icon: 'refresh-cw', fn: 'Resets the active 3D view section box based on selected levels.', videoRef: '', changelog: '' },
                         ]
                     },
                     {
