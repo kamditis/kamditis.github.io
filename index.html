@@ -3,23 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kevin Amditis - BIM Tools & Add-ins</title>
+    <title>EliteCAD Tools - Revit Add-ins</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
     <style>
         :root {
-            --bg: #0f0f12;
-            --surface: #18181d;
-            --surface-2: #222229;
-            --border: #2e2e38;
-            --border-light: #3d3d4a;
-            --text: #e8e8ed;
-            --text-dim: #9898a8;
-            --text-muted: #5a5a6a;
-            --violet: #a78bfa;
-            --violet-bright: #c4b5fd;
-            --violet-dim: rgba(167, 139, 250, 0.12);
+            --bg: #0F0F12;
+            --surface: #18181D;
+            --surface2: #222229;
+            --border: #2E2E38;
+            --border-light: #3D3D4A;
+            --text: #E8E8ED;
+            --text-dim: #9898A8;
+            --text-muted: #5A5A6A;
+
+            --scan: #5ED5DD;
+            --scan-dim: rgba(94, 213, 221, 0.12);
+            --draft: #F5B878;
+            --draft-dim: rgba(245, 184, 120, 0.12);
+            --coord: #6EE7A8;
+            --coord-dim: rgba(110, 231, 168, 0.12);
+            --core: #A78BFA;
+            --core-dim: rgba(167, 139, 250, 0.12);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -29,407 +36,980 @@
             background: var(--bg);
             color: var(--text);
             min-height: 100vh;
+            overflow: hidden;
         }
 
         /* Dot grid background */
-        body::before {
-            content: '';
-            position: fixed;
-            inset: 0;
-            background-image: radial-gradient(circle, var(--border) 1px, transparent 1px);
-            background-size: 24px 24px;
-            pointer-events: none;
-            opacity: 0.5;
+        .tech-grid-bg {
+            background-image:
+                linear-gradient(rgba(46, 46, 56, 0.3) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(46, 46, 56, 0.3) 1px, transparent 1px);
+            background-size: 20px 20px;
         }
 
-        .container {
-            max-width: 1100px;
-            margin: 0 auto;
-            padding: 0 40px;
-            position: relative;
-            z-index: 1;
-        }
-
-        /* Top bar */
-        .top-bar {
-            border-bottom: 1px solid var(--border);
-            padding: 16px 0;
+        .app {
             display: flex;
-            justify-content: space-between;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Header */
+        header {
+            display: flex;
             align-items: center;
+            justify-content: space-between;
+            padding: 12px 24px;
+            border-bottom: 1px solid var(--border);
+            background: var(--surface);
+            z-index: 10;
         }
 
         .logo {
-            font-family: 'Space Mono', monospace;
-            font-size: 13px;
-            font-weight: 700;
-            color: var(--violet);
-        }
-
-        .top-nav {
             display: flex;
-            gap: 24px;
+            align-items: center;
+            gap: 12px;
         }
 
-        .top-nav a {
-            font-family: 'Space Mono', monospace;
-            font-size: 11px;
-            color: var(--text-muted);
-            text-decoration: none;
-            letter-spacing: 0.05em;
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--surface2), var(--bg));
+            border: 1px solid var(--border-light);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text);
         }
 
-        .top-nav a:hover { color: var(--violet); }
-
-        /* Hero section */
-        .hero {
-            padding: 64px 0;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .hero-label {
-            font-family: 'Space Mono', monospace;
-            font-size: 10px;
-            letter-spacing: 0.2em;
-            color: var(--violet);
-            margin-bottom: 16px;
-        }
-
-        h1 {
-            font-size: 48px;
-            font-weight: 700;
-            letter-spacing: -0.03em;
-            margin-bottom: 16px;
-        }
-
-        .hero-desc {
+        .logo-text h1 {
             font-size: 16px;
-            color: var(--text-dim);
-            max-width: 480px;
-            line-height: 1.7;
-        }
-
-        /* Stats row */
-        .stats-row {
-            display: flex;
-            gap: 48px;
-            margin-top: 40px;
-            padding-top: 32px;
-            border-top: 1px solid var(--border);
-        }
-
-        .stat {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-
-        .stat-value {
-            font-family: 'Space Mono', monospace;
-            font-size: 32px;
             font-weight: 700;
-            color: var(--violet);
         }
 
-        .stat-label {
+        .logo-text h1 span {
+            font-weight: 400;
+            color: var(--text-dim);
+        }
+
+        .logo-text p {
             font-family: 'Space Mono', monospace;
             font-size: 10px;
             color: var(--text-muted);
+            text-transform: uppercase;
             letter-spacing: 0.1em;
         }
 
-        /* Main content */
-        main {
-            padding: 48px 0 80px;
-        }
-
-        .section {
-            margin-bottom: 48px;
-        }
-
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .section-title {
-            font-family: 'Space Mono', monospace;
-            font-size: 11px;
-            letter-spacing: 0.15em;
-            color: var(--text-muted);
-        }
-
-        .section-line {
-            flex: 1;
-            height: 1px;
-            background: var(--border);
-            margin-left: 20px;
-        }
-
-        /* Tool cards - horizontal full-width */
-        .tool-card {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            margin-bottom: 16px;
-            transition: border-color 0.2s;
-        }
-
-        .tool-card:hover {
-            border-color: var(--violet);
-        }
-
-        .tool-top {
-            display: grid;
-            grid-template-columns: 1fr auto;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .tool-main {
-            padding: 24px;
-            border-right: 1px solid var(--border);
-        }
-
-        .tool-header {
+        .header-right {
             display: flex;
             align-items: center;
             gap: 16px;
-            margin-bottom: 12px;
         }
 
-        .tool-name {
-            font-size: 22px;
-            font-weight: 600;
-        }
-
-        .tool-version {
-            font-family: 'Space Mono', monospace;
-            font-size: 11px;
-            padding: 4px 10px;
-            background: var(--violet-dim);
-            color: var(--violet);
-        }
-
-        .tool-desc {
-            font-size: 14px;
-            color: var(--text-dim);
-            line-height: 1.7;
-        }
-
-        .tool-actions {
-            padding: 24px;
+        .status {
             display: flex;
-            flex-direction: column;
-            justify-content: center;
-            gap: 10px;
-            min-width: 160px;
-        }
-
-        .tool-specs {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            background: var(--surface-2);
-        }
-
-        .spec-cell {
-            padding: 16px 24px;
-            border-right: 1px solid var(--border);
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-
-        .spec-cell:last-child { border-right: none; }
-
-        .spec-cell-label {
-            font-family: 'Space Mono', monospace;
-            font-size: 9px;
-            color: var(--text-muted);
-            letter-spacing: 0.1em;
-        }
-
-        .spec-cell-value {
-            font-family: 'Space Mono', monospace;
-            font-size: 13px;
-        }
-
-        .spec-cell-value.highlight { color: var(--violet); }
-
-        /* Buttons */
-        .btn {
-            padding: 12px 20px;
-            font-family: 'Space Mono', monospace;
-            font-size: 11px;
-            text-decoration: none;
-            display: inline-flex;
             align-items: center;
-            justify-content: center;
             gap: 8px;
+            padding: 6px 12px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .status-text {
+            font-family: 'Space Mono', monospace;
+            font-size: 11px;
+            color: var(--text-dim);
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 4px;
+            padding: 8px 16px 0;
+            background: var(--bg);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .tab {
+            position: relative;
+            padding: 10px 24px;
+            background: transparent;
+            border: 1px solid transparent;
+            border-bottom: none;
+            border-radius: 4px 4px 0 0;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-muted);
+            cursor: pointer;
             transition: all 0.15s;
         }
 
-        .btn svg { width: 14px; height: 14px; }
-
-        .btn-violet {
-            background: var(--violet);
-            color: var(--bg);
-        }
-
-        .btn-violet:hover { background: var(--violet-bright); }
-
-        .btn-outline {
-            background: transparent;
+        .tab:hover {
             color: var(--text-dim);
-            border: 1px solid var(--border);
         }
 
-        .btn-outline:hover {
-            border-color: var(--violet);
-            color: var(--violet);
-        }
-
-        /* Empty state */
-        .empty-card {
+        .tab.active {
             background: var(--surface);
-            border: 1px dashed var(--border);
-            padding: 48px;
-            text-align: center;
+            border-color: var(--border);
+        }
+
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: var(--surface);
+        }
+
+        .tab.active::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+        }
+
+        .tab.active[data-region="scan"] { color: var(--scan); }
+        .tab.active[data-region="scan"]::before { background: var(--scan); }
+        .tab.active[data-region="draft"] { color: var(--draft); }
+        .tab.active[data-region="draft"]::before { background: var(--draft); }
+        .tab.active[data-region="coord"] { color: var(--coord); }
+        .tab.active[data-region="coord"]::before { background: var(--coord); }
+        .tab.active[data-region="core"] { color: var(--core); }
+        .tab.active[data-region="core"]::before { background: var(--core); }
+
+        /* Ribbon */
+        .ribbon {
+            display: flex;
+            height: 120px;
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            overflow-x: auto;
+            padding: 0 16px;
+        }
+
+        .ribbon::-webkit-scrollbar {
+            height: 6px;
+        }
+
+        .ribbon::-webkit-scrollbar-track {
+            background: var(--bg);
+        }
+
+        .ribbon::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 3px;
+        }
+
+        .panel {
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid var(--border);
+            padding: 0 8px;
+            min-width: max-content;
+        }
+
+        .panel-tools {
+            display: flex;
+            flex: 1;
+            align-items: center;
+            gap: 4px;
+            padding: 8px 4px;
+        }
+
+        .panel-label {
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--surface);
+            border-top: 1px solid var(--border);
+            margin: 0 -8px;
+            padding: 0 8px;
+        }
+
+        .panel-label span {
             font-family: 'Space Mono', monospace;
-            font-size: 12px;
+            font-size: 9px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
             color: var(--text-muted);
         }
 
-        /* Footer */
-        footer {
-            border-top: 1px solid var(--border);
-            padding: 24px 0;
+        /* Tool Button */
+        .tool-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            width: 64px;
+            height: 72px;
+            padding: 8px 4px;
+            background: transparent;
+            border: 1px solid transparent;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .tool-btn:hover {
+            background: var(--surface2);
+            border-color: var(--border);
+        }
+
+        .tool-btn.selected {
+            border-color: var(--border-light);
+        }
+
+        .tool-btn .icon {
+            width: 28px;
+            height: 28px;
+            color: var(--text);
+            transition: color 0.15s;
+        }
+
+        .tool-btn .label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 9px;
+            font-weight: 500;
+            color: var(--text);
+            text-align: center;
+            line-height: 1.2;
+            max-width: 100%;
+            overflow: hidden;
+        }
+
+        /* Selected states by region */
+        [data-active-region="scan"] .tool-btn.selected { background: var(--scan-dim); border-color: var(--scan); }
+        [data-active-region="scan"] .tool-btn.selected .icon { color: var(--scan); }
+        [data-active-region="scan"] .tool-btn.selected .label { color: var(--scan); }
+
+        [data-active-region="draft"] .tool-btn.selected { background: var(--draft-dim); border-color: var(--draft); }
+        [data-active-region="draft"] .tool-btn.selected .icon { color: var(--draft); }
+        [data-active-region="draft"] .tool-btn.selected .label { color: var(--draft); }
+
+        [data-active-region="coord"] .tool-btn.selected { background: var(--coord-dim); border-color: var(--coord); }
+        [data-active-region="coord"] .tool-btn.selected .icon { color: var(--coord); }
+        [data-active-region="coord"] .tool-btn.selected .label { color: var(--coord); }
+
+        [data-active-region="core"] .tool-btn.selected { background: var(--core-dim); border-color: var(--core); }
+        [data-active-region="core"] .tool-btn.selected .icon { color: var(--core); }
+        [data-active-region="core"] .tool-btn.selected .label { color: var(--core); }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .main-content.tech-grid-bg {
+            padding: 32px;
+        }
+
+        .content-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            max-width: 1100px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        /* Breadcrumb */
+        .breadcrumb {
+            font-family: 'Space Mono', monospace;
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+        }
+
+        .breadcrumb .current {
+            color: var(--text-dim);
+        }
+
+        /* Detail Card */
+        .detail-card {
+            flex: 1;
+            display: flex;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            overflow: hidden;
+        }
+
+        .detail-main {
+            flex: 1;
+            padding: 32px;
+            overflow-y: auto;
+        }
+
+        .detail-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding-bottom: 24px;
+            margin-bottom: 24px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .detail-icon {
+            width: 64px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+        }
+
+        .detail-icon i {
+            width: 36px;
+            height: 36px;
+        }
+
+        .detail-title h2 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .detail-badges {
+            display: flex;
+            gap: 8px;
+        }
+
+        .badge {
+            font-family: 'Space Mono', monospace;
+            font-size: 10px;
+            padding: 4px 10px;
+            background: var(--surface2);
+            color: var(--text-dim);
+            text-transform: uppercase;
+        }
+
+        .badge.active {
+            background: var(--scan-dim);
+            color: var(--scan);
+        }
+
+        [data-active-region="draft"] .badge.active { background: var(--draft-dim); color: var(--draft); }
+        [data-active-region="coord"] .badge.active { background: var(--coord-dim); color: var(--coord); }
+        [data-active-region="core"] .badge.active { background: var(--core-dim); color: var(--core); }
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .detail-section h3 {
+            font-family: 'Space Mono', monospace;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+        }
+
+        .detail-box {
+            padding: 16px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-left: 3px solid var(--scan);
+        }
+
+        [data-active-region="draft"] .detail-box { border-left-color: var(--draft); }
+        [data-active-region="coord"] .detail-box { border-left-color: var(--coord); }
+        [data-active-region="core"] .detail-box { border-left-color: var(--core); }
+
+        .detail-box p {
+            font-size: 14px;
+            line-height: 1.7;
+            color: var(--text);
+        }
+
+        .detail-box.mono p {
+            font-family: 'Space Mono', monospace;
+            font-size: 12px;
+            color: var(--text-dim);
+        }
+
+        .detail-meta {
+            display: flex;
+            gap: 16px;
+        }
+
+        .meta-item {
+            flex: 1;
+            padding: 12px 16px;
+            background: var(--surface2);
+            border: 1px solid var(--border);
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
-        .footer-text {
+        .meta-item .label {
+            font-family: 'Space Mono', monospace;
+            font-size: 10px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+        }
+
+        .meta-item .value {
+            font-family: 'Space Mono', monospace;
+            font-size: 12px;
+            color: var(--text);
+        }
+
+        /* Sidebar */
+        .detail-sidebar {
+            width: 280px;
+            background: var(--bg);
+            border-left: 1px solid var(--border);
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-title {
+            font-family: 'Space Mono', monospace;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+        }
+
+        .sidebar-props {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .prop {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .prop .label {
             font-family: 'Space Mono', monospace;
             font-size: 11px;
             color: var(--text-muted);
         }
 
-        .footer-links {
-            display: flex;
-            gap: 24px;
-        }
-
-        .footer-links a {
+        .prop .value {
             font-family: 'Space Mono', monospace;
-            font-size: 11px;
-            color: var(--text-dim);
-            text-decoration: none;
+            font-size: 12px;
+            color: var(--text);
         }
 
-        .footer-links a:hover { color: var(--violet); }
+        .prop .color-value {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
 
-        @media (max-width: 800px) {
-            .container { padding: 0 20px; }
-            h1 { font-size: 32px; }
-            .stats-row { flex-wrap: wrap; gap: 24px; }
-            .stat-value { font-size: 24px; }
-            .tool-top { grid-template-columns: 1fr; }
-            .tool-main { border-right: none; border-bottom: 1px solid var(--border); }
-            .tool-actions { flex-direction: row; }
-            .tool-specs { grid-template-columns: repeat(2, 1fr); }
-            .spec-cell:nth-child(2) { border-right: none; }
-            .spec-cell:nth-child(1), .spec-cell:nth-child(2) { border-bottom: 1px solid var(--border); }
+        .color-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        /* Download Section */
+        .download-section {
+            margin-top: auto;
+            padding-top: 24px;
+            border-top: 1px solid var(--border);
+        }
+
+        .download-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            padding: 14px;
+            background: var(--scan);
+            color: var(--bg);
+            font-family: 'Space Mono', monospace;
+            font-size: 12px;
+            font-weight: 700;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .download-btn:hover {
+            filter: brightness(1.1);
+        }
+
+        [data-active-region="draft"] .download-btn { background: var(--draft); }
+        [data-active-region="coord"] .download-btn { background: var(--coord); }
+        [data-active-region="core"] .download-btn { background: var(--core); }
+
+        .download-btn i {
+            width: 18px;
+            height: 18px;
+        }
+
+        .download-info {
+            margin-top: 12px;
+            text-align: center;
+            font-family: 'Space Mono', monospace;
+            font-size: 10px;
+            color: var(--text-muted);
+        }
+
+        /* Empty state */
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: var(--text-muted);
+            opacity: 0.5;
+        }
+
+        .empty-state i {
+            width: 48px;
+            height: 48px;
+            margin-bottom: 16px;
+        }
+
+        .empty-state span {
+            font-family: 'Space Mono', monospace;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        @media (max-width: 900px) {
+            .detail-grid {
+                grid-template-columns: 1fr;
+            }
+            .detail-sidebar {
+                display: none;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="top-bar">
-            <span class="logo">K.AMDITIS</span>
-            <nav class="top-nav">
-                <a href="#">TOOLS</a>
-                <a href="https://github.com/kamditis">GITHUB</a>
-            </nav>
+    <div class="app" data-active-region="scan">
+        <!-- Header -->
+        <header>
+            <div class="logo">
+                <div class="logo-icon">
+                    <i data-lucide="box" style="width: 18px; height: 18px;"></i>
+                </div>
+                <div class="logo-text">
+                    <h1>EliteCAD<span>Tools</span></h1>
+                    <p>Ribbon Configuration System v1.0</p>
+                </div>
+            </div>
+            <div class="header-right">
+                <div class="status">
+                    <div class="status-dot" style="background: var(--scan);"></div>
+                    <span class="status-text">System Active</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Tabs -->
+        <div class="tabs">
+            <button class="tab active" data-region="scan">ELITE SCAN</button>
+            <button class="tab" data-region="draft">ELITE DRAFT</button>
+            <button class="tab" data-region="coord">ELITE COORD</button>
+            <button class="tab" data-region="core">ELITE CORE</button>
         </div>
 
-        <section class="hero">
-            <div class="hero-label">BIM DEVELOPMENT</div>
-            <h1>Tools & Add-ins</h1>
-            <p class="hero-desc">Autodesk Revit and Navisworks plugins for BIM coordination, QA workflows, and construction verification.</p>
+        <!-- Ribbon -->
+        <div class="ribbon" id="ribbon">
+            <!-- Populated by JS -->
+        </div>
 
-            <div class="stats-row">
-                <div class="stat">
-                    <span class="stat-value">1</span>
-                    <span class="stat-label">ACTIVE TOOLS</span>
-                </div>
-                <div class="stat">
-                    <span class="stat-value">2026</span>
-                    <span class="stat-label">LATEST SUPPORT</span>
-                </div>
-            </div>
-        </section>
-
-        <main>
-            <section class="section">
-                <div class="section-header">
-                    <span class="section-title">REVIT MODULES</span>
-                    <div class="section-line"></div>
+        <!-- Main Content -->
+        <div class="main-content tech-grid-bg">
+            <div class="content-wrapper">
+                <div class="breadcrumb">
+                    <span id="breadcrumb-region">ELITE SCAN</span> / <span class="current" id="breadcrumb-tool">Select Tool</span>
                 </div>
 
-                <article class="tool-card">
-                    <div class="tool-top">
-                        <div class="tool-main">
-                            <div class="tool-header">
-                                <h3 class="tool-name">ScanAnalysis</h3>
-                                <span class="tool-version">v1.0.1</span>
+                <div class="detail-card">
+                    <div class="detail-main" id="detail-main">
+                        <div class="empty-state">
+                            <i data-lucide="activity"></i>
+                            <span>Select a tool to view specifications</span>
+                        </div>
+                    </div>
+
+                    <div class="detail-sidebar">
+                        <h4 class="sidebar-title">Properties</h4>
+                        <div class="sidebar-props">
+                            <div class="prop">
+                                <span class="label">Status</span>
+                                <span class="value">Production Ready</span>
                             </div>
-                            <p class="tool-desc">Point cloud deviation analysis with per-element A-F scoring, 360° panorama viewing, and automated QA verification workflows.</p>
+                            <div class="prop">
+                                <span class="label">Add-in</span>
+                                <span class="value" id="sidebar-addin">EliteScan</span>
+                            </div>
+                            <div class="prop">
+                                <span class="label">Accent</span>
+                                <div class="color-value">
+                                    <div class="color-dot" id="sidebar-color-dot" style="background: var(--scan);"></div>
+                                    <span class="value" id="sidebar-color">#5ED5DD</span>
+                                </div>
+                            </div>
+                            <div class="prop">
+                                <span class="label">Revit Versions</span>
+                                <span class="value">2022 - 2026</span>
+                            </div>
                         </div>
-                        <div class="tool-actions">
-                            <a href="scananalysis.html" class="btn btn-violet">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                                Download
+
+                        <div class="download-section">
+                            <a href="https://github.com/kamditis/kamditis.github.io/releases/latest/download/EliteScan-Setup.exe" class="download-btn" id="download-btn">
+                                <i data-lucide="download"></i>
+                                <span>Download</span>
                             </a>
-                            <a href="scananalysis.html" class="btn btn-outline">Docs</a>
+                            <p class="download-info" id="download-info">EliteScan-Setup.exe</p>
                         </div>
                     </div>
-                    <div class="tool-specs">
-                        <div class="spec-cell">
-                            <span class="spec-cell-label">VERSION</span>
-                            <span class="spec-cell-value highlight">1.0.1</span>
-                        </div>
-                        <div class="spec-cell">
-                            <span class="spec-cell-label">STATUS</span>
-                            <span class="spec-cell-value">Active</span>
-                        </div>
-                        <div class="spec-cell">
-                            <span class="spec-cell-label">PLATFORM</span>
-                            <span class="spec-cell-value">Revit 2022-2026</span>
-                        </div>
-                        <div class="spec-cell">
-                            <span class="spec-cell-label">SIZE</span>
-                            <span class="spec-cell-value">~3 MB</span>
-                        </div>
-                    </div>
-                </article>
-            </section>
-
-            <section class="section">
-                <div class="section-header">
-                    <span class="section-title">NAVISWORKS MODULES</span>
-                    <div class="section-line"></div>
                 </div>
-                <div class="empty-card">No modules available — in development</div>
-            </section>
-        </main>
-
-        <footer>
-            <span class="footer-text">Kevin Amditis</span>
-            <div class="footer-links">
-                <a href="https://github.com/kamditis">GitHub</a>
             </div>
-        </footer>
+        </div>
     </div>
+
+    <script>
+        // Data
+        const REGIONS = {
+            scan: {
+                id: 'scan',
+                name: 'EliteScan',
+                label: 'ELITE SCAN',
+                color: '#5ED5DD',
+                colorVar: 'var(--scan)',
+                downloadUrl: 'https://github.com/kamditis/kamditis.github.io/releases/latest/download/EliteScan-Setup.exe',
+                downloadFile: 'EliteScan-Setup.exe',
+                panels: [
+                    {
+                        title: 'Analysis',
+                        tools: [
+                            { id: 'place_scans', label: 'Place Scans', icon: 'target', fn: 'Places scan origin points in the model for point cloud deviation analysis. User selects locations where scans were taken.', iconDesc: 'Crosshair/target reticle with a small point cloud dot pattern in the center. Cyan accent on the center target point.' },
+                            { id: 'run_analysis', label: 'Run Analysis', icon: 'play', fn: 'Executes point cloud deviation analysis comparing model geometry against scan data. Calculates per-element deviations and assigns A-F grades.', iconDesc: 'Play triangle overlaid on a bar chart or waveform pattern. Cyan accent on the play button.' },
+                            { id: 'view_report', label: 'View Report', icon: 'file-text', fn: 'Opens the HTML deviation analysis report showing element grades, statistics, and deviation heat maps.', iconDesc: 'Document/page icon with horizontal lines representing text, and a small chart/graph in the corner.' },
+                            { id: 'settings', label: 'Settings', icon: 'settings', fn: 'Opens the ScanAnalysis settings dialog for configuring tolerances, grade thresholds, and report options.', iconDesc: 'Gear/cog icon. Cyan accent as a small dot or highlight on the gear teeth.' },
+                        ]
+                    },
+                    {
+                        title: 'Viewer',
+                        tools: [
+                            { id: '360_viewer', label: '360 Viewer', icon: 'globe', fn: 'Launches a standalone window to view 360° panorama images from scan locations.', iconDesc: 'Sphere with horizontal/vertical grid lines with an eye icon overlay.' },
+                            { id: '360_pane', label: '360 Pane', icon: 'maximize', fn: 'Opens/toggles the dockable 360° panorama pane within Revit for persistent viewing while working.', iconDesc: 'Rectangle representing a docked panel with a small sphere/360 icon inside.' },
+                        ]
+                    },
+                    {
+                        title: 'Overlay',
+                        tools: [
+                            { id: 'show_overlay', label: 'Show Overlay', icon: 'layers', fn: 'Displays color-coded deviation overlay on model elements in the active view. Elements colored by grade (green=A, red=F).', iconDesc: 'Layers/stack icon with color gradient bands.' },
+                            { id: 'clear_overlay', label: 'Clear Overlay', icon: 'eye-off', fn: 'Removes the deviation color overlay from the view, restoring normal element appearance.', iconDesc: 'Layers icon with an X or slash through it.' },
+                        ]
+                    },
+                    {
+                        title: 'Point Clouds',
+                        tools: [
+                            { id: 'revit_2_recap', label: 'Revit 2 ReCap', icon: 'share', fn: 'Exports selected Revit geometry to ReCap for comparison with point cloud data. Creates RCS/RCP files.', iconDesc: 'Arrow pointing from a building shape toward a cloud of dots.' },
+                            { id: 'cloud_reset', label: 'Cloud Reset', icon: 'refresh-cw', fn: 'Resets point cloud visibility and graphics overrides to default state. Useful after analysis sessions.', iconDesc: 'Point cloud dot pattern with a circular refresh arrow.' },
+                        ]
+                    }
+                ]
+            },
+            draft: {
+                id: 'draft',
+                name: 'EliteDraft',
+                label: 'ELITE DRAFT',
+                color: '#F5B878',
+                colorVar: 'var(--draft)',
+                downloadUrl: 'https://github.com/kamditis/kamditis.github.io/releases/latest/download/EliteDraft-Setup.exe',
+                downloadFile: 'EliteDraft-Setup.exe',
+                panels: [
+                    {
+                        title: 'Hangers',
+                        tools: [
+                            { id: 'hanger_settings', label: 'Hanger Settings', icon: 'wrench', fn: 'Opens the hanger configuration dialog for setting rod sizes, spacing rules, trapeze preferences, and load calculations.', iconDesc: 'Gear/cog with a small hanger hook shape.' },
+                            { id: 'single_pipes', label: 'Single Pipes', icon: 'anchor', rotate: true, fn: 'Places individual pipe hangers on selected pipe runs. Calculates spacing based on pipe size and settings.', iconDesc: 'Single vertical rod with a clevis/ring at bottom holding a horizontal pipe.' },
+                            { id: 'pipe_rack', label: 'Pipe Rack', icon: 'grip-horizontal', fn: 'Places trapeze-style hangers for multiple parallel pipes. Creates shared support structure for pipe racks.', iconDesc: 'Two vertical rods connected by a horizontal strut with multiple pipes below.' },
+                            { id: 'duct_hangers', label: 'Duct Hangers', icon: 'container', fn: 'Places hangers on rectangular or round ductwork. Supports trapeze and individual hanger styles.', iconDesc: 'Trapeze frame with a rectangular duct shape below.' },
+                            { id: 'trapeze_layout', label: 'Trapeze Layout', icon: 'gallery-horizontal', fn: 'Automatically lays out trapeze hangers along selected duct/pipe runs at calculated intervals.', iconDesc: 'Top-down view of duct with evenly spaced hanger points.' },
+                            { id: 'adjust_trapeze', label: 'Adjust Trapeze', icon: 'sliders-horizontal', fn: 'Modifies existing trapeze hanger positions, elevations, or configurations. Interactive adjustment tool.', iconDesc: 'Trapeze shape with bidirectional arrows indicating adjustment.' },
+                            { id: 'audit_hangers', label: 'Audit Hangers', icon: 'clipboard-check', fn: 'Scans the model for hanger issues: missing supports, incorrect spacing, undersized rods. Generates report.', iconDesc: 'Checklist/clipboard icon with a hanger silhouette and checkmark.' },
+                            { id: 'fill_parameters', label: 'Fill Parameters', icon: 'pencil', fn: 'Batch-fills hanger family parameters (rod length, load, size) based on connected elements and calculations.', iconDesc: 'Hanger icon with a downward arrow or fill indication.' },
+                        ]
+                    },
+                    {
+                        title: 'Annotation',
+                        tools: [
+                            { id: 'tag_size', label: 'Tag Size', icon: 'tag', fn: 'Places or updates size tags on selected ductwork/piping showing dimensions (e.g., "24x12", "6" Ø").', iconDesc: 'Tag shape containing dimension text.' },
+                            { id: 'tag_lengths', label: 'Tag Lengths', icon: 'ruler', fn: 'Tags pipe/duct segments with their lengths. Useful for cut lists and quantity takeoffs.', iconDesc: 'Tag shape with a ruler or dimension line icon inside.' },
+                            { id: 'elbow_extension', label: 'Elbow Extension', icon: 'corner-down-right', fn: 'Annotates elbows with extension/takeoff dimensions for fabrication. Shows centerline-to-end measurements.', iconDesc: 'Elbow/90° bend shape with dimension arrows at the extensions.' },
+                            { id: 'transitions', label: 'Transitions', icon: 'filter', fn: 'Tags transition fittings with size change information (e.g., "12×8 to 10×6").', iconDesc: 'Tapered/reducer shape with size labels at each end.' },
+                            { id: 'batch_spools', label: 'Batch Spools', icon: 'list-ordered', fn: 'Automatically generates spool tags/numbers for piping assemblies. Creates fabrication spool drawings.', iconDesc: 'Multiple tag shapes in a row with sequential numbers.' },
+                            { id: 'renumber', label: 'Renumber', icon: 'hash', fn: 'Renumbers selected tags or elements sequentially. Allows setting start number and prefix.', iconDesc: '# symbol with a circular refresh arrow.' },
+                        ]
+                    },
+                    {
+                        title: 'View',
+                        tools: [
+                            { id: 'isolate_service', label: 'Isolate Service', icon: 'eye', fn: 'Isolates elements by system/service type in the current view. Quick filter for mechanical systems.', iconDesc: 'Eye icon with filter lines, or a funnel shape with a pipe/duct emerging.' },
+                            { id: 'hide_service', label: 'Hide Service', icon: 'eye-off', fn: 'Hides elements by system/service type in the current view. Opposite of Isolate.', iconDesc: 'Eye icon with a slash through it.' },
+                        ]
+                    }
+                ]
+            },
+            coord: {
+                id: 'coord',
+                name: 'EliteCoord',
+                label: 'ELITE COORD',
+                color: '#6EE7A8',
+                colorVar: 'var(--coord)',
+                downloadUrl: 'https://github.com/kamditis/kamditis.github.io/releases/latest/download/EliteCoord-Setup.exe',
+                downloadFile: 'EliteCoord-Setup.exe',
+                panels: [
+                    {
+                        title: 'Export',
+                        tools: [
+                            { id: 'dwg_overrides', label: 'DWG Overrides', icon: 'file-output', fn: 'Configures layer/color mappings for DWG export. Ensures consistent CAD standards when exporting.', iconDesc: 'DWG file icon with adjustment slider.' },
+                            { id: 'material_mapping', label: 'Material Mapping', icon: 'palette', fn: 'Maps Revit materials to Navisworks appearance definitions for consistent visualization in coordination models.', iconDesc: 'Palette/color swatches icon with arrow pointing to a cube.' },
+                        ]
+                    },
+                    {
+                        title: 'Views',
+                        tools: [
+                            { id: 'section_box', label: 'Section Box', icon: 'box', fn: 'Creates a 3D view with section box tightly cropped to selected elements. Quick coordination box.', iconDesc: '3D cube with dashed lines indicating section box boundaries.' },
+                            { id: '3d_view', label: '3D View', icon: 'cuboid', fn: 'Creates a new 3D view from current camera position or selected scope. Quick view generation.', iconDesc: 'Isometric cube icon (3D box in perspective).' },
+                        ]
+                    },
+                    {
+                        title: 'Clash',
+                        tools: [
+                            { id: 'clash_viewer', label: 'Clash Viewer', icon: 'alert-triangle', fn: 'Opens the clash visualization pane showing Navisworks clash results overlaid on Revit elements.', iconDesc: 'Two overlapping shapes with a warning indicator at intersection.' },
+                        ]
+                    }
+                ]
+            },
+            core: {
+                id: 'core',
+                name: 'EliteCore',
+                label: 'ELITE CORE',
+                color: '#A78BFA',
+                colorVar: 'var(--core)',
+                downloadUrl: 'https://github.com/kamditis/kamditis.github.io/releases/latest/download/EliteCore-Setup.exe',
+                downloadFile: 'EliteCore-Setup.exe',
+                panels: [
+                    {
+                        title: 'Project Setup',
+                        tools: [
+                            { id: 'user_workset', label: 'User Workset', icon: 'user', fn: 'Creates a user-specific workset (named after current user) for organizing user-owned elements.', iconDesc: 'Person/user icon with a small folder or layer icon.' },
+                            { id: 'link_worksets', label: 'Link Worksets', icon: 'link', fn: 'Associates linked models with dedicated worksets for better visibility control and organization.', iconDesc: 'Chain link icon combined with a folder/layer stack.' },
+                        ]
+                    }
+                ]
+            }
+        };
+
+        // State
+        let activeRegion = 'scan';
+        let selectedTool = null;
+
+        // Elements
+        const app = document.querySelector('.app');
+        const tabs = document.querySelectorAll('.tab');
+        const ribbon = document.getElementById('ribbon');
+        const detailMain = document.getElementById('detail-main');
+        const breadcrumbRegion = document.getElementById('breadcrumb-region');
+        const breadcrumbTool = document.getElementById('breadcrumb-tool');
+        const sidebarAddin = document.getElementById('sidebar-addin');
+        const sidebarColorDot = document.getElementById('sidebar-color-dot');
+        const sidebarColor = document.getElementById('sidebar-color');
+        const downloadBtn = document.getElementById('download-btn');
+        const downloadInfo = document.getElementById('download-info');
+        const statusDot = document.querySelector('.status-dot');
+
+        // Functions
+        function renderRibbon(regionId) {
+            const region = REGIONS[regionId];
+            ribbon.innerHTML = '';
+
+            region.panels.forEach(panel => {
+                const panelEl = document.createElement('div');
+                panelEl.className = 'panel';
+
+                const toolsEl = document.createElement('div');
+                toolsEl.className = 'panel-tools';
+
+                panel.tools.forEach(tool => {
+                    const btn = document.createElement('button');
+                    btn.className = 'tool-btn';
+                    btn.dataset.toolId = tool.id;
+
+                    const iconStyle = tool.rotate ? 'transform: rotate(180deg);' : '';
+                    btn.innerHTML = `
+                        <i data-lucide="${tool.icon}" class="icon" style="${iconStyle}"></i>
+                        <span class="label">${tool.label}</span>
+                    `;
+
+                    btn.addEventListener('click', () => selectTool(tool));
+                    toolsEl.appendChild(btn);
+                });
+
+                const labelEl = document.createElement('div');
+                labelEl.className = 'panel-label';
+                labelEl.innerHTML = `<span>${panel.title}</span>`;
+
+                panelEl.appendChild(toolsEl);
+                panelEl.appendChild(labelEl);
+                ribbon.appendChild(panelEl);
+            });
+
+            lucide.createIcons();
+        }
+
+        function selectTool(tool) {
+            selectedTool = tool;
+
+            // Update selected state
+            document.querySelectorAll('.tool-btn').forEach(btn => {
+                btn.classList.toggle('selected', btn.dataset.toolId === tool.id);
+            });
+
+            // Update breadcrumb
+            breadcrumbTool.textContent = tool.label;
+
+            // Render detail
+            renderDetail(tool);
+        }
+
+        function renderDetail(tool) {
+            const region = REGIONS[activeRegion];
+
+            detailMain.innerHTML = `
+                <div class="detail-header">
+                    <div class="detail-icon" style="color: ${region.color};">
+                        <i data-lucide="${tool.icon}" ${tool.rotate ? 'style="transform: rotate(180deg);"' : ''}></i>
+                    </div>
+                    <div class="detail-title">
+                        <h2>${tool.label}</h2>
+                        <div class="detail-badges">
+                            <span class="badge">ID: ${tool.id}</span>
+                            <span class="badge active">ACTIVE</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="detail-grid">
+                    <div class="detail-section">
+                        <h3>Function Description</h3>
+                        <div class="detail-box">
+                            <p>${tool.fn}</p>
+                        </div>
+                    </div>
+                    <div class="detail-section">
+                        <h3>Icon Design Specs</h3>
+                        <div class="detail-box mono">
+                            <p>${tool.iconDesc}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="detail-meta">
+                    <div class="meta-item">
+                        <span class="label">Format</span>
+                        <span class="value">SVG / PNG</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="label">Size</span>
+                        <span class="value">32x32 px</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="label">Stroke</span>
+                        <span class="value">2px</span>
+                    </div>
+                </div>
+            `;
+
+            lucide.createIcons();
+        }
+
+        function switchRegion(regionId) {
+            activeRegion = regionId;
+            selectedTool = null;
+            const region = REGIONS[regionId];
+
+            // Update app data attribute
+            app.dataset.activeRegion = regionId;
+
+            // Update tabs
+            tabs.forEach(tab => {
+                tab.classList.toggle('active', tab.dataset.region === regionId);
+            });
+
+            // Update sidebar
+            breadcrumbRegion.textContent = region.label;
+            breadcrumbTool.textContent = 'Select Tool';
+            sidebarAddin.textContent = region.name;
+            sidebarColorDot.style.background = region.colorVar;
+            sidebarColor.textContent = region.color;
+            sidebarColor.style.color = region.color;
+            statusDot.style.background = region.colorVar;
+
+            // Update download
+            downloadBtn.href = region.downloadUrl;
+            downloadInfo.textContent = region.downloadFile;
+
+            // Render ribbon
+            renderRibbon(regionId);
+
+            // Reset detail
+            detailMain.innerHTML = `
+                <div class="empty-state">
+                    <i data-lucide="activity"></i>
+                    <span>Select a tool to view specifications</span>
+                </div>
+            `;
+            lucide.createIcons();
+        }
+
+        // Event listeners
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => switchRegion(tab.dataset.region));
+        });
+
+        // Init
+        switchRegion('scan');
+    </script>
 </body>
 </html>
