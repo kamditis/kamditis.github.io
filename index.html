@@ -437,6 +437,21 @@
             background: var(--surface);
             border: 1px solid var(--border);
             border-left: 3px solid var(--scan);
+            height: 120px;
+            overflow-y: auto;
+        }
+
+        .detail-box::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .detail-box::-webkit-scrollbar-track {
+            background: var(--bg);
+        }
+
+        .detail-box::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 3px;
         }
 
         [data-active-region="draft"] .detail-box { border-left-color: var(--draft); }
