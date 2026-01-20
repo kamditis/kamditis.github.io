@@ -802,8 +802,8 @@
                     {
                         title: 'Analysis',
                         tools: [
-                            { id: 'place_scans', label: 'Place Scans', icon: 'target', fn: 'Places scan origin points in the model for point cloud deviation analysis. User selects locations where scans were taken.', videoRef: '', changelog: '', requirements: ['3D View active', 'Point cloud linked in model'] },
-                            { id: 'run_analysis', label: 'Run Analysis', icon: 'play', fn: 'Executes point cloud deviation analysis comparing model geometry against scan data. Calculates per-element deviations and assigns A-F grades.', videoRef: '', changelog: '', requirements: ['Scan origins placed', 'Point cloud visible', 'MEP elements in view'] },
+                            { id: 'place_scans', label: 'Place Scans', icon: 'target', fn: 'Places scan origin points in the model for point cloud deviation analysis. User selects locations where scans were taken.', videoRef: '', changelog: '', requirements: ['Point cloud linked in model', 'Family: Scan Location', 'Levels defined in model'] },
+                            { id: 'run_analysis', label: 'Run Analysis', icon: 'play', fn: 'Executes point cloud deviation analysis comparing model geometry against scan data. Calculates per-element deviations and assigns A-F grades.', videoRef: '', changelog: '', requirements: ['Scan locations placed', 'CloudCompare installed'] },
                             { id: 'view_report', label: 'View Report', icon: 'file-text', fn: 'Opens the HTML deviation analysis report showing element grades, statistics, and deviation heat maps.', videoRef: '', changelog: '', requirements: ['Analysis completed'] },
                             { id: 'settings', label: 'Settings', icon: 'settings', fn: 'Opens the ScanAnalysis settings dialog for configuring tolerances, grade thresholds, and report options.', videoRef: '', changelog: '', requirements: [] },
                         ]
@@ -811,22 +811,22 @@
                     {
                         title: 'Viewer',
                         tools: [
-                            { id: '360_viewer', label: '360 Viewer', icon: 'globe', fn: 'Launches a standalone window to view 360° panorama images from scan locations.', videoRef: '', changelog: '', requirements: ['360° images in project folder', 'Scan origins placed'] },
-                            { id: '360_pane', label: '360 Pane', icon: 'maximize', fn: 'Opens/toggles the dockable 360° panorama pane within Revit for persistent viewing while working.', videoRef: '', changelog: '', requirements: ['360° images in project folder'] },
+                            { id: '360_viewer', label: '360 Viewer', icon: 'globe', fn: 'Launches a standalone window to view 360° panorama images from scan locations.', videoRef: '', changelog: '', requirements: ['Single scan location selected', 'Support folder with [ScanID].jpg'] },
+                            { id: '360_pane', label: '360 Pane', icon: 'maximize', fn: 'Opens/toggles the dockable 360° panorama pane within Revit for persistent viewing while working.', videoRef: '', changelog: '', requirements: ['Support folder with [ScanID].jpg'] },
                         ]
                     },
                     {
                         title: 'Overlay',
                         tools: [
-                            { id: 'show_overlay', label: 'Show Overlay', icon: 'layers', fn: 'Displays color-coded deviation overlay on model elements in the active view. Elements colored by grade (green=A, red=F).', videoRef: '', changelog: '', requirements: ['3D View active', 'Analysis completed'] },
+                            { id: 'show_overlay', label: 'Show Overlay', icon: 'layers', fn: 'Displays color-coded deviation overlay on model elements in the active view. Elements colored by grade (green=A, red=F).', videoRef: '', changelog: '', requirements: ['Analysis results exist'] },
                             { id: 'clear_overlay', label: 'Clear Overlay', icon: 'eye-off', fn: 'Removes the deviation color overlay from the view, restoring normal element appearance.', videoRef: '', changelog: '', requirements: ['Overlay active'] },
                         ]
                     },
                     {
                         title: 'Point Clouds',
                         tools: [
-                            { id: 'revit_2_recap', label: 'Revit 2 ReCap', icon: 'share', fn: 'Exports selected Revit geometry to ReCap for comparison with point cloud data. Creates RCS/RCP files.', videoRef: '', changelog: '', requirements: ['Elements selected', 'ReCap installed'] },
-                            { id: 'cloud_reset', label: 'Cloud Reset', icon: 'refresh-cw', fn: 'Resets point cloud visibility and graphics overrides to default state. Useful after analysis sessions.', videoRef: '', changelog: '', requirements: ['Point cloud in model'] },
+                            { id: 'revit_2_recap', label: 'Revit 2 ReCap', icon: 'share', fn: 'Exports selected Revit geometry to ReCap for comparison with point cloud data. Creates RCS/RCP files.', videoRef: '', changelog: '', requirements: ['Point cloud in model'] },
+                            { id: 'cloud_reset', label: 'Cloud Reset', icon: 'refresh-cw', fn: 'Resets point cloud visibility and graphics overrides to default state. Useful after analysis sessions.', videoRef: '', changelog: '', requirements: ['Point cloud selected'] },
                         ]
                     }
                 ]
@@ -844,30 +844,30 @@
                         title: 'Hangers',
                         tools: [
                             { id: 'hanger_settings', label: 'Hanger Settings', icon: 'wrench', fn: 'Opens the hanger configuration dialog for setting rod sizes, spacing rules, trapeze preferences, and load calculations.', videoRef: '', changelog: '', requirements: [] },
-                            { id: 'single_pipes', label: 'Single Pipes', icon: 'anchor', rotate: true, fn: 'Places individual pipe hangers on selected pipe runs. Calculates spacing based on pipe size and settings.', videoRef: '', changelog: '', requirements: ['Pipes selected', 'Hanger families loaded', 'Fabrication parts in model'] },
-                            { id: 'pipe_rack', label: 'Pipe Rack', icon: 'grip-horizontal', fn: 'Places trapeze-style hangers for multiple parallel pipes. Creates shared support structure for pipe racks.', videoRef: '', changelog: '', requirements: ['Multiple pipes selected', 'Trapeze family loaded', 'Fabrication parts in model'] },
-                            { id: 'duct_hangers', label: 'Duct Hangers', icon: 'container', fn: 'Places hangers on rectangular or round ductwork. Supports trapeze and individual hanger styles.', videoRef: '', changelog: '', requirements: ['Ducts selected', 'Duct hanger families loaded'] },
-                            { id: 'rack_adjustment', label: 'Rack Adjustment', icon: 'sliders-horizontal', fn: 'Modifies existing trapeze hanger positions, elevations, or configurations. Interactive adjustment tool.', videoRef: '', changelog: '', requirements: ['Trapeze hangers in model', 'Hanger selected'] },
-                            { id: 'audit_hangers', label: 'Audit Hangers', icon: 'clipboard-check', fn: 'Scans the model for hanger issues: missing supports, incorrect spacing, undersized rods. Generates report.', videoRef: '', changelog: '', requirements: ['Hangers placed in model'] },
-                            { id: 'fill_info', label: 'Fill Info', icon: 'pencil', fn: 'Batch-fills hanger family parameters (rod length, load, size) based on connected elements and calculations.', videoRef: '', changelog: '', requirements: ['Hangers selected', 'Parameter: Rod Length', 'Parameter: Hanger Load'] },
+                            { id: 'single_pipes', label: 'Single Pipes', icon: 'anchor', rotate: true, fn: 'Places individual pipe hangers on selected pipe runs. Calculates spacing based on pipe size and settings.', videoRef: '', changelog: '', requirements: ['Fabrication pipes in model', 'Hanger service button configured'] },
+                            { id: 'pipe_rack', label: 'Pipe Rack', icon: 'grip-horizontal', fn: 'Places trapeze-style hangers for multiple parallel pipes. Creates shared support structure for pipe racks.', videoRef: '', changelog: '', requirements: ['Fabrication pipes in model', 'Parallel pipes at same elevation'] },
+                            { id: 'duct_hangers', label: 'Duct Hangers', icon: 'container', fn: 'Places hangers on rectangular or round ductwork. Supports trapeze and individual hanger styles.', videoRef: '', changelog: '', requirements: ['Fabrication ducts in model'] },
+                            { id: 'rack_adjustment', label: 'Rack Adjustment', icon: 'sliders-horizontal', fn: 'Modifies existing trapeze hanger positions, elevations, or configurations. Interactive adjustment tool.', videoRef: '', changelog: '', requirements: ['Trapeze hangers selected', 'Pipes selected'] },
+                            { id: 'audit_hangers', label: 'Audit Hangers', icon: 'clipboard-check', fn: 'Scans the model for hanger issues: missing supports, incorrect spacing, undersized rods. Generates report.', videoRef: '', changelog: '', requirements: ['Fabrication parts selected'] },
+                            { id: 'fill_info', label: 'Fill Info', icon: 'pencil', fn: 'Batch-fills hanger family parameters (rod length, load, size) based on connected elements and calculations.', videoRef: '', changelog: '', requirements: ['Fabrication hangers in model', 'Param: Hanger - Rod Length', 'Param: Hanger - Elevation Offset'] },
                         ]
                     },
                     {
                         title: 'Annotation',
                         tools: [
-                            { id: 'tag_size', label: 'Tag Size', icon: 'tag', fn: 'Places or updates size tags on selected ductwork/piping showing dimensions (e.g., "24x12", "6" Ø").', videoRef: '', changelog: '', requirements: ['Plan or Section view active', 'Size tag family loaded', 'MEP elements in view'] },
-                            { id: 'tag_lengths', label: 'Tag Lengths', icon: 'ruler', fn: 'Tags pipe/duct segments with their lengths. Useful for cut lists and quantity takeoffs.', videoRef: '', changelog: '', requirements: ['Plan or Section view active', 'Length tag family loaded'] },
-                            { id: 'elbow_extension', label: 'Elbow Extension', icon: 'corner-down-right', fn: 'Annotates elbows with extension/takeoff dimensions for fabrication. Shows centerline-to-end measurements.', videoRef: '', changelog: '', requirements: ['Elbow fittings selected', 'Extension tag family loaded'] },
-                            { id: 'transition', label: 'Transition', icon: 'filter', fn: 'Tags transition fittings with size change information (e.g., "12×8 to 10×6").', videoRef: '', changelog: '', requirements: ['Transition fittings in view', 'Transition tag family loaded'] },
-                            { id: 'batch_spools', label: 'Batch Spools', icon: 'list-ordered', fn: 'Automatically generates spool tags/numbers for piping assemblies. Creates fabrication spool drawings.', videoRef: '', changelog: '', requirements: ['Fabrication parts in model', 'Spool tag family loaded', 'Parameter: Spool Number'] },
-                            { id: 'renumber', label: 'Renumber', icon: 'hash', fn: 'Renumbers selected tags or elements sequentially. Allows setting start number and prefix.', videoRef: '', changelog: '', requirements: ['Tags or elements selected'] },
+                            { id: 'tag_size', label: 'Tag Size', icon: 'tag', fn: 'Places or updates size tags on selected ductwork/piping showing dimensions (e.g., "24x12", "6" Ø").', videoRef: '', changelog: '', requirements: [] },
+                            { id: 'tag_lengths', label: 'Tag Lengths', icon: 'ruler', fn: 'Tags pipe/duct segments with their lengths. Useful for cut lists and quantity takeoffs.', videoRef: '', changelog: '', requirements: [] },
+                            { id: 'elbow_extension', label: 'Elbow Extension', icon: 'corner-down-right', fn: 'Annotates elbows with extension/takeoff dimensions for fabrication. Shows centerline-to-end measurements.', videoRef: '', changelog: '', requirements: [] },
+                            { id: 'transition', label: 'Transition', icon: 'filter', fn: 'Tags transition fittings with size change information (e.g., "12×8 to 10×6").', videoRef: '', changelog: '', requirements: [] },
+                            { id: 'batch_spools', label: 'Batch Spools', icon: 'list-ordered', fn: 'Automatically generates spool tags/numbers for piping assemblies. Creates fabrication spool drawings.', videoRef: '', changelog: '', requirements: [] },
+                            { id: 'renumber', label: 'Renumber', icon: 'hash', fn: 'Renumbers selected tags or elements sequentially. Allows setting start number and prefix.', videoRef: '', changelog: '', requirements: [] },
                         ]
                     },
                     {
                         title: 'View',
                         tools: [
-                            { id: 'isolate_service', label: 'Isolate Service', icon: 'eye', fn: 'Isolates elements by system/service type in the current view. Quick filter for mechanical systems.', videoRef: '', changelog: '', requirements: ['Parameter: System Type or Service Type'] },
-                            { id: 'hide_service', label: 'Hide Service', icon: 'eye-off', fn: 'Hides elements by system/service type in the current view. Opposite of Isolate.', videoRef: '', changelog: '', requirements: ['Parameter: System Type or Service Type'] },
+                            { id: 'isolate_service', label: 'Isolate Service', icon: 'eye', fn: 'Isolates elements by system/service type in the current view. Quick filter for mechanical systems.', videoRef: '', changelog: '', requirements: [] },
+                            { id: 'hide_service', label: 'Hide Service', icon: 'eye-off', fn: 'Hides elements by system/service type in the current view. Opposite of Isolate.', videoRef: '', changelog: '', requirements: [] },
                         ]
                     }
                 ]
@@ -885,22 +885,22 @@
                         title: 'Prep',
                         tools: [
                             { id: 'dwg_overrides', label: 'DWG Overrides', icon: 'file-output', fn: 'Configures layer/color mappings for DWG export. Ensures consistent CAD standards when exporting.', videoRef: '', changelog: '', requirements: [] },
-                            { id: 'apply_colors', label: 'Apply Colors', icon: 'paintbrush', fn: 'Applies configured DWG color overrides to imported DWG layers in the active view.', videoRef: '', changelog: '', requirements: ['DWG links in model', 'Color mapping configured'] },
+                            { id: 'apply_colors', label: 'Apply Colors', icon: 'paintbrush', fn: 'Applies configured DWG color overrides to imported DWG layers in the active view.', videoRef: '', changelog: '', requirements: ['DWG imports in active view', 'DWG color prefs configured'] },
                             { id: 'material_mapping', label: 'Material Mapping', icon: 'palette', fn: 'Maps Revit materials to Navisworks appearance definitions for consistent visualization in coordination models.', videoRef: '', changelog: '', requirements: [] },
-                            { id: 'apply_materials', label: 'Apply Materials', icon: 'wand', fn: 'Assigns materials to fabrication parts based on saved material configuration and filter rules.', videoRef: '', changelog: '', requirements: ['Fabrication parts in model', 'Material mapping configured'] },
+                            { id: 'apply_materials', label: 'Apply Materials', icon: 'wand', fn: 'Assigns materials to fabrication parts based on saved material configuration and filter rules.', videoRef: '', changelog: '', requirements: ['Fabrication parts in model', 'Material mapping configured', 'Param: Navis Material'] },
                         ]
                     },
                     {
                         title: 'Views',
                         tools: [
-                            { id: 'create_scopes', label: 'Create Scopes', icon: 'box', fn: 'Creates 3D isometric views with per-level section boxes for coordination.', videoRef: '', changelog: '', requirements: ['Levels in model'] },
-                            { id: 'reset_scope', label: 'Reset Scope', icon: 'refresh-cw', fn: 'Resets the active 3D view section box based on selected levels.', videoRef: '', changelog: '', requirements: ['3D View active', 'Levels selected'] },
+                            { id: 'create_scopes', label: 'Create Scopes', icon: 'box', fn: 'Creates 3D isometric views with per-level section boxes for coordination.', videoRef: '', changelog: '', requirements: ['Levels in model', '3D view type exists'] },
+                            { id: 'reset_scope', label: 'Reset Scope', icon: 'refresh-cw', fn: 'Resets the active 3D view section box based on selected levels.', videoRef: '', changelog: '', requirements: ['3D view active (non-perspective)', '0-2 levels selected'] },
                         ]
                     },
                     {
                         title: 'Clash',
                         tools: [
-                            { id: 'clash_viewer', label: 'Clash Viewer', icon: 'alert-triangle', fn: 'Opens the clash visualization pane showing Navisworks clash results overlaid on Revit elements.', videoRef: '', changelog: '', requirements: ['Clash report file (.xml or .html)'] },
+                            { id: 'clash_viewer', label: 'Clash Viewer', icon: 'alert-triangle', fn: 'Opens the clash visualization pane showing Navisworks clash results overlaid on Revit elements.', videoRef: '', changelog: '', requirements: ['Navisworks clash XML file'] },
                         ]
                     }
                 ]
@@ -918,7 +918,7 @@
                         title: 'Project Setup',
                         tools: [
                             { id: 'user_workset', label: 'User Workset', icon: 'user', fn: 'Creates a user-specific workset (named after current user) for organizing user-owned elements.', videoRef: '', changelog: '', requirements: ['Worksharing enabled'] },
-                            { id: 'link_worksets', label: 'Link Worksets', icon: 'link', fn: 'Associates linked models with dedicated worksets for better visibility control and organization.', videoRef: '', changelog: '', requirements: ['Worksharing enabled', 'Linked models in project'] },
+                            { id: 'link_worksets', label: 'Link Worksets', icon: 'link', fn: 'Associates linked models with dedicated worksets for better visibility control and organization.', videoRef: '', changelog: '', requirements: ['Worksharing enabled'] },
                         ]
                     }
                 ]
