@@ -454,6 +454,10 @@
             border-radius: 3px;
         }
 
+        .detail-box-large {
+            height: 200px;
+        }
+
         [data-active-region="draft"] .detail-box { border-left-color: var(--draft); }
         [data-active-region="coord"] .detail-box { border-left-color: var(--coord); }
         [data-active-region="core"] .detail-box { border-left-color: var(--core); }
@@ -953,7 +957,7 @@
 
                 <div class="detail-section" style="margin-top: 24px;">
                     <h3>Video Reference</h3>
-                    <div class="detail-box mono">
+                    <div class="detail-box detail-box-large mono">
                         <p>${tool.videoRef || 'No video reference available'}</p>
                     </div>
                 </div>
