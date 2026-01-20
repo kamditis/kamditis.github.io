@@ -603,6 +603,17 @@
             color: var(--text-muted);
         }
 
+        .download-btn.disabled {
+            background: var(--surface2);
+            color: var(--text-muted);
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        .download-btn.disabled:hover {
+            filter: none;
+        }
+
         /* Requirements Section */
         .requirements-section {
             margin-top: 24px;
@@ -796,6 +807,7 @@
                 label: 'ELITE SCAN',
                 color: '#5ED5DD',
                 colorVar: 'var(--scan)',
+                released: false,
                 downloadUrl: 'https://github.com/kamditis/kamditis.github.io/releases/download/EliteScan-latest/EliteScan-Setup.exe',
                 downloadFile: 'EliteScan-Setup.exe',
                 panels: [
@@ -837,6 +849,7 @@
                 label: 'ELITE DRAFT',
                 color: '#F5B878',
                 colorVar: 'var(--draft)',
+                released: true,
                 downloadUrl: 'https://github.com/kamditis/kamditis.github.io/releases/download/EliteDraft-latest/EliteDraft-Setup.exe',
                 downloadFile: 'EliteDraft-Setup.exe',
                 panels: [
@@ -878,6 +891,7 @@
                 label: 'ELITE COORD',
                 color: '#6EE7A8',
                 colorVar: 'var(--coord)',
+                released: false,
                 downloadUrl: 'https://github.com/kamditis/kamditis.github.io/releases/download/EliteCoord-latest/EliteCoord-Setup.exe',
                 downloadFile: 'EliteCoord-Setup.exe',
                 panels: [
@@ -911,6 +925,7 @@
                 label: 'ELITE CORE',
                 color: '#A78BFA',
                 colorVar: 'var(--core)',
+                released: false,
                 downloadUrl: 'https://github.com/kamditis/kamditis.github.io/releases/download/EliteCore-latest/EliteCore-Setup.exe',
                 downloadFile: 'EliteCore-Setup.exe',
                 panels: [
@@ -1078,8 +1093,17 @@
             statusDot.style.background = region.colorVar;
 
             // Update download
-            downloadBtn.href = region.downloadUrl;
-            downloadInfo.textContent = region.downloadFile;
+            if (region.released) {
+                downloadBtn.href = region.downloadUrl;
+                downloadBtn.classList.remove('disabled');
+                downloadBtn.innerHTML = `<i data-lucide="download"></i><span>Download</span>`;
+                downloadInfo.textContent = region.downloadFile;
+            } else {
+                downloadBtn.removeAttribute('href');
+                downloadBtn.classList.add('disabled');
+                downloadBtn.innerHTML = `<i data-lucide="clock"></i><span>Coming Soon</span>`;
+                downloadInfo.textContent = 'Release pending';
+            }
 
             // Render ribbon
             renderRibbon(regionId);
