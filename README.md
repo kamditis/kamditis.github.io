@@ -20,7 +20,3 @@ kamditis.github.io/
 ├── index.html          # Main landing page
 └── README.md           # This file
 ```
-
-Individual plugin pages are hosted in their own repos:
-- `kamditis.github.io/ScanAnalysis` → ScanAnalysis repo `/docs` folder
-- etc.
