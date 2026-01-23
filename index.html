@@ -260,9 +260,9 @@
             flex-direction: column;
             align-items: center;
             justify-content: space-between;
-            width: 64px;
+            width: 72px; /* Slightly wider for the new icons */
             height: 72px;
-            padding: 8px 4px;
+            padding: 6px 4px;
             background: transparent;
             border: 1px solid transparent;
             border-radius: 4px;
@@ -280,10 +280,18 @@
         }
 
         .tool-btn .icon {
-            width: 28px;
-            height: 28px;
+            width: 36px; /* Increased from 28px to showcase the detailed SVG */
+            height: 36px;
             color: var(--text);
             transition: color 0.15s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .tool-btn .icon svg {
+            width: 100%;
+            height: 100%;
         }
 
         .tool-btn .label {
@@ -292,9 +300,10 @@
             font-weight: 500;
             color: var(--text);
             text-align: center;
-            line-height: 1.2;
+            line-height: 1.1;
             max-width: 100%;
             overflow: hidden;
+            margin-top: 4px;
         }
 
         /* Selected states by region */
@@ -372,19 +381,26 @@
         }
 
         .detail-icon {
-            width: 64px;
-            height: 64px;
+            width: 80px;
+            height: 80px;
             display: flex;
             align-items: center;
             justify-content: center;
             background: var(--surface2);
             border: 1px solid var(--border);
             border-radius: 6px;
+            padding: 12px;
         }
 
+        .detail-icon svg {
+            width: 100%;
+            height: 100%;
+        }
+        
+        /* Fallback for lucide icons in detail view */
         .detail-icon i {
-            width: 36px;
-            height: 36px;
+            width: 48px;
+            height: 48px;
         }
 
         .detail-title h2 {
@@ -799,6 +815,134 @@
     </div>
 
     <script>
+        // --- CUSTOM ICON SYSTEM (Imported from EliteRibbons) ---
+        
+        // SYMMETRICAL WRENCH LOGIC
+        const SYMMETRICAL_WRENCH_GROUP = `
+            <g transform="rotate(45, 32, 32)">
+                <path d="M 29 54 L 29 28 Q 29 22 20 20 L 20 8 L 26 8 L 26 16 Q 32 20 38 16 L 38 8 L 44 8 L 44 20 Q 35 22 35 28 L 35 54 A 3 3 0 0 1 29 54 Z" 
+                    fill="none" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" />
+            </g>
+        `;
+
+        const BADGE_WRENCH_GROUP = (color) => `
+            <g transform="translate(44, 44) rotate(45) translate(-16, -16)">
+                 <path d="M 14 28 L 14 14 Q 14 10 10 9 L 10 4 L 12 4 L 12 7 Q 16 9 20 7 L 20 4 L 22 4 L 22 9 Q 18 10 18 14 L 18 28 A 2 2 0 0 1 14 28 Z"
+                 fill="none" stroke="${color}" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/>
+            </g>
+        `;
+
+        const customIcons = [
+            // --- SCAN ---
+            { id: 'Settings', group: 'scan', path: SYMMETRICAL_WRENCH_GROUP },
+            { id: 'PlaceScans', group: 'scan', path: '<circle cx="32" cy="32" r="10" stroke="white" stroke-width="3" fill="none"/><path d="M32 10V20 M32 44V54 M10 32H20 M44 32H54" stroke="currentColor" stroke-width="3" stroke-linecap="round"/><circle cx="32" cy="32" r="2" fill="currentColor"/>' },
+            { id: 'RunAnalysis', group: 'scan', path: '<path d="M22 18V46L46 32L22 18Z" fill="white" stroke="none"/><path d="M12 50H52" stroke="currentColor" stroke-width="2" stroke-dasharray="2 2"/>' },
+            { id: 'ViewReport', group: 'scan', path: '<rect x="18" y="14" width="28" height="36" rx="2" stroke="white" stroke-width="2" fill="none"/><path d="M24 24H40 M24 30H40 M24 36H32" stroke="#5A5A6A" stroke-width="2"/><circle cx="38" cy="40" r="4" fill="currentColor"/>' },
+            { id: '360Viewer', group: 'scan', path: '<circle cx="32" cy="32" r="14" stroke="white" stroke-width="2" fill="none"/><path d="M18 32H46 M32 18V46" stroke="currentColor" stroke-width="1"/><path d="M32 24C36 24 40 28 40 32C40 36 36 40 32 40" stroke="currentColor" stroke-width="1"/>' },
+            { id: '360Pane', group: 'scan', path: '<rect x="14" y="14" width="36" height="36" rx="2" stroke="white" stroke-width="2" fill="none"/><path d="M38 14V50" stroke="currentColor" stroke-width="2"/><circle cx="26" cy="32" r="6" stroke="currentColor" stroke-width="2" fill="none"/>' },
+            { id: 'ShowOverlay', group: 'scan', path: '<path d="M32 14L50 24L32 34L14 24L32 14Z" stroke="white" stroke-width="2" fill="currentColor" fill-opacity="0.2"/><path d="M14 30L32 40L50 30" stroke="currentColor" stroke-width="2" fill="none"/><path d="M14 36L32 46L50 36" stroke="white" stroke-width="2" fill="none"/>' },
+            { id: 'ClearOverlay', group: 'scan', path: '<path d="M32 14L50 24L32 34L14 24L32 14Z" stroke="#5A5A6A" stroke-width="2" fill="none"/><path d="M14 30L32 40L50 30" stroke="#5A5A6A" stroke-width="2" fill="none"/><path d="M18 46L46 18" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>' },
+            { id: 'Revit2ReCap', group: 'scan', path: '<rect x="14" y="24" width="16" height="16" stroke="white" stroke-width="2" fill="none"/><circle cx="46" cy="32" r="2" fill="currentColor"/><circle cx="52" cy="28" r="2" fill="currentColor"/><circle cx="42" cy="26" r="2" fill="currentColor"/><circle cx="48" cy="38" r="2" fill="currentColor"/><path d="M32 32H38" stroke="currentColor" stroke-width="2"/>' },
+            { id: 'CloudReset', group: 'scan', path: '<path d="M46 32A14 14 0 1 1 32 18" stroke="white" stroke-width="2" stroke-linecap="round" fill="none"/><path d="M32 14V22L36 18L32 14Z" fill="currentColor"/><circle cx="32" cy="32" r="2" fill="currentColor"/><circle cx="38" cy="28" r="2" fill="currentColor"/><circle cx="26" cy="36" r="2" fill="currentColor"/>' },
+
+            // --- DRAFT ---
+            { id: 'HangerSettings', group: 'draft', path: '<path d="M26 10V26 M18 26H34 M18 26V40C18 46 34 46 34 40V26" stroke="white" stroke-width="2" fill="none"/>', badge: true },
+            { id: 'TagSettings', group: 'draft', path: '<path d="M20 22 L30 12 H48 V46 H20 Z" stroke="white" stroke-width="2" fill="none"/><circle cx="29" cy="20" r="2" fill="white"/>', badge: true },
+            { id: 'SinglePipes', group: 'draft', path: '<line x1="32" y1="12" x2="32" y2="36" stroke="currentColor" stroke-width="2"/><circle cx="32" cy="44" r="8" stroke="white" stroke-width="2" fill="none"/>' },
+            { id: 'PipeRack', group: 'draft', path: '<line x1="20" y1="12" x2="20" y2="32" stroke="currentColor" stroke-width="2"/><line x1="44" y1="12" x2="44" y2="32" stroke="currentColor" stroke-width="2"/><line x1="16" y1="32" x2="48" y2="32" stroke="white" stroke-width="3"/><circle cx="24" cy="44" r="4" stroke="#5A5A6A" stroke-width="2" fill="none"/><circle cx="40" cy="44" r="4" stroke="#5A5A6A" stroke-width="2" fill="none"/>' },
+            { id: 'DuctHangers', group: 'draft', path: '<rect x="16" y="32" width="32" height="16" stroke="white" stroke-width="2" fill="none"/><line x1="20" y1="12" x2="20" y2="32" stroke="currentColor" stroke-width="2"/><line x1="44" y1="12" x2="44" y2="32" stroke="currentColor" stroke-width="2"/><line x1="16" y1="32" x2="48" y2="32" stroke="currentColor" stroke-width="2"/>' },
+            { id: 'RackAdjustment', group: 'draft', path: '<rect x="16" y="28" width="32" height="8" fill="#5A5A6A"/><path d="M32 20V44" stroke="currentColor" stroke-width="2"/><path d="M28 24L32 20L36 24" stroke="currentColor" stroke-width="2" fill="none"/><path d="M28 40L32 44L36 40" stroke="currentColor" stroke-width="2" fill="none"/>' },
+            { id: 'AuditHangers', group: 'draft', path: '<path d="M20 16H44V48H20Z" stroke="white" stroke-width="2" fill="none"/><path d="M26 26L30 30L38 22" stroke="currentColor" stroke-width="2" fill="none"/>' },
+            { id: 'FillInfo', group: 'draft', path: '<path d="M42 14L50 22L36 36L28 28L42 14Z" fill="white"/><path d="M36 36L28 28L22 46L26 48L36 36Z" fill="currentColor"/><rect x="18" y="44" width="16" height="4" fill="currentColor"/>' },
+            { id: 'ElbowExtension', group: 'draft', path: '<path d="M20 16V36H44" stroke="white" stroke-width="6" stroke-linecap="square" fill="none"/><line x1="20" y1="16" x2="20" y2="8" stroke="currentColor" stroke-width="1"/><line x1="44" y1="36" x2="52" y2="36" stroke="currentColor" stroke-width="1"/>' },
+            { id: 'Transition', group: 'draft', path: '<path d="M16 16H24L36 24H48V40H36L24 48H16V16Z" stroke="white" stroke-width="2" fill="none"/><line x1="24" y1="16" x2="24" y2="48" stroke="currentColor" stroke-width="1" stroke-dasharray="2 2"/>' },
+            { id: 'BatchSpools', group: 'draft', path: '<rect x="18" y="18" width="24" height="28" fill="#333" stroke="white" stroke-width="2"/><rect x="22" y="14" width="24" height="28" fill="#333" stroke="currentColor" stroke-width="2"/><rect x="26" y="10" width="24" height="28" fill="#333" stroke="white" stroke-width="2"/>' },
+            { id: 'Renumber', group: 'draft', path: '<text x="24" y="40" font-size="24" font-weight="bold" fill="white" font-family="sans-serif">#</text><path d="M42 24A10 10 0 1 1 36 44" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M42 20V24H46" stroke="currentColor" stroke-width="2" fill="none"/>' },
+            { id: 'IsolateService', group: 'draft', path: '<path d="M12 32C12 32 20 18 32 18C44 18 52 32 52 32C52 32 44 46 32 46C20 46 12 32 12 32Z" stroke="white" stroke-width="2" fill="none"/><circle cx="32" cy="32" r="6" fill="currentColor"/>' },
+            { id: 'HideService', group: 'draft', path: '<path d="M12 32C12 32 20 18 32 18C44 18 52 32 52 32C52 32 44 46 32 46C20 46 12 32 12 32Z" stroke="#5A5A6A" stroke-width="2" fill="none"/><line x1="10" y1="10" x2="54" y2="54" stroke="currentColor" stroke-width="3"/>' },
+            { id: 'QuickTag', group: 'draft', path: '<path d="M20 22 L30 12 H48 V46 H20 Z" stroke="white" stroke-width="2" fill="none"/><circle cx="29" cy="20" r="2" fill="white"/><line x1="28" y1="28" x2="42" y2="28" stroke="currentColor" stroke-width="2"/><line x1="28" y1="36" x2="42" y2="36" stroke="currentColor" stroke-width="2"/>' },
+
+            // --- COORD ---
+            { id: 'DWGOverrides', group: 'coord', path: '<path d="M16 42L48 42" stroke="white" stroke-width="2"/><path d="M16 34L48 34" stroke="white" stroke-width="2"/><path d="M16 26L36 26" stroke="white" stroke-width="2"/>', badge: true },
+            { id: 'MaterialMapping', group: 'coord', path: '<rect x="16" y="24" width="32" height="24" stroke="white" stroke-width="2" fill="none"/><path d="M24 24V48 M32 24V48 M40 24V48" stroke="white" stroke-width="1"/>', badge: true },
+            { id: 'ApplyDWG', group: 'coord', path: '<path d="M16 42L48 42" stroke="white" stroke-width="2"/><path d="M16 34L48 34" stroke="white" stroke-width="2"/><path d="M16 26L36 26" stroke="white" stroke-width="2"/><path d="M44 12L52 20L44 28" fill="currentColor" stroke="none"/>' },
+            { id: 'ApplyMaterials', group: 'coord', path: '<rect x="16" y="24" width="32" height="24" stroke="white" stroke-width="2" fill="none"/><path d="M24 24V48 M32 24V48 M40 24V48" stroke="white" stroke-width="1"/><path d="M44 12L52 20L44 28" fill="currentColor" stroke="none"/>' },
+            { id: 'CreateScopes', group: 'coord', path: '<rect x="18" y="18" width="28" height="28" stroke="white" stroke-width="2" stroke-dasharray="4 2" fill="none"/><path d="M10 10L18 18M54 10L46 18M10 54L18 46M54 54L46 46" stroke="currentColor" stroke-width="2"/>' },
+            { id: 'ResetScope', group: 'coord', path: '<rect x="20" y="20" width="24" height="24" stroke="white" stroke-width="2" fill="none"/><path d="M32 14A18 18 0 1 1 14 32" stroke="currentColor" stroke-width="2" fill="none" stroke-dasharray="2 2"/><path d="M32 10V18L36 14Z" fill="currentColor"/>' },
+            { id: 'ClashViewer', group: 'coord', path: '<rect x="18" y="18" width="20" height="20" stroke="white" stroke-width="2" fill="none"/><rect x="26" y="26" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"/><path d="M32 32L42 22M22 42L32 32" stroke="currentColor" stroke-width="2"/><circle cx="32" cy="32" r="2" fill="red"/>' },
+
+            // --- CORE ---
+            { id: 'UserWorkset', group: 'core', path: '<circle cx="32" cy="24" r="8" stroke="white" stroke-width="2" fill="none"/><path d="M16 48C16 38 24 36 32 36C40 36 48 38 48 48" stroke="white" stroke-width="2" fill="none"/><rect x="36" y="40" width="16" height="12" rx="2" fill="currentColor" stroke="#18181D"/>' },
+            { id: 'LinkWorksets', group: 'core', path: '<path d="M20 24H32A6 6 0 0 1 32 36H20A6 6 0 0 1 20 24" stroke="white" stroke-width="2" fill="none"/><path d="M44 24H32A6 6 0 0 0 32 36H44A6 6 0 0 0 44 24" stroke="currentColor" stroke-width="2" fill="none"/><rect x="36" y="40" width="16" height="12" rx="2" fill="#18181D" stroke="white"/>' },
+        ];
+
+        // MAPPING: Links App Tool IDs to Custom Icon IDs
+        const ICON_MAP = {
+            // Scan
+            'settings': 'Settings',
+            'place_scans': 'PlaceScans',
+            'run_analysis': 'RunAnalysis',
+            'view_report': 'ViewReport',
+            '360_viewer': '360Viewer',
+            '360_pane': '360Pane',
+            'show_overlay': 'ShowOverlay',
+            'clear_overlay': 'ClearOverlay',
+            'revit_2_recap': 'Revit2ReCap',
+            'cloud_reset': 'CloudReset',
+            
+            // Draft
+            'hanger_settings': 'HangerSettings',
+            'single_pipes': 'SinglePipes',
+            'pipe_rack': 'PipeRack',
+            'duct_hangers': 'DuctHangers',
+            'rack_adjustment': 'RackAdjustment',
+            'audit_hangers': 'AuditHangers',
+            'fill_info': 'FillInfo',
+            'quick_tag': 'QuickTag',
+            'tag_settings': 'TagSettings',
+            'elbow_extension': 'ElbowExtension',
+            'transition': 'Transition',
+            'batch_spools': 'BatchSpools',
+            'renumber': 'Renumber',
+            'isolate_service': 'IsolateService',
+            'hide_service': 'HideService',
+            
+            // Coord
+            'dwg_overrides': 'DWGOverrides',
+            'apply_colors': 'ApplyDWG',
+            'material_mapping': 'MaterialMapping',
+            'apply_materials': 'ApplyMaterials',
+            'create_scopes': 'CreateScopes',
+            'reset_scope': 'ResetScope',
+            'clash_viewer': 'ClashViewer',
+            
+            // Core
+            'user_workset': 'UserWorkset',
+            'link_worksets': 'LinkWorksets'
+        };
+
+        function createIconSVG(iconId, color) {
+            const icon = customIcons.find(i => i.id === iconId);
+            if (!icon) return null;
+
+            // Background chips logic - kept outlines but removed solid fill for button integration
+            return `
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="100%" height="100%">
+                <path d="M8 1H56L63 8V56L56 63H8L1 56V8L8 1Z" stroke="${color}" stroke-width="1" stroke-opacity="0.3" fill="none"/>
+                <path d="M8 6H56" stroke="${color}" stroke-width="1" stroke-opacity="0.5" />
+                <path d="M8 58H56" stroke="${color}" stroke-width="1" stroke-opacity="0.5" />
+                <path d="M2 10L10 2" stroke="${color}" stroke-width="2" stroke-opacity="0.8" />
+                <path d="M54 2L62 10" stroke="${color}" stroke-width="2" stroke-opacity="0.8" />
+                <path d="M62 54L54 62" stroke="${color}" stroke-width="2" stroke-opacity="0.8" />
+                <path d="M10 62L2 54" stroke="${color}" stroke-width="2" stroke-opacity="0.8" />
+                
+                <g style="color: ${color}">
+                    ${icon.path}
+                    ${icon.badge ? BADGE_WRENCH_GROUP(color) : ''}
+                </g>
+            </svg>`;
+        }
+
         // Data
         const REGIONS = {
             scan: {
@@ -868,8 +1012,8 @@
                     {
                         title: 'Annotation',
                         tools: [
-                            { id: 'tag_size', label: 'Tag Size', icon: 'tag', fn: 'Places or updates size tags on selected ductwork/piping showing dimensions (e.g., "24x12", "6" Ø").', videoRef: '', changelog: '', requirements: ['Fabrication ducts in view', 'Family: SIZE tag'] },
-                            { id: 'tag_lengths', label: 'Tag Lengths', icon: 'ruler', fn: 'Tags pipe/duct segments with their lengths. Useful for cut lists and quantity takeoffs.', videoRef: '', changelog: '', requirements: ['Fabrication ducts in view', 'Family: LENGTH tag'] },
+                            { id: 'quick_tag', label: 'Quick Tag', icon: 'tag', fn: 'Places intelligent tags on selected fabrication parts based on current configuration. Supports size, length, and custom parameter tagging.', videoRef: '', changelog: '', requirements: ['Fabrication parts in view', 'Tag Settings configured'] },
+                            { id: 'tag_settings', label: 'Tag Settings', icon: 'settings-2', fn: 'Configures preferences for the Quick Tag tool, including default tag types, leader settings, and parameter mappings.', videoRef: '', changelog: '', requirements: [] },
                             { id: 'elbow_extension', label: 'Elbow Extension', icon: 'corner-down-right', fn: 'Annotates elbows with extension/takeoff dimensions for fabrication. Shows centerline-to-end measurements.', videoRef: '', changelog: '', requirements: ['Fabrication parts in view', 'Param: SM - Top Extension', 'Param: SM - Bottom Extension'] },
                             { id: 'transition', label: 'Transition', icon: 'filter', fn: 'Tags transition fittings with size change information (e.g., "12×8 to 10×6").', videoRef: '', changelog: '', requirements: ['Fabrication parts in view', 'Param: SM - OFFSET', 'Param: SM - TRANSITION'] },
                             { id: 'batch_spools', label: 'Batch Spools', icon: 'list-ordered', fn: 'Automatically generates spool tags/numbers for piping assemblies. Creates fabrication spool drawings.', videoRef: '', changelog: '', requirements: ['Assemblies selected', 'Family: ECD - SPOOL template', 'Family: Item Number tag'] },
@@ -975,8 +1119,25 @@
                     btn.dataset.toolId = tool.id;
 
                     const iconStyle = tool.rotate ? 'transform: rotate(180deg);' : '';
+                    
+                    // ICON SELECTION LOGIC
+                    const customId = ICON_MAP[tool.id];
+                    let iconContent = '';
+                    
+                    if (customId) {
+                        const svg = createIconSVG(customId, region.color);
+                        if (svg) {
+                            iconContent = svg;
+                        }
+                    }
+                    
+                    if (!iconContent) {
+                        // Fallback to lucide
+                        iconContent = `<i data-lucide="${tool.icon}" class="icon" style="${iconStyle}"></i>`;
+                    }
+
                     btn.innerHTML = `
-                        <i data-lucide="${tool.icon}" class="icon" style="${iconStyle}"></i>
+                        <div class="icon" style="${iconStyle}">${iconContent}</div>
                         <span class="label">${tool.label}</span>
                     `;
 
@@ -1032,11 +1193,26 @@
 
         function renderDetail(tool) {
             const region = REGIONS[activeRegion];
+            
+            // Icon Generation
+            const customId = ICON_MAP[tool.id];
+            let iconContent = '';
+            
+            if (customId) {
+                const svg = createIconSVG(customId, region.color);
+                if (svg) {
+                    iconContent = svg;
+                }
+            }
+            
+            if (!iconContent) {
+                 iconContent = `<i data-lucide="${tool.icon}" ${tool.rotate ? 'style="transform: rotate(180deg);"' : ''}></i>`;
+            }
 
             detailMain.innerHTML = `
                 <div class="detail-header">
                     <div class="detail-icon" style="color: ${region.color};">
-                        <i data-lucide="${tool.icon}" ${tool.rotate ? 'style="transform: rotate(180deg);"' : ''}></i>
+                        ${iconContent}
                     </div>
                     <div class="detail-title">
                         <h2>${tool.label}</h2>
