@@ -770,6 +770,19 @@
             text-decoration: underline;
         }
 
+        .release-info code {
+            display: inline-block;
+            margin-top: 4px;
+            padding: 6px 10px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 4px;
+            font-family: 'Space Mono', monospace;
+            font-size: 11px;
+            color: var(--text);
+            word-break: break-all;
+        }
+
         @media (max-width: 900px) {
             .detail-grid {
                 grid-template-columns: 1fr;
@@ -1008,9 +1021,8 @@
                 description: 'Point cloud deviation analysis for Autodesk Revit.',
                 installation: [
                     'Download the ZIP file.',
-                    'Right-click the ZIP → Properties → check <strong>Unblock</strong> → OK.',
                     'Extract the ZIP.',
-                    'Right-click <strong>Install-EliteScan.ps1</strong> and select <strong>Run with PowerShell</strong>.',
+                    'Open PowerShell, navigate to the extracted folder, and run:<br><code>powershell -ExecutionPolicy Bypass -File .\\Install-EliteScan.ps1</code>',
                     'Select which Revit version(s) to install.',
                     'Restart Revit.'
                 ],
@@ -1063,9 +1075,8 @@
                 description: 'MEP fabrication drafting tools for Autodesk Revit.',
                 installation: [
                     'Download the ZIP file.',
-                    'Right-click the ZIP → Properties → check <strong>Unblock</strong> → OK.',
                     'Extract the ZIP.',
-                    'Right-click <strong>Install-EliteDraft.ps1</strong> and select <strong>Run with PowerShell</strong>.',
+                    'Open PowerShell, navigate to the extracted folder, and run:<br><code>powershell -ExecutionPolicy Bypass -File .\\Install-EliteDraft.ps1</code>',
                     'Select which Revit version(s) to install.',
                     'Restart Revit.'
                 ],
@@ -1116,9 +1127,8 @@
                 description: 'BIM coordination tools for Autodesk Revit.',
                 installation: [
                     'Download the ZIP file.',
-                    'Right-click the ZIP → Properties → check <strong>Unblock</strong> → OK.',
                     'Extract the ZIP.',
-                    'Right-click <strong>Install-EliteCoord.ps1</strong> and select <strong>Run with PowerShell</strong>.',
+                    'Open PowerShell, navigate to the extracted folder, and run:<br><code>powershell -ExecutionPolicy Bypass -File .\\Install-EliteCoord.ps1</code>',
                     'Select which Revit version(s) to install.',
                     'Restart Revit.'
                 ],
@@ -1161,9 +1171,8 @@
                 description: 'Project setup and shared utilities for Autodesk Revit.',
                 installation: [
                     'Download the ZIP file.',
-                    'Right-click the ZIP → Properties → check <strong>Unblock</strong> → OK.',
                     'Extract the ZIP.',
-                    'Right-click <strong>Install-EliteCore.ps1</strong> and select <strong>Run with PowerShell</strong>.',
+                    'Open PowerShell, navigate to the extracted folder, and run:<br><code>powershell -ExecutionPolicy Bypass -File .\\Install-EliteCore.ps1</code>',
                     'Select which Revit version(s) to install.',
                     'Restart Revit.'
                 ],
