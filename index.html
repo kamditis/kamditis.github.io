@@ -712,6 +712,59 @@
             letter-spacing: 0.1em;
         }
 
+        /* Release info */
+        .release-info {
+            padding: 24px;
+        }
+
+        .release-info h2 {
+            font-family: 'Space Mono', monospace;
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--text);
+            margin: 0 0 16px 0;
+        }
+
+        .release-info h3 {
+            font-family: 'Space Mono', monospace;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text);
+            margin: 20px 0 8px 0;
+        }
+
+        .release-info p {
+            font-size: 13px;
+            color: var(--text-dim);
+            line-height: 1.6;
+            margin: 0 0 8px 0;
+        }
+
+        .release-info strong {
+            color: var(--text);
+        }
+
+        .release-info ul {
+            list-style: disc;
+            padding-left: 20px;
+            margin: 0;
+        }
+
+        .release-info ul li {
+            font-size: 13px;
+            color: var(--text-dim);
+            line-height: 1.8;
+        }
+
+        .release-info ul li a {
+            color: var(--scan);
+            text-decoration: none;
+        }
+
+        .release-info ul li a:hover {
+            text-decoration: underline;
+        }
+
         @media (max-width: 900px) {
             .detail-grid {
                 grid-template-columns: 1fr;
@@ -760,15 +813,12 @@
         <div class="main-content tech-grid-bg">
             <div class="content-wrapper">
                 <div class="breadcrumb">
-                    <span id="breadcrumb-region">ELITE SCAN</span> / <span class="current" id="breadcrumb-tool">Select Tool</span>
+                    <span id="breadcrumb-region">ELITE SCAN</span> / <span class="current" id="breadcrumb-tool">Overview</span>
                 </div>
 
                 <div class="detail-card">
                     <div class="detail-main" id="detail-main">
-                        <div class="empty-state">
-                            <i data-lucide="activity"></i>
-                            <span>Select a tool to view specifications</span>
-                        </div>
+                        <!-- Populated by JS -->
                     </div>
 
                     <div class="detail-sidebar">
@@ -797,11 +847,11 @@
 
                         <div class="download-section">
                             <p class="download-version" id="download-version">v1.2.0</p>
-                            <a href="https://github.com/kamditis/kamditis.github.io/releases/download/EliteScan-latest/EliteScan-Setup.exe" class="download-btn" id="download-btn">
+                            <a href="https://github.com/kamditis/kamditis.github.io/releases/download/EliteScan-latest/EliteScan-v1.2.1.zip" class="download-btn" id="download-btn">
                                 <i data-lucide="download"></i>
                                 <span>Download</span>
                             </a>
-                            <p class="download-info" id="download-info">EliteScan-Setup.exe</p>
+                            <p class="download-info" id="download-info">EliteScan-v1.2.1.zip</p>
                         </div>
                     </div>
                 </div>
@@ -948,8 +998,14 @@
                 colorVar: 'var(--scan)',
                 released: true,
                 version: 'v1.2.0',
-                downloadUrl: 'https://github.com/kamditis/kamditis.github.io/releases/download/EliteScan-latest/EliteScan-Setup.exe',
-                downloadFile: 'EliteScan-Setup.exe',
+                downloadUrl: 'https://github.com/kamditis/kamditis.github.io/releases/download/EliteScan-latest/EliteScan-v1.2.1.zip',
+                downloadFile: 'EliteScan-v1.2.1.zip',
+                description: 'Point cloud deviation analysis for Autodesk Revit.',
+                installation: 'Download and extract the ZIP, then right-click Install-EliteScan.ps1 and select Run with PowerShell.',
+                addinRequirements: [
+                    '<a href="https://cloudcompare.org/" target="_blank">CloudCompare</a>',
+                    'WebView2 runtime'
+                ],
                 panels: [
                     {
                         title: 'Analysis',
@@ -990,8 +1046,11 @@
                 colorVar: 'var(--draft)',
                 released: true,
                 version: 'v1.0.5',
-                downloadUrl: 'https://github.com/kamditis/kamditis.github.io/releases/download/EliteDraft-latest/EliteDraft-Setup.exe',
-                downloadFile: 'EliteDraft-Setup.exe',
+                downloadUrl: 'https://github.com/kamditis/kamditis.github.io/releases/download/EliteDraft-latest/EliteDraft-v1.0.5.zip',
+                downloadFile: 'EliteDraft-v1.0.5.zip',
+                description: 'MEP fabrication drafting tools for Autodesk Revit.',
+                installation: 'Download and extract the ZIP, then right-click Install-EliteDraft.ps1 and select Run with PowerShell.',
+                addinRequirements: [],
                 panels: [
                     {
                         title: 'Hangers',
@@ -1033,8 +1092,11 @@
                 colorVar: 'var(--coord)',
                 released: true,
                 version: 'v1.0.0',
-                downloadUrl: 'https://github.com/kamditis/kamditis.github.io/releases/download/EliteCoord-latest/EliteCoord-Setup.exe',
-                downloadFile: 'EliteCoord-Setup.exe',
+                downloadUrl: 'https://github.com/kamditis/kamditis.github.io/releases/download/EliteCoord-latest/EliteCoord-v1.0.0.zip',
+                downloadFile: 'EliteCoord-v1.0.0.zip',
+                description: 'BIM coordination tools for Autodesk Revit.',
+                installation: 'Download and extract the ZIP, then right-click Install-EliteCoord.ps1 and select Run with PowerShell.',
+                addinRequirements: [],
                 panels: [
                     {
                         title: 'Prep',
@@ -1068,8 +1130,11 @@
                 colorVar: 'var(--core)',
                 released: true,
                 version: 'v1.0.0',
-                downloadUrl: 'https://github.com/kamditis/kamditis.github.io/releases/download/EliteCore-latest/EliteCore-Setup.exe',
-                downloadFile: 'EliteCore-Setup.exe',
+                downloadUrl: 'https://github.com/kamditis/kamditis.github.io/releases/download/EliteCore-latest/EliteCore-v1.0.0.zip',
+                downloadFile: 'EliteCore-v1.0.0.zip',
+                description: 'Project setup and shared utilities for Autodesk Revit.',
+                installation: 'Download and extract the ZIP, then right-click Install-EliteCore.ps1 and select Run with PowerShell.',
+                addinRequirements: [],
                 panels: [
                     {
                         title: 'Project Setup',
@@ -1250,6 +1315,24 @@
             lucide.createIcons();
         }
 
+        function showReleaseInfo(region) {
+            const version = region.version || '';
+            const reqsHtml = region.addinRequirements && region.addinRequirements.length > 0
+                ? `<h3>Requirements</h3><ul>${region.addinRequirements.map(r => `<li>${r}</li>`).join('')}</ul>`
+                : '';
+
+            detailMain.innerHTML = `
+                <div class="release-info">
+                    <h2>${region.name} ${version}</h2>
+                    <p class="release-description">${region.description || ''}</p>
+                    <p><strong>Supported Revit Versions:</strong> 2022, 2023, 2024, 2025, 2026</p>
+                    <h3>Installation</h3>
+                    <p>${region.installation || ''}</p>
+                    ${reqsHtml}
+                </div>
+            `;
+        }
+
         function switchRegion(regionId) {
             activeRegion = regionId;
             selectedTool = null;
@@ -1265,7 +1348,7 @@
 
             // Update sidebar
             breadcrumbRegion.textContent = region.label;
-            breadcrumbTool.textContent = 'Select Tool';
+            breadcrumbTool.textContent = 'Overview';
             sidebarAddin.textContent = region.name;
             statusDot.style.background = region.colorVar;
 
@@ -1287,16 +1370,17 @@
             // Render ribbon
             renderRibbon(regionId);
 
-            // Reset detail
-            detailMain.innerHTML = `
-                <div class="empty-state">
-                    <i data-lucide="activity"></i>
-                    <span>Select a tool to view specifications</span>
-                </div>
-            `;
+            // Show release info as default view
+            showReleaseInfo(region);
 
-            // Reset requirements
-            requirementsList.innerHTML = '<span class="requirements-empty">Select a tool to view requirements</span>';
+            // Reset requirements to addin-level requirements
+            if (region.addinRequirements && region.addinRequirements.length > 0) {
+                requirementsList.innerHTML = region.addinRequirements
+                    .map(r => `<div class="requirement-item"><i data-lucide="check-circle-2"></i><span>${r}</span></div>`)
+                    .join('');
+            } else {
+                requirementsList.innerHTML = '<span class="requirements-empty">No additional requirements</span>';
+            }
 
             lucide.createIcons();
         }
