@@ -954,7 +954,7 @@
                     {
                         title: 'Analysis',
                         tools: [
-                            { id: 'place_scans', label: 'Place Scans', icon: 'target', fn: 'Auto-places scan location markers at point cloud scan origins. Links each marker to its source scan for analysis tracking.', videoRef: '', changelog: '', requirements: ['Point cloud linked in model (RCP/RCS)', 'Family: "Scan Location" loaded in project', 'Params on family: ScanID (text), PointCloudId (integer)', 'Levels defined in model'] },
+                            { id: 'place_scans', label: 'Place Scans', icon: 'target', fn: 'Auto-places scan location markers at point cloud scan origins. Links each marker to its source scan for analysis tracking.', videoRef: 'GGQTLdprTyA', changelog: '', requirements: ['Point cloud linked in model (RCP/RCS)', 'Family: "Scan Location" loaded in project', 'Params on family: ScanID (text), PointCloudId (integer)', 'Levels defined in model'] },
                             { id: 'run_analysis', label: 'Run Analysis', icon: 'play', fn: 'Compares your Revit model against point cloud scans to verify installation accuracy. Grades each element A-F based on how closely the as-built matches design.', videoRef: '', changelog: '', requirements: ['Scan locations placed with ScanID populated', 'PointCloudId parameter linked to loaded point cloud', 'CloudCompare installed (auto-detected or set in Settings)'] },
                             { id: 'view_report', label: 'View Report', icon: 'file-text', fn: 'Opens the interactive results window showing which elements passed or failed quality checks. Drill down by discipline, category, or element to investigate deviations.', videoRef: '', changelog: '', requirements: ['Analysis completed (current session or saved results)'] },
                             { id: 'settings', label: 'Settings', icon: 'settings', fn: 'Configure analysis tolerance (how close is close enough), grading thresholds, and which element categories to include in quality checks.', videoRef: '', changelog: '', requirements: [] },
@@ -1237,9 +1237,12 @@
 
                 <div class="detail-section" style="margin-top: 24px;">
                     <h3>Video Reference</h3>
-                    <div class="detail-box detail-box-large mono">
-                        <p>${tool.videoRef || 'No video reference available'}</p>
-                    </div>
+                    ${tool.videoRef
+                        ? `<div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 8px; border: 1px solid var(--border);">
+                            <iframe src="https://www.youtube.com/embed/${tool.videoRef}" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" allowfullscreen></iframe>
+                           </div>`
+                        : `<div class="detail-box detail-box-large mono"><p>No video reference available</p></div>`
+                    }
                 </div>
             `;
 
