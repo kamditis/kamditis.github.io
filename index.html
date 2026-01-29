@@ -968,30 +968,30 @@
                     {
                         title: 'Analysis',
                         tools: [
-                            { id: 'place_scans', label: 'Place Scans', icon: 'target', fn: 'Auto-places scan location markers at point cloud scan origins. Links each marker to its source scan for analysis tracking.', videoRef: '', changelog: '', requirements: ['Point cloud linked in model', 'Family: Scan Location', 'Levels defined in model'] },
-                            { id: 'run_analysis', label: 'Run Analysis', icon: 'play', fn: 'Compares your Revit model against point cloud scans to verify installation accuracy. Grades each element A-F based on how closely the as-built matches design.', videoRef: '', changelog: '', requirements: ['Scan locations placed', 'CloudCompare installed'] },
-                            { id: 'view_report', label: 'View Report', icon: 'file-text', fn: 'Opens the interactive results window showing which elements passed or failed quality checks. Drill down by discipline, category, or element to investigate deviations.', videoRef: '', changelog: '', requirements: ['Analysis completed'] },
+                            { id: 'place_scans', label: 'Place Scans', icon: 'target', fn: 'Auto-places scan location markers at point cloud scan origins. Links each marker to its source scan for analysis tracking.', videoRef: '', changelog: '', requirements: ['Point cloud linked in model (RCP/RCS)', 'Family: "Scan Location" loaded in project', 'Params on family: ScanID (text), PointCloudId (integer)', 'Levels defined in model'] },
+                            { id: 'run_analysis', label: 'Run Analysis', icon: 'play', fn: 'Compares your Revit model against point cloud scans to verify installation accuracy. Grades each element A-F based on how closely the as-built matches design.', videoRef: '', changelog: '', requirements: ['Scan locations placed with ScanID populated', 'PointCloudId parameter linked to loaded point cloud', 'CloudCompare installed (auto-detected or set in Settings)'] },
+                            { id: 'view_report', label: 'View Report', icon: 'file-text', fn: 'Opens the interactive results window showing which elements passed or failed quality checks. Drill down by discipline, category, or element to investigate deviations.', videoRef: '', changelog: '', requirements: ['Analysis completed (current session or saved results)'] },
                             { id: 'settings', label: 'Settings', icon: 'settings', fn: 'Configure analysis tolerance (how close is close enough), grading thresholds, and which element categories to include in quality checks.', videoRef: '', changelog: '', requirements: [] },
                         ]
                     },
                     {
                         title: 'Viewer',
                         tools: [
-                            { id: '360_viewer', label: '360 Viewer', icon: 'globe', fn: 'View scan locations as interactive 360° panoramas with hotspot navigation between nearby scans. Sync the panorama view direction with Revit\'s 3D view for spatial context.', videoRef: '', changelog: '', requirements: ['Single scan location selected', 'Support folder with [ScanID].jpg'] },
+                            { id: '360_viewer', label: '360 Viewer', icon: 'globe', fn: 'View scan locations as interactive 360° panoramas with hotspot navigation between nearby scans. Sync the panorama view direction with Revit\'s 3D view for spatial context.', videoRef: '', changelog: '', requirements: ['Scan Location family instance selected', 'ScanID parameter populated', 'Support folder: "[PointCloudName] Support/"', 'Panorama image: [ScanID].jpg in support folder'] },
                         ]
                     },
                     {
                         title: 'Overlay',
                         tools: [
-                            { id: 'show_overlay', label: 'Show Overlay', icon: 'layers', fn: 'Color-code elements in the active view by their accuracy grade (green = excellent, red = failed). Quickly spot problem areas without opening the full report.', videoRef: '', changelog: '', requirements: ['Analysis results exist'] },
-                            { id: 'clear_overlay', label: 'Clear Overlay', icon: 'eye-off', fn: 'Remove color-coded deviation overlays from the current view to restore normal element appearance.', videoRef: '', changelog: '', requirements: ['Overlay active'] },
+                            { id: 'show_overlay', label: 'Show Overlay', icon: 'layers', fn: 'Color-code elements in the active view by their accuracy grade (green = excellent, red = failed). Quickly spot problem areas without opening the full report.', videoRef: '', changelog: '', requirements: ['Analysis results (current session or saved)', 'Active view open'] },
+                            { id: 'clear_overlay', label: 'Clear Overlay', icon: 'eye-off', fn: 'Remove color-coded deviation overlays from the current view to restore normal element appearance.', videoRef: '', changelog: '', requirements: ['Active view with overlay applied'] },
                         ]
                     },
                     {
                         title: 'Point Clouds',
                         tools: [
-                            { id: 'revit_2_recap', label: 'Revit 2 ReCap', icon: 'share', fn: 'Extract point cloud transform data (position and rotation) for ReCap alignment. Displays coordinates and angles needed to align scans with your Revit model.', videoRef: '', changelog: '', requirements: ['Point cloud in model'] },
-                            { id: 'cloud_reset', label: 'Cloud Reset', icon: 'refresh-cw', fn: 'Reset a selected point cloud\'s position and rotation back to origin. Useful for re-aligning scans after moving them in Revit.', videoRef: '', changelog: '', requirements: ['Point cloud selected'] },
+                            { id: 'revit_2_recap', label: 'Revit 2 ReCap', icon: 'share', fn: 'Extract point cloud transform data (position and rotation) for ReCap alignment. Displays coordinates and angles needed to align scans with your Revit model.', videoRef: '', changelog: '', requirements: ['Point cloud instance linked in model'] },
+                            { id: 'cloud_reset', label: 'Cloud Reset', icon: 'refresh-cw', fn: 'Reset a selected point cloud\'s position and rotation back to origin. Useful for re-aligning scans after moving them in Revit.', videoRef: '', changelog: '', requirements: ['Point cloud instance to select when prompted'] },
                         ]
                     }
                 ]
@@ -1011,30 +1011,30 @@
                         title: 'Hangers',
                         tools: [
                             { id: 'hanger_settings', label: 'Hanger Settings', icon: 'wrench', fn: 'Configure rod sizes, spacing rules, and support families before placing hangers. Set defaults once, apply to all projects.', videoRef: '', changelog: '', requirements: [] },
-                            { id: 'single_pipes', label: 'Single Pipes', icon: 'anchor', rotate: true, fn: 'Automatically space individual pipe hangers based on code requirements and pipe size. Works on selected pipes or entire view.', videoRef: '', changelog: '', requirements: ['Fabrication pipes in model', 'Hanger service button configured'] },
-                            { id: 'pipe_rack', label: 'Pipe Rack', icon: 'grip-horizontal', fn: 'Create shared trapeze supports for grouped parallel pipes. Automatically detects runs that should hang together to save labor and material.', videoRef: '', changelog: '', requirements: ['Fabrication pipes in model', 'Parallel pipes at same elevation'] },
-                            { id: 'duct_hangers', label: 'Duct Hangers', icon: 'container', fn: 'Place hangers on straight duct runs with proper spacing per SMACNA. Handles both rectangular and round duct, individual or trapeze styles.', videoRef: '', changelog: '', requirements: ['Fabrication ducts in model'] },
-                            { id: 'rack_adjustment', label: 'Rack Adjustment', icon: 'sliders-horizontal', fn: 'Realign existing trapeze hangers to match current pipe positions. Fixes width and elevation when pipes shift during coordination.', videoRef: '', changelog: '', requirements: ['Trapeze hangers selected', 'Pipes selected'] },
-                            { id: 'audit_hangers', label: 'Audit Hangers', icon: 'clipboard-check', fn: 'Analyze hanger placement for coverage gaps, clash conflicts, and configuration issues. Generates a detailed troubleshooting report.', videoRef: '', changelog: '', requirements: ['Fabrication parts selected'] },
-                            { id: 'fill_info', label: 'Fill Info', icon: 'pencil', fn: 'Populate hanger family parameters with calculated values: rod lengths, elevation offsets, and sizes. Eliminates manual parameter entry for shop drawings.', videoRef: '', changelog: '', requirements: ['Fabrication hangers in model', 'Param: Hanger - Rod Length', 'Param: Hanger - Elevation Offset'] },
+                            { id: 'single_pipes', label: 'Single Pipes', icon: 'anchor', rotate: true, fn: 'Automatically space individual pipe hangers based on code requirements and pipe size. Works on selected pipes or entire view.', videoRef: '', changelog: '', requirements: ['Fabrication pipes in model (straight, horizontal)', 'Hanger service button configured in Hanger Settings', 'Structural elements above pipes for attachment', 'A 3D view in project (for ray-casting)'] },
+                            { id: 'pipe_rack', label: 'Pipe Rack', icon: 'grip-horizontal', fn: 'Create shared trapeze supports for grouped parallel pipes. Automatically detects runs that should hang together to save labor and material.', videoRef: '', changelog: '', requirements: ['Fabrication pipes in model (straight, horizontal)', 'Parallel pipes at same elevation', 'Trapeze hanger button configured in Hanger Settings', 'Structural elements above pipes for attachment', 'A 3D view in project (for ray-casting)'] },
+                            { id: 'duct_hangers', label: 'Duct Hangers', icon: 'container', fn: 'Place hangers on straight duct runs with proper spacing per SMACNA. Handles both rectangular and round duct, individual or trapeze styles.', videoRef: '', changelog: '', requirements: ['Fabrication ducts in model (straight, horizontal)', 'Duct hanger button configured in Hanger Settings', 'Structural elements above ducts for attachment', 'A 3D view in project (for ray-casting)'] },
+                            { id: 'rack_adjustment', label: 'Rack Adjustment', icon: 'sliders-horizontal', fn: 'Realign existing trapeze hangers to match current pipe positions. Fixes width and elevation when pipes shift during coordination.', videoRef: '', changelog: '', requirements: ['Fabrication hangers selected (trapeze style)', 'Fabrication pipes selected'] },
+                            { id: 'audit_hangers', label: 'Audit Hangers', icon: 'clipboard-check', fn: 'Analyze hanger placement for coverage gaps, clash conflicts, and configuration issues. Generates a detailed troubleshooting report.', videoRef: '', changelog: '', requirements: ['Fabrication parts selected (pipes, ducts, or hangers)', 'Hanger Settings configured'] },
+                            { id: 'fill_info', label: 'Fill Info', icon: 'pencil', fn: 'Populate hanger family parameters with calculated values: rod lengths, elevation offsets, and sizes. Eliminates manual parameter entry for shop drawings.', videoRef: '', changelog: '', requirements: ['Fabrication hangers in model', 'Param: Hanger - Elevation Offset', 'Param: Hanger - Rod Length', 'Param: Hanger - Rod Length #2', 'Param: Hanger - Total Length', 'Param: Hanger - Unistrut Length', 'Param: Hanger - Free Size'] },
                         ]
                     },
                     {
                         title: 'Annotation',
                         tools: [
-                            { id: 'quick_tag', label: 'Quick Tag', icon: 'tag', fn: 'Tag duct fittings with intelligent positioning based on fitting type. Configure once per fitting style, then batch-tag entire views.', videoRef: '', changelog: '', requirements: ['Fabrication parts in view', 'Tag Settings configured'] },
+                            { id: 'quick_tag', label: 'Quick Tag', icon: 'tag', fn: 'Tag duct fittings with intelligent positioning based on fitting type. Configure once per fitting style, then batch-tag entire views.', videoRef: '', changelog: '', requirements: ['Fabrication duct fittings in view', 'Tag Settings configured with tag families', 'Tag families loaded in project', 'Active view supports tagging (not 3D/schedule)'] },
                             { id: 'tag_settings', label: 'Tag Settings', icon: 'settings-2', fn: 'Control where tags appear on straights, elbows, and transitions using a 3x3 grid system. Set offsets and tag families per fitting type.', videoRef: '', changelog: '', requirements: [] },
-                            { id: 'elbow_extension', label: 'Elbow Extension', icon: 'corner-down-right', fn: 'Extract centerline-to-end dimensions from elbows and write to shared parameters for detailing. Shows takeoff lengths needed for fabrication.', videoRef: '', changelog: '', requirements: ['Fabrication parts in view', 'Param: SM - Top Extension', 'Param: SM - Bottom Extension'] },
-                            { id: 'transition', label: 'Transition', icon: 'filter', fn: 'Calculate and tag offset/set values for duct transitions. Automatically determines flat-top, flat-bottom, or bottom-up/down dimensions for fab notes.', videoRef: '', changelog: '', requirements: ['Fabrication parts in view', 'Param: SM - OFFSET', 'Param: SM - TRANSITION'] },
-                            { id: 'batch_spools', label: 'Batch Spools', icon: 'list-ordered', fn: 'Generate complete spool sheet packages with ISO, plan, elevation views, and bill of materials. Creates fabrication-ready drawings from assemblies.', videoRef: '', changelog: '', requirements: ['Assemblies selected', 'Family: ECD - SPOOL template', 'Family: Item Number tag'] },
-                            { id: 'renumber', label: 'Renumber', icon: 'hash', fn: 'Renumber spool item tags after changes. Groups identical parts under the same number and recalculates weight/weld totals for the BOM.', videoRef: '', changelog: '', requirements: ['Assemblies selected'] },
+                            { id: 'elbow_extension', label: 'Elbow Extension', icon: 'corner-down-right', fn: 'Extract centerline-to-end dimensions from elbows and write to shared parameters for detailing. Shows takeoff lengths needed for fabrication.', videoRef: '', changelog: '', requirements: ['Fabrication duct fittings in view', 'Param: SM - Top Extension', 'Param: SM - Bottom Extension', 'Param: SM - Elbow Radius'] },
+                            { id: 'transition', label: 'Transition', icon: 'filter', fn: 'Calculate and tag offset/set values for duct transitions. Automatically determines flat-top, flat-bottom, or bottom-up/down dimensions for fab notes.', videoRef: '', changelog: '', requirements: ['Fabrication duct fittings in view', 'Fitting Description: Transition, Radius Offset, Mitred Offset, or Square to Round', 'Param: SM - OFFSET (text)', 'Param: SM - SET (text)', 'Param: SM - CALC TRANSITION LENGTH (number)'] },
+                            { id: 'batch_spools', label: 'Batch Spools', icon: 'list-ordered', fn: 'Generate complete spool sheet packages with ISO, plan, elevation views, and bill of materials. Creates fabrication-ready drawings from assemblies.', videoRef: '', changelog: '', requirements: ['Assemblies (spools) selected', 'View template: "ECD - SPOOL"', 'Title block: "ECD - Spool-11x17"', 'Tag family: "Item Number"', 'Param on parts: Spool - Description', 'Params on sheet: Spool - Weight, Spool - Weld Inches'] },
+                            { id: 'renumber', label: 'Renumber', icon: 'hash', fn: 'Renumber spool item tags after changes. Groups identical parts under the same number and recalculates weight/weld totals for the BOM.', videoRef: '', changelog: '', requirements: ['Assemblies (spools) selected', 'Param on parts: Spool - Description', 'Params on sheet: Spool - Weight, Spool - Weld Inches'] },
                         ]
                     },
                     {
                         title: 'View',
                         tools: [
-                            { id: 'isolate_service', label: 'Isolate Service', icon: 'eye', fn: 'Show only the selected system in the current view. Quickly focus on hot water, chilled water, or any service without manual filters.', videoRef: '', changelog: '', requirements: ['Fabrication parts in view'] },
-                            { id: 'hide_service', label: 'Hide Service', icon: 'eye-off', fn: 'Hide the selected system in the current view. Clean up spool drawings by removing interfering systems outside the fabrication scope.', videoRef: '', changelog: '', requirements: ['Fabrication parts in view'] },
+                            { id: 'isolate_service', label: 'Isolate Service', icon: 'eye', fn: 'Show only the selected system in the current view. Quickly focus on hot water, chilled water, or any service without manual filters.', videoRef: '', changelog: '', requirements: ['Fabrication parts in active view', 'Select or pick a fabrication part to identify the service'] },
+                            { id: 'hide_service', label: 'Hide Service', icon: 'eye-off', fn: 'Hide the selected system in the current view. Clean up spool drawings by removing interfering systems outside the fabrication scope.', videoRef: '', changelog: '', requirements: ['Fabrication parts in active view', 'Pick a fabrication part to identify the service to hide'] },
                         ]
                     }
                 ]
@@ -1053,22 +1053,22 @@
                         title: 'Prep',
                         tools: [
                             { id: 'dwg_overrides', label: 'DWG Overrides', icon: 'file-output', fn: 'Define color and visibility rules for imported CAD layers to maintain consistent drawing standards across your project.', videoRef: '', changelog: '', requirements: [] },
-                            { id: 'apply_colors', label: 'Apply Colors', icon: 'paintbrush', fn: 'Instantly color-code imported CAD layers in your view based on saved rules, making it easy to distinguish systems.', videoRef: '', changelog: '', requirements: ['DWG imports in active view', 'DWG color prefs configured'] },
-                            { id: 'material_mapping', label: 'Material Mapping', icon: 'palette', fn: 'Assign colors to fabrication services that carry through to Navisworks, ensuring consistent clash detection visualization.', videoRef: '', changelog: '', requirements: [] },
-                            { id: 'apply_materials', label: 'Apply Materials', icon: 'wand', fn: 'Automatically apply configured materials to fabrication parts based on service or filter rules for coordination model consistency.', videoRef: '', changelog: '', requirements: ['Fabrication parts in model', 'Material mapping configured', 'Param: Navis Material'] },
+                            { id: 'apply_colors', label: 'Apply Colors', icon: 'paintbrush', fn: 'Instantly color-code imported CAD layers in your view based on saved rules, making it easy to distinguish systems.', videoRef: '', changelog: '', requirements: ['DWG imports in active view', 'DWG Overrides configured'] },
+                            { id: 'material_mapping', label: 'Material Mapping', icon: 'palette', fn: 'Assign colors to fabrication services that carry through to Navisworks, ensuring consistent clash detection visualization.', videoRef: '', changelog: '', requirements: ['Fabrication configuration loaded in Revit'] },
+                            { id: 'apply_materials', label: 'Apply Materials', icon: 'wand', fn: 'Automatically apply configured materials to fabrication parts based on service or filter rules for coordination model consistency.', videoRef: '', changelog: '', requirements: ['Fabrication parts in model', 'Material Mapping configured', 'Shared parameter file set in Revit', 'Param: Navis Material (auto-created if missing)'] },
                         ]
                     },
                     {
                         title: 'Views',
                         tools: [
-                            { id: 'create_scopes', label: 'Create Scopes', icon: 'box', fn: 'Generate level-specific 3D views with section boxes for streamlined coordination reviews and clash resolution.', videoRef: '', changelog: '', requirements: ['Levels in model', '3D view type exists'] },
-                            { id: 'reset_scope', label: 'Reset Scope', icon: 'refresh-cw', fn: 'Quickly adjust your 3D view\'s section box to focus on specific levels, saving time during coordination.', videoRef: '', changelog: '', requirements: ['3D view active (non-perspective)', '0-2 levels selected'] },
+                            { id: 'create_scopes', label: 'Create Scopes', icon: 'box', fn: 'Generate level-specific 3D views with section boxes for streamlined coordination reviews and clash resolution.', videoRef: '', changelog: '', requirements: ['Levels defined in model', '3D view family type exists', 'Model geometry in view for bounding box'] },
+                            { id: 'reset_scope', label: 'Reset Scope', icon: 'refresh-cw', fn: 'Quickly adjust your 3D view\'s section box to focus on specific levels, saving time during coordination.', videoRef: '', changelog: '', requirements: ['Active 3D view (non-perspective)', '0-2 levels selected (auto-detects upper bound)'] },
                         ]
                     },
                     {
                         title: 'Clash',
                         tools: [
-                            { id: 'clash_viewer', label: 'Clash Viewer', icon: 'alert-triangle', fn: 'Import and visualize Navisworks clash results directly in Revit, tracking status and navigating to problem areas.', videoRef: '', changelog: '', requirements: ['Navisworks clash XML file'] },
+                            { id: 'clash_viewer', label: 'Clash Viewer', icon: 'alert-triangle', fn: 'Import and visualize Navisworks clash results directly in Revit, tracking status and navigating to problem areas.', videoRef: '', changelog: '', requirements: ['Navisworks clash export XML file'] },
                         ]
                     }
                 ]
@@ -1087,8 +1087,8 @@
                     {
                         title: 'Project Setup',
                         tools: [
-                            { id: 'user_workset', label: 'User Workset', icon: 'user', fn: 'Create a personal workset named after you to keep your work organized and prevent accidental edits to others\' elements.', videoRef: '', changelog: '', requirements: ['Worksharing enabled'] },
-                            { id: 'link_worksets', label: 'Link Worksets', icon: 'link', fn: 'Organize linked models (RVT, CAD, point clouds) onto dedicated worksets for easier visibility control and model management.', videoRef: '', changelog: '', requirements: ['Worksharing enabled'] },
+                            { id: 'user_workset', label: 'User Workset', icon: 'user', fn: 'Create a personal workset named after you to keep your work organized and prevent accidental edits to others\' elements.', videoRef: '', changelog: '', requirements: ['Worksharing enabled in project'] },
+                            { id: 'link_worksets', label: 'Link Worksets', icon: 'link', fn: 'Organize linked models (RVT, CAD, point clouds) onto dedicated worksets for easier visibility control and model management.', videoRef: '', changelog: '', requirements: ['Worksharing enabled in project', 'Linked models, CAD files, or point clouds in project'] },
                         ]
                     }
                 ]
