@@ -611,6 +611,14 @@
             height: 18px;
         }
 
+        .download-version {
+            margin-bottom: 8px;
+            text-align: center;
+            font-family: 'Space Mono', monospace;
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+
         .download-info {
             margin-top: 12px;
             text-align: center;
@@ -802,6 +810,7 @@
                         </div>
 
                         <div class="download-section">
+                            <p class="download-version" id="download-version">v1.2.0</p>
                             <a href="https://github.com/kamditis/kamditis.github.io/releases/download/EliteScan-latest/EliteScan-Setup.exe" class="download-btn" id="download-btn">
                                 <i data-lucide="download"></i>
                                 <span>Download</span>
@@ -951,7 +960,8 @@
                 label: 'ELITE SCAN',
                 color: '#5ED5DD',
                 colorVar: 'var(--scan)',
-                released: false,
+                released: true,
+                version: 'v1.2.0',
                 downloadUrl: 'https://github.com/kamditis/kamditis.github.io/releases/download/EliteScan-latest/EliteScan-Setup.exe',
                 downloadFile: 'EliteScan-Setup.exe',
                 panels: [
@@ -968,7 +978,6 @@
                         title: 'Viewer',
                         tools: [
                             { id: '360_viewer', label: '360 Viewer', icon: 'globe', fn: 'Launches a standalone window to view 360° panorama images from scan locations.', videoRef: '', changelog: '', requirements: ['Single scan location selected', 'Support folder with [ScanID].jpg'] },
-                            { id: '360_pane', label: '360 Pane', icon: 'maximize', fn: 'Opens/toggles the dockable 360° panorama pane within Revit for persistent viewing while working.', videoRef: '', changelog: '', requirements: ['Support folder with [ScanID].jpg'] },
                         ]
                     },
                     {
@@ -994,6 +1003,7 @@
                 color: '#F5B878',
                 colorVar: 'var(--draft)',
                 released: true,
+                version: 'v1.0.4',
                 downloadUrl: 'https://github.com/kamditis/kamditis.github.io/releases/download/EliteDraft-latest/EliteDraft-Setup.exe',
                 downloadFile: 'EliteDraft-Setup.exe',
                 panels: [
@@ -1098,6 +1108,7 @@
         const sidebarAddin = document.getElementById('sidebar-addin');
         const downloadBtn = document.getElementById('download-btn');
         const downloadInfo = document.getElementById('download-info');
+        const downloadVersion = document.getElementById('download-version');
         const statusDot = document.querySelector('.status-dot');
         const requirementsList = document.getElementById('requirements-list');
 
@@ -1274,11 +1285,13 @@
                 downloadBtn.classList.remove('disabled');
                 downloadBtn.innerHTML = `<i data-lucide="download"></i><span>Download</span>`;
                 downloadInfo.textContent = region.downloadFile;
+                downloadVersion.textContent = region.version || '';
             } else {
                 downloadBtn.removeAttribute('href');
                 downloadBtn.classList.add('disabled');
                 downloadBtn.innerHTML = `<i data-lucide="clock"></i><span>Coming Soon</span>`;
                 downloadInfo.textContent = 'Release pending';
+                downloadVersion.textContent = '';
             }
 
             // Render ribbon
