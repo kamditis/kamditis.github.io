@@ -744,12 +744,17 @@
             color: var(--text);
         }
 
+        .release-info ol,
         .release-info ul {
-            list-style: disc;
             padding-left: 20px;
             margin: 0;
         }
 
+        .release-info ul {
+            list-style: disc;
+        }
+
+        .release-info ol li,
         .release-info ul li {
             font-size: 13px;
             color: var(--text-dim);
@@ -1001,7 +1006,14 @@
                 downloadUrl: 'https://github.com/kamditis/kamditis.github.io/releases/download/EliteScan-latest/EliteScan-v1.2.1.zip',
                 downloadFile: 'EliteScan-v1.2.1.zip',
                 description: 'Point cloud deviation analysis for Autodesk Revit.',
-                installation: 'Download and extract the ZIP, then right-click Install-EliteScan.ps1 and select Run with PowerShell.',
+                installation: [
+                    'Download the ZIP file.',
+                    'Right-click the ZIP → Properties → check <strong>Unblock</strong> → OK.',
+                    'Extract the ZIP.',
+                    'Right-click <strong>Install-EliteScan.ps1</strong> and select <strong>Run with PowerShell</strong>.',
+                    'Select which Revit version(s) to install.',
+                    'Restart Revit.'
+                ],
                 addinRequirements: [
                     '<a href="https://cloudcompare.org/" target="_blank">CloudCompare</a>',
                     'WebView2 runtime'
@@ -1049,7 +1061,14 @@
                 downloadUrl: 'https://github.com/kamditis/kamditis.github.io/releases/download/EliteDraft-latest/EliteDraft-v1.0.5.zip',
                 downloadFile: 'EliteDraft-v1.0.5.zip',
                 description: 'MEP fabrication drafting tools for Autodesk Revit.',
-                installation: 'Download and extract the ZIP, then right-click Install-EliteDraft.ps1 and select Run with PowerShell.',
+                installation: [
+                    'Download the ZIP file.',
+                    'Right-click the ZIP → Properties → check <strong>Unblock</strong> → OK.',
+                    'Extract the ZIP.',
+                    'Right-click <strong>Install-EliteDraft.ps1</strong> and select <strong>Run with PowerShell</strong>.',
+                    'Select which Revit version(s) to install.',
+                    'Restart Revit.'
+                ],
                 addinRequirements: [],
                 panels: [
                     {
@@ -1095,7 +1114,14 @@
                 downloadUrl: 'https://github.com/kamditis/kamditis.github.io/releases/download/EliteCoord-latest/EliteCoord-v1.0.0.zip',
                 downloadFile: 'EliteCoord-v1.0.0.zip',
                 description: 'BIM coordination tools for Autodesk Revit.',
-                installation: 'Download and extract the ZIP, then right-click Install-EliteCoord.ps1 and select Run with PowerShell.',
+                installation: [
+                    'Download the ZIP file.',
+                    'Right-click the ZIP → Properties → check <strong>Unblock</strong> → OK.',
+                    'Extract the ZIP.',
+                    'Right-click <strong>Install-EliteCoord.ps1</strong> and select <strong>Run with PowerShell</strong>.',
+                    'Select which Revit version(s) to install.',
+                    'Restart Revit.'
+                ],
                 addinRequirements: [],
                 panels: [
                     {
@@ -1133,7 +1159,14 @@
                 downloadUrl: 'https://github.com/kamditis/kamditis.github.io/releases/download/EliteCore-latest/EliteCore-v1.0.0.zip',
                 downloadFile: 'EliteCore-v1.0.0.zip',
                 description: 'Project setup and shared utilities for Autodesk Revit.',
-                installation: 'Download and extract the ZIP, then right-click Install-EliteCore.ps1 and select Run with PowerShell.',
+                installation: [
+                    'Download the ZIP file.',
+                    'Right-click the ZIP → Properties → check <strong>Unblock</strong> → OK.',
+                    'Extract the ZIP.',
+                    'Right-click <strong>Install-EliteCore.ps1</strong> and select <strong>Run with PowerShell</strong>.',
+                    'Select which Revit version(s) to install.',
+                    'Restart Revit.'
+                ],
                 addinRequirements: [],
                 panels: [
                     {
@@ -1327,7 +1360,7 @@
                     <p class="release-description">${region.description || ''}</p>
                     <p><strong>Supported Revit Versions:</strong> 2022, 2023, 2024, 2025, 2026</p>
                     <h3>Installation</h3>
-                    <p>${region.installation || ''}</p>
+                    <ol>${(region.installation || []).map(s => `<li>${s}</li>`).join('')}</ol>
                     ${reqsHtml}
                 </div>
             `;
