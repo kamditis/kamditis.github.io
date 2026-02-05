@@ -1,0 +1,123 @@
+# .github/workflows/notify-teams.yml
+#
+# Sends a Microsoft Teams notification when a new release is published.
+# The message links to the EliteCAD Tools website (not GitHub).
+#
+# SETUP:
+#   1. In Teams: Channel > Manage Channel > Connectors (or Workflows app)
+#      → Add "Incoming Webhook" → Name it "EliteCAD Releases" → Copy the URL
+#   2. In GitHub: Repo Settings > Secrets > Actions
+#      → New secret: TEAMS_WEBHOOK_URL = <paste the webhook URL>
+
+name: Notify Teams on Release
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  notify-teams:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Parse release info
+        id: info
+        run: |
+          TAG="${{ github.event.release.tag_name }}"
+          # Tags follow pattern: EliteScan-latest, EliteDraft-latest, etc.
+          ADDIN_NAME=$(echo "$TAG" | sed 's/-latest//')
+          echo "addin=$ADDIN_NAME" >> "$GITHUB_OUTPUT"
+
+          # Extract version from release name or body (e.g., "EliteScan v1.2.4")
+          VERSION=$(echo "${{ github.event.release.name }}" | grep -oP 'v[\d.]+' || echo "")
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+          # Pick accent color based on add-in
+          case "$ADDIN_NAME" in
+            EliteScan)  echo "color=#5ED5DD" >> "$GITHUB_OUTPUT" ;;
+            EliteDraft) echo "color=#F5B878" >> "$GITHUB_OUTPUT" ;;
+            EliteCoord) echo "color=#6EE7A8" >> "$GITHUB_OUTPUT" ;;
+            EliteCore)  echo "color=#A78BFA" >> "$GITHUB_OUTPUT" ;;
+            *)          echo "color=#E8E8ED" >> "$GITHUB_OUTPUT" ;;
+          esac
+
+      - name: Send Teams notification
+        run: |
+          # Build the release notes - escape for JSON
+          BODY=$(echo '${{ github.event.release.body }}' | head -c 500 | jq -Rs .)
+
+          cat <<'CARD' > payload.json
+          {
+            "type": "message",
+            "attachments": [
+              {
+                "contentType": "application/vnd.microsoft.card.adaptive",
+                "content": {
+                  "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+                  "type": "AdaptiveCard",
+                  "version": "1.4",
+                  "body": [
+                    {
+                      "type": "Container",
+                      "style": "emphasis",
+                      "items": [
+                        {
+                          "type": "TextBlock",
+                          "size": "Large",
+                          "weight": "Bolder",
+                          "text": "🚀 ADDIN_PLACEHOLDER UPDATE_PLACEHOLDER",
+                          "wrap": true
+                        }
+                      ]
+                    },
+                    {
+                      "type": "TextBlock",
+                      "text": "A new version is available for download.",
+                      "wrap": true,
+                      "spacing": "Medium"
+                    },
+                    {
+                      "type": "FactSet",
+                      "facts": [
+                        { "title": "Add-in:", "value": "ADDIN_PLACEHOLDER" },
+                        { "title": "Version:", "value": "UPDATE_PLACEHOLDER" },
+                        { "title": "Released by:", "value": "AUTHOR_PLACEHOLDER" }
+                      ]
+                    },
+                    {
+                      "type": "TextBlock",
+                      "text": "**What's New:**",
+                      "wrap": true,
+                      "spacing": "Medium"
+                    },
+                    {
+                      "type": "TextBlock",
+                      "text": BODY_PLACEHOLDER,
+                      "wrap": true,
+                      "size": "Small"
+                    }
+                  ],
+                  "actions": [
+                    {
+                      "type": "Action.OpenUrl",
+                      "title": "⬇️ Go to Download Page",
+                      "url": "https://kamditis.github.io",
+                      "style": "positive"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+          CARD
+
+          # Replace placeholders
+          sed -i "s|ADDIN_PLACEHOLDER|${{ steps.info.outputs.addin }}|g" payload.json
+          sed -i "s|UPDATE_PLACEHOLDER|${{ steps.info.outputs.version }}|g" payload.json
+          sed -i "s|AUTHOR_PLACEHOLDER|${{ github.actor }}|g" payload.json
+          sed -i "s|BODY_PLACEHOLDER|${BODY}|g" payload.json
+
+          # Send to Teams
+          curl -s -o /dev/null -w "%{http_code}" \
+            -H "Content-Type: application/json" \
+            -d @payload.json \
+            "${{ secrets.TEAMS_WEBHOOK_URL }}"
