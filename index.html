@@ -759,18 +759,21 @@
             font-style: italic;
         }
 
-        /* Changelog Section */
-        .changelog-section {
-            margin-top: 24px;
-            padding-top: 24px;
-            border-top: 1px solid var(--border);
+        /* Changelog Column */
+        .detail-changelog {
+            width: 260px;
+            background: var(--bg);
+            border-left: 1px solid var(--border);
+            padding: 24px;
+            overflow-y: auto;
+            display: none;
         }
 
-        .changelog-content {
+        .detail-changelog .changelog-content {
             font-family: 'Space Mono', monospace;
             font-size: 11px;
             color: var(--text-dim);
-            line-height: 1.6;
+            line-height: 1.7;
         }
 
         /* Empty state */
@@ -869,8 +872,9 @@
         }
 
         @media (max-width: 900px) {
-            .detail-sidebar {
-                display: none;
+            .detail-sidebar,
+            .detail-changelog {
+                display: none !important;
             }
         }
     </style>
@@ -945,13 +949,6 @@
                             </div>
                         </div>
 
-                        <div class="changelog-section" id="changelog-section">
-                            <h4 class="requirements-title">Changelog</h4>
-                            <div class="changelog-content" id="changelog-content">
-                                <span class="requirements-empty">No changelog entries</span>
-                            </div>
-                        </div>
-
                         <div class="download-section">
                             <p class="download-version" id="download-version">v1.2.3</p>
                             <a href="https://github.com/kamditis/kamditis.github.io/releases/download/EliteScan-latest/EliteScan-v1.2.3.zip" class="download-btn" id="download-btn">
@@ -960,6 +957,10 @@
                             </a>
                             <p class="download-info" id="download-info">EliteScan-v1.2.3.zip</p>
                         </div>
+                    <div class="detail-changelog" id="changelog-section">
+                        <h4 class="sidebar-title">Changelog</h4>
+                        <div class="changelog-content" id="changelog-content"></div>
+                    </div>
                     </div>
                 </div>
             </div>
@@ -1378,7 +1379,7 @@
         function renderChangelog(tool) {
             const changelog = tool.changelog || '';
             if (changelog) {
-                changelogSection.style.display = '';
+                changelogSection.style.display = 'block';
                 changelogContent.textContent = changelog;
             } else {
                 changelogSection.style.display = 'none';
