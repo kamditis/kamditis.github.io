@@ -26,10 +26,10 @@ The site uses a tab-based UI with four "regions" defined in a `REGIONS` JavaScri
 
 | Region | Key | Color | Released |
 |--------|-----|-------|----------|
-| EliteScan | `scan` | `#5ED5DD` | Yes (v1.2.3) |
-| EliteDraft | `draft` | `#F5B878` | Yes (v1.0.11) |
-| EliteCoord | `coord` | `#6EE7A8` | Yes (v1.0.3) |
-| EliteCore | `core` | `#A78BFA` | Yes (v1.0.2) |
+| EliteScan | `scan` | `#5ED5DD` | Yes (v1.2.4) |
+| EliteDraft | `draft` | `#F5B878` | Yes (v1.0.12) |
+| EliteCoord | `coord` | `#6EE7A8` | Yes (v1.0.4) |
+| EliteCore | `core` | `#A78BFA` | Yes (v1.0.3) |
 
 Each region has:
 - `released` (boolean) — controls whether download button shows or "Coming Soon"
