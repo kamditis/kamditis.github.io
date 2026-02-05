@@ -462,11 +462,8 @@
         [data-active-region="coord"] .badge.active { background: var(--coord-dim); color: var(--coord); }
         [data-active-region="core"] .badge.active { background: var(--core-dim); color: var(--core); }
 
-        .detail-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 24px;
-            margin-bottom: 32px;
+        .detail-section {
+            margin-bottom: 24px;
         }
 
         .detail-section h3 {
@@ -484,8 +481,6 @@
             border: 1px solid var(--border);
             border-left: 3px solid var(--scan);
             border-radius: 0 6px 6px 0;
-            height: 120px;
-            overflow-y: auto;
         }
 
         .detail-box::-webkit-scrollbar {
@@ -764,6 +759,20 @@
             font-style: italic;
         }
 
+        /* Changelog Section */
+        .changelog-section {
+            margin-top: 24px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border);
+        }
+
+        .changelog-content {
+            font-family: 'Space Mono', monospace;
+            font-size: 11px;
+            color: var(--text-dim);
+            line-height: 1.6;
+        }
+
         /* Empty state */
         .empty-state {
             display: flex;
@@ -860,9 +869,6 @@
         }
 
         @media (max-width: 900px) {
-            .detail-grid {
-                grid-template-columns: 1fr;
-            }
             .detail-sidebar {
                 display: none;
             }
@@ -936,6 +942,13 @@
                             <h4 class="requirements-title">Requirements</h4>
                             <div class="requirements-list" id="requirements-list">
                                 <span class="requirements-empty">Select a tool to view requirements</span>
+                            </div>
+                        </div>
+
+                        <div class="changelog-section" id="changelog-section">
+                            <h4 class="requirements-title">Changelog</h4>
+                            <div class="changelog-content" id="changelog-content">
+                                <span class="requirements-empty">No changelog entries</span>
                             </div>
                         </div>
 
@@ -1267,6 +1280,8 @@
         const downloadVersion = document.getElementById('download-version');
         const statusDot = document.querySelector('.status-dot');
         const requirementsList = document.getElementById('requirements-list');
+        const changelogContent = document.getElementById('changelog-content');
+        const changelogSection = document.getElementById('changelog-section');
 
         // Functions
         function renderRibbon(regionId) {
@@ -1340,6 +1355,9 @@
 
             // Render requirements
             renderRequirements(tool);
+
+            // Render changelog
+            renderChangelog(tool);
         }
 
         function renderRequirements(tool) {
@@ -1354,6 +1372,16 @@
                         <span>${req}</span>
                     </div>
                 `).join('');
+            }
+        }
+
+        function renderChangelog(tool) {
+            const changelog = tool.changelog || '';
+            if (changelog) {
+                changelogSection.style.display = '';
+                changelogContent.textContent = changelog;
+            } else {
+                changelogSection.style.display = 'none';
             }
         }
 
@@ -1389,18 +1417,10 @@
                     </div>
                 </div>
 
-                <div class="detail-grid">
-                    <div class="detail-section">
-                        <h3>Function Description</h3>
-                        <div class="detail-box">
-                            <p>${tool.fn}</p>
-                        </div>
-                    </div>
-                    <div class="detail-section">
-                        <h3>Changelog</h3>
-                        <div class="detail-box mono">
-                            <p>${tool.changelog || 'No changelog entries'}</p>
-                        </div>
+                <div class="detail-section">
+                    <h3>Function Description</h3>
+                    <div class="detail-box">
+                        <p>${tool.fn}</p>
                     </div>
                 </div>
 
@@ -1484,6 +1504,9 @@
             } else {
                 requirementsList.innerHTML = '<span class="requirements-empty">No additional requirements</span>';
             }
+
+            // Hide changelog when no tool is selected
+            changelogSection.style.display = 'none';
 
             lucide.createIcons();
         }
