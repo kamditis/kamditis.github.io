@@ -26,10 +26,10 @@ The site uses a tab-based UI with four "regions" defined in a `REGIONS` JavaScri
 
 | Region | Key | Color | Released |
 |--------|-----|-------|----------|
-| EliteScan | `scan` | `#5ED5DD` | Yes (v1.2.0) |
-| EliteDraft | `draft` | `#F5B878` | Yes (v1.0.5) |
-| EliteCoord | `coord` | `#6EE7A8` | No |
-| EliteCore | `core` | `#A78BFA` | Yes (v1.0.0) |
+| EliteScan | `scan` | `#5ED5DD` | Yes (v1.2.3) |
+| EliteDraft | `draft` | `#F5B878` | Yes (v1.0.11) |
+| EliteCoord | `coord` | `#6EE7A8` | Yes (v1.0.3) |
+| EliteCore | `core` | `#A78BFA` | Yes (v1.0.2) |
 
 Each region has:
 - `released` (boolean) — controls whether download button shows or "Coming Soon"
@@ -46,7 +46,7 @@ Each tool in a panel has:
     icon: 'lucide-icon-name',
     fn: 'Description of what the tool does',
     videoRef: 'YouTubeVideoID',    // Empty string if no video
-    changelog: '',                  // Not yet used
+    changelog: '',                  // Version-prefixed notes, e.g. 'v1.0.2: Fixed bug...'
     requirements: ['Requirement 1', 'Requirement 2']
 }
 ```
