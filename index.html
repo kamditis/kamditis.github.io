@@ -42,8 +42,8 @@
         /* Dot grid background */
         .tech-grid-bg {
             background-image:
-                linear-gradient(rgba(46, 46, 56, 0.3) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(46, 46, 56, 0.3) 1px, transparent 1px);
+                linear-gradient(rgba(46, 46, 56, 0.15) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(46, 46, 56, 0.15) 1px, transparent 1px);
             background-size: 20px 20px;
         }
 
@@ -59,9 +59,11 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 12px 24px;
+            padding: 14px 28px;
             border-bottom: 1px solid var(--border);
-            background: var(--surface);
+            background: rgba(24, 24, 29, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
             z-index: 10;
         }
 
@@ -84,7 +86,7 @@
         }
 
         .logo-text h1 {
-            font-size: 16px;
+            font-size: 18px;
             font-weight: 700;
         }
 
@@ -121,12 +123,12 @@
             width: 8px;
             height: 8px;
             border-radius: 50%;
-            animation: pulse 2s infinite;
+            animation: pulse 3s ease-in-out infinite;
         }
 
         @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(0.85); }
         }
 
         .status-text {
@@ -139,28 +141,29 @@
         .tabs {
             display: flex;
             gap: 4px;
-            padding: 8px 16px 0;
+            padding: 10px 20px 0;
             background: var(--bg);
             border-bottom: 1px solid var(--border);
         }
 
         .tab {
             position: relative;
-            padding: 10px 24px;
+            padding: 12px 28px;
             background: transparent;
             border: 1px solid transparent;
             border-bottom: none;
-            border-radius: 4px 4px 0 0;
+            border-radius: 6px 6px 0 0;
             font-family: 'Space Grotesk', sans-serif;
             font-size: 13px;
             font-weight: 500;
             color: var(--text-muted);
             cursor: pointer;
-            transition: all 0.15s;
+            transition: all 0.2s ease;
         }
 
         .tab:hover {
             color: var(--text-dim);
+            background: rgba(34, 34, 41, 0.5);
         }
 
         .tab.active {
@@ -185,6 +188,7 @@
             left: 0;
             right: 0;
             height: 2px;
+            border-radius: 2px 2px 0 0;
         }
 
         .tab.active[data-region="scan"] { color: var(--scan); }
@@ -203,15 +207,15 @@
             background: var(--surface);
             border-bottom: 1px solid var(--border);
             overflow-x: auto;
-            padding: 0 16px;
+            padding: 0 20px;
         }
 
         .ribbon::-webkit-scrollbar {
-            height: 6px;
+            height: 5px;
         }
 
         .ribbon::-webkit-scrollbar-track {
-            background: var(--bg);
+            background: transparent;
         }
 
         .ribbon::-webkit-scrollbar-thumb {
@@ -219,11 +223,15 @@
             border-radius: 3px;
         }
 
+        .ribbon::-webkit-scrollbar-thumb:hover {
+            background: var(--border-light);
+        }
+
         .panel {
             display: flex;
             flex-direction: column;
             border-right: 1px solid var(--border);
-            padding: 0 8px;
+            padding: 0 12px;
             min-width: max-content;
         }
 
@@ -231,7 +239,7 @@
             display: flex;
             flex: 1;
             align-items: center;
-            gap: 4px;
+            gap: 6px;
             padding: 8px 4px;
         }
 
@@ -260,19 +268,21 @@
             flex-direction: column;
             align-items: center;
             justify-content: space-between;
-            width: 72px; /* Slightly wider for the new icons */
+            width: 72px;
             height: 72px;
             padding: 6px 4px;
             background: transparent;
             border: 1px solid transparent;
-            border-radius: 4px;
+            border-radius: 6px;
             cursor: pointer;
-            transition: all 0.15s;
+            transition: all 0.2s ease;
         }
 
         .tool-btn:hover {
             background: var(--surface2);
             border-color: var(--border);
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
         }
 
         .tool-btn.selected {
@@ -306,20 +316,26 @@
             margin-top: 4px;
         }
 
+        /* Hover glow by region */
+        [data-active-region="scan"] .tool-btn:hover { box-shadow: 0 2px 12px rgba(94, 213, 221, 0.15); }
+        [data-active-region="draft"] .tool-btn:hover { box-shadow: 0 2px 12px rgba(245, 184, 120, 0.15); }
+        [data-active-region="coord"] .tool-btn:hover { box-shadow: 0 2px 12px rgba(110, 231, 168, 0.15); }
+        [data-active-region="core"] .tool-btn:hover { box-shadow: 0 2px 12px rgba(167, 139, 250, 0.15); }
+
         /* Selected states by region */
-        [data-active-region="scan"] .tool-btn.selected { background: var(--scan-dim); border-color: var(--scan); }
+        [data-active-region="scan"] .tool-btn.selected { background: var(--scan-dim); border-color: var(--scan); box-shadow: 0 0 12px rgba(94, 213, 221, 0.2); }
         [data-active-region="scan"] .tool-btn.selected .icon { color: var(--scan); }
         [data-active-region="scan"] .tool-btn.selected .label { color: var(--scan); }
 
-        [data-active-region="draft"] .tool-btn.selected { background: var(--draft-dim); border-color: var(--draft); }
+        [data-active-region="draft"] .tool-btn.selected { background: var(--draft-dim); border-color: var(--draft); box-shadow: 0 0 12px rgba(245, 184, 120, 0.2); }
         [data-active-region="draft"] .tool-btn.selected .icon { color: var(--draft); }
         [data-active-region="draft"] .tool-btn.selected .label { color: var(--draft); }
 
-        [data-active-region="coord"] .tool-btn.selected { background: var(--coord-dim); border-color: var(--coord); }
+        [data-active-region="coord"] .tool-btn.selected { background: var(--coord-dim); border-color: var(--coord); box-shadow: 0 0 12px rgba(110, 231, 168, 0.2); }
         [data-active-region="coord"] .tool-btn.selected .icon { color: var(--coord); }
         [data-active-region="coord"] .tool-btn.selected .label { color: var(--coord); }
 
-        [data-active-region="core"] .tool-btn.selected { background: var(--core-dim); border-color: var(--core); }
+        [data-active-region="core"] .tool-btn.selected { background: var(--core-dim); border-color: var(--core); box-shadow: 0 0 12px rgba(167, 139, 250, 0.2); }
         [data-active-region="core"] .tool-btn.selected .icon { color: var(--core); }
         [data-active-region="core"] .tool-btn.selected .label { color: var(--core); }
 
@@ -362,13 +378,20 @@
             display: flex;
             background: var(--surface);
             border: 1px solid var(--border);
+            border-radius: 8px;
             overflow: hidden;
         }
 
         .detail-main {
             flex: 1;
-            padding: 32px;
+            padding: 36px;
             overflow-y: auto;
+            animation: fadeIn 0.25s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(4px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .detail-header {
@@ -388,9 +411,14 @@
             justify-content: center;
             background: var(--surface2);
             border: 1px solid var(--border);
-            border-radius: 6px;
+            border-radius: 8px;
             padding: 12px;
         }
+
+        [data-active-region="scan"] .detail-icon { box-shadow: 0 0 20px rgba(94, 213, 221, 0.1); }
+        [data-active-region="draft"] .detail-icon { box-shadow: 0 0 20px rgba(245, 184, 120, 0.1); }
+        [data-active-region="coord"] .detail-icon { box-shadow: 0 0 20px rgba(110, 231, 168, 0.1); }
+        [data-active-region="core"] .detail-icon { box-shadow: 0 0 20px rgba(167, 139, 250, 0.1); }
 
         .detail-icon svg {
             width: 100%;
@@ -404,9 +432,10 @@
         }
 
         .detail-title h2 {
-            font-size: 24px;
+            font-size: 26px;
             font-weight: 700;
             margin-bottom: 8px;
+            letter-spacing: -0.01em;
         }
 
         .detail-badges {
@@ -421,6 +450,7 @@
             background: var(--surface2);
             color: var(--text-dim);
             text-transform: uppercase;
+            border-radius: 4px;
         }
 
         .badge.active {
@@ -449,20 +479,21 @@
         }
 
         .detail-box {
-            padding: 16px;
-            background: var(--surface);
+            padding: 18px;
+            background: var(--bg);
             border: 1px solid var(--border);
             border-left: 3px solid var(--scan);
+            border-radius: 0 6px 6px 0;
             height: 120px;
             overflow-y: auto;
         }
 
         .detail-box::-webkit-scrollbar {
-            width: 6px;
+            width: 5px;
         }
 
         .detail-box::-webkit-scrollbar-track {
-            background: var(--bg);
+            background: transparent;
         }
 
         .detail-box::-webkit-scrollbar-thumb {
@@ -470,8 +501,41 @@
             border-radius: 3px;
         }
 
+        .detail-box::-webkit-scrollbar-thumb:hover {
+            background: var(--border-light);
+        }
+
+        .detail-main::-webkit-scrollbar,
+        .detail-sidebar::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        .detail-main::-webkit-scrollbar-track,
+        .detail-sidebar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .detail-main::-webkit-scrollbar-thumb,
+        .detail-sidebar::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 3px;
+        }
+
+        .detail-main::-webkit-scrollbar-thumb:hover,
+        .detail-sidebar::-webkit-scrollbar-thumb:hover {
+            background: var(--border-light);
+        }
+
         .detail-box-large {
             height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .detail-box-large p {
+            color: var(--text-muted) !important;
+            font-style: italic;
         }
 
         [data-active-region="draft"] .detail-box { border-left-color: var(--draft); }
@@ -480,7 +544,7 @@
 
         .detail-box p {
             font-size: 14px;
-            line-height: 1.7;
+            line-height: 1.75;
             color: var(--text);
         }
 
@@ -500,6 +564,7 @@
             padding: 12px 16px;
             background: var(--surface2);
             border: 1px solid var(--border);
+            border-radius: 6px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -541,13 +606,13 @@
         .sidebar-props {
             display: flex;
             flex-direction: column;
-            gap: 16px;
+            gap: 20px;
         }
 
         .prop {
             display: flex;
             flex-direction: column;
-            gap: 4px;
+            gap: 6px;
         }
 
         .prop .label {
@@ -595,13 +660,20 @@
             font-weight: 700;
             text-decoration: none;
             border: none;
+            border-radius: 6px;
             cursor: pointer;
-            transition: all 0.15s;
+            transition: all 0.2s ease;
         }
 
         .download-btn:hover {
             filter: brightness(1.1);
+            transform: scale(1.02);
+            box-shadow: 0 4px 16px rgba(94, 213, 221, 0.3);
         }
+
+        [data-active-region="draft"] .download-btn:hover { box-shadow: 0 4px 16px rgba(245, 184, 120, 0.3); }
+        [data-active-region="coord"] .download-btn:hover { box-shadow: 0 4px 16px rgba(110, 231, 168, 0.3); }
+        [data-active-region="core"] .download-btn:hover { box-shadow: 0 4px 16px rgba(167, 139, 250, 0.3); }
 
         [data-active-region="draft"] .download-btn { background: var(--draft); }
         [data-active-region="coord"] .download-btn { background: var(--coord); }
@@ -631,12 +703,16 @@
         .download-btn.disabled {
             background: var(--surface2);
             color: var(--text-muted);
+            border: 1px solid var(--border);
             cursor: not-allowed;
             pointer-events: none;
+            opacity: 0.6;
         }
 
         .download-btn.disabled:hover {
             filter: none;
+            transform: none;
+            box-shadow: none;
         }
 
         /* Requirements Section */
@@ -880,63 +956,49 @@
     <script>
         // --- CUSTOM ICON SYSTEM (Imported from EliteRibbons) ---
         
-        // SYMMETRICAL WRENCH LOGIC
-        const SYMMETRICAL_WRENCH_GROUP = `
-            <g transform="rotate(45, 32, 32)">
-                <path d="M 29 54 L 29 28 Q 29 22 20 20 L 20 8 L 26 8 L 26 16 Q 32 20 38 16 L 38 8 L 44 8 L 44 20 Q 35 22 35 28 L 35 54 A 3 3 0 0 1 29 54 Z" 
-                    fill="none" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" />
-            </g>
-        `;
-
-        const BADGE_WRENCH_GROUP = (color) => `
-            <g transform="translate(44, 44) rotate(45) translate(-16, -16)">
-                 <path d="M 14 28 L 14 14 Q 14 10 10 9 L 10 4 L 12 4 L 12 7 Q 16 9 20 7 L 20 4 L 22 4 L 22 9 Q 18 10 18 14 L 18 28 A 2 2 0 0 1 14 28 Z"
-                 fill="none" stroke="${color}" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/>
-            </g>
-        `;
-
         const customIcons = [
             // --- SCAN ---
-            { id: 'Settings', group: 'scan', path: SYMMETRICAL_WRENCH_GROUP },
-            { id: 'PlaceScans', group: 'scan', path: '<circle cx="32" cy="32" r="10" stroke="white" stroke-width="3" fill="none"/><path d="M32 10V20 M32 44V54 M10 32H20 M44 32H54" stroke="currentColor" stroke-width="3" stroke-linecap="round"/><circle cx="32" cy="32" r="2" fill="currentColor"/>' },
-            { id: 'RunAnalysis', group: 'scan', path: '<path d="M22 18V46L46 32L22 18Z" fill="white" stroke="none"/><path d="M12 50H52" stroke="currentColor" stroke-width="2" stroke-dasharray="2 2"/>' },
-            { id: 'ViewReport', group: 'scan', path: '<rect x="18" y="14" width="28" height="36" rx="2" stroke="white" stroke-width="2" fill="none"/><path d="M24 24H40 M24 30H40 M24 36H32" stroke="#5A5A6A" stroke-width="2"/><circle cx="38" cy="40" r="4" fill="currentColor"/>' },
-            { id: '360Viewer', group: 'scan', path: '<circle cx="32" cy="32" r="14" stroke="white" stroke-width="2" fill="none"/><path d="M18 32H46 M32 18V46" stroke="currentColor" stroke-width="1"/><path d="M32 24C36 24 40 28 40 32C40 36 36 40 32 40" stroke="currentColor" stroke-width="1"/>' },
-            { id: '360Pane', group: 'scan', path: '<rect x="14" y="14" width="36" height="36" rx="2" stroke="white" stroke-width="2" fill="none"/><path d="M38 14V50" stroke="currentColor" stroke-width="2"/><circle cx="26" cy="32" r="6" stroke="currentColor" stroke-width="2" fill="none"/>' },
-            { id: 'ShowOverlay', group: 'scan', path: '<path d="M32 14L50 24L32 34L14 24L32 14Z" stroke="white" stroke-width="2" fill="currentColor" fill-opacity="0.2"/><path d="M14 30L32 40L50 30" stroke="currentColor" stroke-width="2" fill="none"/><path d="M14 36L32 46L50 36" stroke="white" stroke-width="2" fill="none"/>' },
-            { id: 'ClearOverlay', group: 'scan', path: '<path d="M32 14L50 24L32 34L14 24L32 14Z" stroke="#5A5A6A" stroke-width="2" fill="none"/><path d="M14 30L32 40L50 30" stroke="#5A5A6A" stroke-width="2" fill="none"/><path d="M18 46L46 18" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>' },
-            { id: 'Revit2ReCap', group: 'scan', path: '<rect x="14" y="24" width="16" height="16" stroke="white" stroke-width="2" fill="none"/><circle cx="46" cy="32" r="2" fill="currentColor"/><circle cx="52" cy="28" r="2" fill="currentColor"/><circle cx="42" cy="26" r="2" fill="currentColor"/><circle cx="48" cy="38" r="2" fill="currentColor"/><path d="M32 32H38" stroke="currentColor" stroke-width="2"/>' },
-            { id: 'CloudReset', group: 'scan', path: '<path d="M46 32A14 14 0 1 1 32 18" stroke="white" stroke-width="2" stroke-linecap="round" fill="none"/><path d="M32 14V22L36 18L32 14Z" fill="currentColor"/><circle cx="32" cy="32" r="2" fill="currentColor"/><circle cx="38" cy="28" r="2" fill="currentColor"/><circle cx="26" cy="36" r="2" fill="currentColor"/>' },
+            { id: 'Settings', group: 'scan', path: '<g transform="translate(28,36) rotate(45) scale(1.25) translate(-32,-32)"><path d="M 29 54 L 29 28 Q 29 22 20 20 L 20 8 L 26 8 L 26 16 Q 32 20 38 16 L 38 8 L 44 8 L 44 20 Q 35 22 35 28 L 35 54 A 3 3 0 0 1 29 54 Z" fill="none" stroke-width="5" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor"/></g>' },
+            { id: 'PlaceScans', group: 'scan', path: '<circle cx="32" cy="32" r="20" stroke="currentColor" stroke-width="5" fill="none"/><path d="M32 3V9 M32 55V61 M3 32H9 M55 32H61" stroke="currentColor" stroke-width="5" stroke-linecap="round"/><circle cx="32" cy="32" r="10" fill="white"/>' },
+            { id: 'RunAnalysis', group: 'scan', path: '<path d="M20 2V46L52 24Z" fill="currentColor" stroke="none"/><path d="M3 55H62" stroke="white" stroke-width="5" stroke-dasharray="2 2"/>' },
+            { id: 'ViewReport', group: 'scan', path: '<rect x="4" y="2" width="56" height="58" rx="3" stroke="currentColor" stroke-width="5" fill="none"/><path d="M10 11H54 M10 20H54 M10 29H36.4" stroke="white" stroke-width="5"/><circle cx="46" cy="46" r="9" fill="#5A5A6A"/>' },
+            { id: '360Viewer', group: 'scan', path: '<circle cx="32" cy="32" r="29" stroke="currentColor" stroke-width="5" fill="none"/><path d="M3 32H61 M32 3V61" stroke="white" stroke-width="5"/><path d="M32 15.47C40.41 15.47 48.53 23.59 48.53 32C48.53 40.41 40.41 48.53 32 48.53" stroke="white" stroke-width="5" fill="none"/>' },
+            { id: 'ShowOverlay', group: 'scan', path: '<path d="M32 4L55 14L32 24L9 14Z" stroke="currentColor" stroke-width="5" fill="currentColor" fill-opacity="0.5"/><path d="M9 30L32 40L55 30" stroke="white" stroke-width="5" fill="none"/><path d="M9 46L32 56L55 46" stroke="currentColor" stroke-width="5" fill="none"/>' },
+            { id: 'ClearOverlay', group: 'scan', path: '<path d="M32 6L54 16L32 26L10 16Z" stroke="white" stroke-width="5" fill="none"/><path d="M10 33L32 43L54 33" stroke="white" stroke-width="5" fill="none"/><path d="M4 59L59 4" stroke="currentColor" stroke-width="7" stroke-linecap="round"/>' },
+            { id: 'Revit2ReCap', group: 'scan', path: '<rect x="3" y="16" width="29" height="29" stroke="white" stroke-width="5" fill="none"/><circle cx="51" cy="33" r="4" fill="currentColor"/><circle cx="58" cy="18" r="4" fill="currentColor"/><circle cx="41" cy="11" r="4" fill="currentColor"/><circle cx="55" cy="51" r="4" fill="currentColor"/><path d="M34 32H41" stroke="white" stroke-width="5"/>' },
+            { id: 'CloudReset', group: 'scan', path: '<path d="M20.7 58.7 A29 29 0 1 1 49.5 55.2" stroke="currentColor" stroke-width="5" stroke-linecap="round" fill="none"/><path d="M18.4 53.1L20.7 58.7L15.1 60.9" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><circle cx="32" cy="32" r="3" fill="white"/><circle cx="38" cy="28" r="3" fill="white"/><circle cx="26" cy="36" r="3" fill="white"/>' },
 
             // --- DRAFT ---
-            { id: 'HangerSettings', group: 'draft', path: '<path d="M26 10V26 M18 26H34 M18 26V40C18 46 34 46 34 40V26" stroke="white" stroke-width="2" fill="none"/>', badge: true },
-            { id: 'TagSettings', group: 'draft', path: '<path d="M20 22 L30 12 H48 V46 H20 Z" stroke="white" stroke-width="2" fill="none"/><circle cx="29" cy="20" r="2" fill="white"/>', badge: true },
-            { id: 'SinglePipes', group: 'draft', path: '<line x1="32" y1="12" x2="32" y2="36" stroke="currentColor" stroke-width="2"/><circle cx="32" cy="44" r="8" stroke="white" stroke-width="2" fill="none"/>' },
-            { id: 'PipeRack', group: 'draft', path: '<path d="M14 12 V 48 M 50 12 V 48" stroke="currentColor" stroke-width="2" fill="none"/><line x1="10" y1="48" x2="54" y2="48" stroke="white" stroke-width="3"/><circle cx="20" cy="41" r="5" stroke="white" stroke-width="2" fill="none"/><circle cx="32" cy="41" r="5" stroke="white" stroke-width="2" fill="none"/><circle cx="44" cy="41" r="5" stroke="white" stroke-width="2" fill="none"/>' },
-            { id: 'DuctHangers', group: 'draft', path: '<rect x="10" y="14" width="6" height="36" stroke="currentColor" stroke-width="2" fill="none"/><rect x="48" y="14" width="6" height="36" stroke="currentColor" stroke-width="2" fill="none"/><path d="M16 18H48M16 46H48" stroke="white" stroke-width="2"/><path d="M22 24L42 40M22 40L42 24" stroke="white" stroke-width="1" opacity="0.5"/>' },
-            { id: 'RackAdjustment', group: 'draft', path: '<rect x="16" y="28" width="32" height="8" fill="#5A5A6A"/><path d="M32 20V44" stroke="currentColor" stroke-width="2"/><path d="M28 24L32 20L36 24" stroke="currentColor" stroke-width="2" fill="none"/><path d="M28 40L32 44L36 40" stroke="currentColor" stroke-width="2" fill="none"/>' },
-            { id: 'AuditHangers', group: 'draft', path: '<path d="M20 16H44V48H20Z" stroke="white" stroke-width="2" fill="none"/><path d="M26 26L30 30L38 22" stroke="currentColor" stroke-width="2" fill="none"/>' },
-            { id: 'FillInfo', group: 'draft', path: '<path d="M42 14L50 22L36 36L28 28L42 14Z" fill="white"/><path d="M36 36L28 28L22 46L26 48L36 36Z" fill="currentColor"/><rect x="18" y="44" width="16" height="4" fill="currentColor"/>' },
-            { id: 'ElbowExtension', group: 'draft', path: '<rect x="16" y="8" width="24" height="6" stroke="currentColor" stroke-width="2" fill="none"/><rect x="50" y="24" width="6" height="24" stroke="currentColor" stroke-width="2" fill="none"/><path d="M20 14 V 44 H 50" stroke="white" stroke-width="2" fill="none"/><path d="M36 14 V 28 H 50" stroke="white" stroke-width="2" fill="none"/><path d="M26 14 Q 26 38 50 38" stroke="white" stroke-width="1" opacity="0.5" fill="none"/><path d="M32 14 Q 32 32 50 32" stroke="white" stroke-width="1" opacity="0.5" fill="none"/>' },
-            { id: 'Transition', group: 'draft', path: '<path d="M16 16H24L36 24H48V40H36L24 48H16V16Z" stroke="white" stroke-width="2" fill="none"/><line x1="24" y1="16" x2="24" y2="48" stroke="currentColor" stroke-width="1" stroke-dasharray="2 2"/>' },
-            { id: 'BatchSpools', group: 'draft', path: '<rect x="18" y="18" width="24" height="28" fill="#333" stroke="white" stroke-width="2"/><rect x="22" y="14" width="24" height="28" fill="#333" stroke="currentColor" stroke-width="2"/><rect x="26" y="10" width="24" height="28" fill="#333" stroke="white" stroke-width="2"/>' },
-            { id: 'Renumber', group: 'draft', path: '<text x="24" y="40" font-size="24" font-weight="bold" fill="white" font-family="sans-serif">#</text><path d="M42 24A10 10 0 1 1 36 44" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M42 20V24H46" stroke="currentColor" stroke-width="2" fill="none"/>' },
-            { id: 'IsolateService', group: 'draft', path: '<path d="M12 32C12 32 20 18 32 18C44 18 52 32 52 32C52 32 44 46 32 46C20 46 12 32 12 32Z" stroke="white" stroke-width="2" fill="none"/><circle cx="32" cy="32" r="6" fill="currentColor"/>' },
-            { id: 'HideService', group: 'draft', path: '<path d="M12 32C12 32 20 18 32 18C44 18 52 32 52 32C52 32 44 46 32 46C20 46 12 32 12 32Z" stroke="#5A5A6A" stroke-width="2" fill="none"/><line x1="10" y1="10" x2="54" y2="54" stroke="currentColor" stroke-width="3"/>' },
-            { id: 'QuickTag', group: 'draft', path: '<path d="M20 22 L30 12 H48 V46 H20 Z" stroke="white" stroke-width="2" fill="none"/><circle cx="29" cy="20" r="2" fill="white"/><line x1="28" y1="28" x2="42" y2="28" stroke="currentColor" stroke-width="2"/><line x1="28" y1="36" x2="42" y2="36" stroke="currentColor" stroke-width="2"/>' },
+            { id: 'HangerSettings', group: 'draft', path: '<path d="M32 1V30" stroke="currentColor" stroke-width="5"/><path d="M14 20H50" stroke="currentColor" stroke-width="5"/><path d="M14 20V40Q14 58 32 58Q50 58 50 40V20" stroke="currentColor" stroke-width="5" fill="none"/><g transform="translate(36, 39) rotate(45) scale(2) translate(-16, -16)"><path d="M 14 28 L 14 14 Q 14 10 10 9 L 10 4 L 12 4 L 12 7 Q 16 9 20 7 L 20 4 L 22 4 L 22 9 Q 18 10 18 14 L 18 28 A 2 2 0 0 1 14 28 Z" fill="none" stroke="white" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/></g>' },
+            { id: 'TagSettings', group: 'draft', path: '<path d="M6 10L13 3H56V59H6Z" stroke="currentColor" stroke-width="5" fill="none"/><circle cx="15" cy="12" r="2" fill="#5A5A6A"/><g transform="translate(36, 39) rotate(45) scale(2) translate(-16, -16)"><path d="M 14 28 L 14 14 Q 14 10 10 9 L 10 4 L 12 4 L 12 7 Q 16 9 20 7 L 20 4 L 22 4 L 22 9 Q 18 10 18 14 L 18 28 A 2 2 0 0 1 14 28 Z" fill="none" stroke="white" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/></g>' },
+            { id: 'SinglePipes', group: 'draft', path: '<path d="M32 1V30" stroke="white" stroke-width="5"/><path d="M14 20H50" stroke="currentColor" stroke-width="5"/><path d="M14 20V40Q14 58 32 58Q50 58 50 40V20" stroke="currentColor" stroke-width="5" fill="none"/>' },
+            { id: 'PipeRack', group: 'draft', path: '<path d="M5 0V62 M58 0V62" stroke="currentColor" stroke-width="5"/><path d="M0 52H64" stroke="currentColor" stroke-width="5"/><circle cx="16" cy="42" r="5" stroke="white" stroke-width="5" fill="none"/><circle cx="32" cy="42" r="5" stroke="white" stroke-width="5" fill="none"/><circle cx="48" cy="42" r="5" stroke="white" stroke-width="5" fill="none"/>' },
+            { id: 'DuctHangers', group: 'draft', path: '<rect x="3" y="2" width="2" height="59" stroke="currentColor" stroke-width="5" fill="none"/><rect x="59" y="2" width="2" height="59" stroke="currentColor" stroke-width="5" fill="none"/><path d="M5 8H59 M5 56H59" stroke="white" stroke-width="5"/><path d="M11 8L53 55 M11 55L53 8" stroke="white" stroke-width="1" opacity="1"/>' },
+            { id: 'RackAdjustment', group: 'draft', path: '<rect x="2" y="28" width="59" height="8" fill="currentColor"/><path d="M32 5V58" stroke="white" stroke-width="5"/><path d="M24.67 16L32 5L39.33 16" stroke="white" stroke-width="5" fill="none"/><path d="M24.67 47L32 58L39.33 47" stroke="white" stroke-width="5" fill="none"/>' },
+            { id: 'AuditHangers', group: 'draft', path: '<rect x="16" y="12" width="34" height="40" stroke="white" stroke-width="5" fill="none"/><path d="M24 33.2L29.4 38.6L42 26" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>' },
+            { id: 'FillInfo', group: 'draft', path: '<path d="M57.5 6.5L47.9 25.3L38.7 16.1Z" fill="white"/><path d="M47.9 25.3L38.7 16.1L10.4 44.4L19.6 53.6Z" fill="currentColor"/><path d="M19.6 53.6L10.4 44.4L1.9 52.9L11.1 62.1Z" fill="#5A5A6A"/>' },
+            { id: 'ElbowExtension', group: 'draft', path: '<rect x="3" y="3" width="33" height="3" stroke="currentColor" stroke-width="5" fill="none"/><rect x="56" y="28" width="3" height="33" stroke="currentColor" stroke-width="5" fill="none"/><path d="M7 6V59H56" stroke="white" stroke-width="5" fill="none"/><path d="M32 6V31H56" stroke="white" stroke-width="5" fill="none"/>' },
+            { id: 'Transition', group: 'draft', path: '<path d="M3 3H27L39 15H60V47H39L27 59H3V3Z" stroke="white" stroke-width="5" fill="none"/><line x1="27" y1="3" x2="27" y2="59" stroke="currentColor" stroke-width="1" stroke-dasharray="2 2"/>' },
+            { id: 'BatchSpools', group: 'draft', path: '<rect x="3" y="18" width="42" height="42" fill="#222" stroke="currentColor" stroke-width="5"/><rect x="10.5" y="10.5" width="42" height="42" fill="#222" stroke="#5A5A6A" stroke-width="5"/><rect x="18" y="3" width="42" height="42" fill="#222" stroke="white" stroke-width="5"/>' },
+            { id: 'Renumber', group: 'draft', path: '<text x="18" y="51" font-size="48" font-weight="bold" fill="white" font-family="sans-serif">#</text><path d="M31 7A27 27 0 1 1 4.59 28.39" stroke="currentColor" stroke-width="5" fill="none" stroke-linecap="round"/><path d="M31 2.5V7H35.5" stroke="currentColor" stroke-width="5" fill="none" stroke-linecap="round"/>' },
+            { id: 'IsolateService', group: 'draft', path: '<path d="M3 32C3 32 11 12 31.5 12C52 12 60 32 60 32C60 32 52 52 31.5 52C11 52 3 32 3 32Z" stroke="white" stroke-width="5" fill="none"/><circle cx="31.5" cy="32" r="14" fill="currentColor"/>' },
+            { id: 'HideService', group: 'draft', path: '<path d="M3 32C3 32 11 12 31.5 12C52 12 60 32 60 32C60 32 52 52 31.5 52C11 52 3 32 3 32Z" stroke="#5A5A6A" stroke-width="5" fill="none"/><line x1="10" y1="10" x2="54" y2="54" stroke="currentColor" stroke-width="12"/>' },
+            { id: 'QuickTag', group: 'draft', path: '<path d="M6 10L13 3H56V59H6Z" stroke="currentColor" stroke-width="5" fill="none"/><circle cx="15" cy="12" r="3" fill="#5A5A6A"/><line x1="11" y1="22" x2="52" y2="22" stroke="white" stroke-width="5"/><line x1="11" y1="34" x2="52" y2="34" stroke="white" stroke-width="5"/>' },
 
             // --- COORD ---
-            { id: 'DWGOverrides', group: 'coord', path: '<path d="M16 42L48 42" stroke="white" stroke-width="2"/><path d="M16 34L48 34" stroke="white" stroke-width="2"/><path d="M16 26L36 26" stroke="white" stroke-width="2"/>', badge: true },
-            { id: 'MaterialMapping', group: 'coord', path: '<rect x="16" y="24" width="32" height="24" stroke="white" stroke-width="2" fill="none"/><path d="M24 24V48 M32 24V48 M40 24V48" stroke="white" stroke-width="1"/>', badge: true },
-            { id: 'ApplyDWG', group: 'coord', path: '<path d="M16 42L48 42" stroke="white" stroke-width="2"/><path d="M16 34L48 34" stroke="white" stroke-width="2"/><path d="M16 26L36 26" stroke="white" stroke-width="2"/><path d="M44 12L52 20L44 28" fill="currentColor" stroke="none"/>' },
-            { id: 'ApplyMaterials', group: 'coord', path: '<rect x="16" y="24" width="32" height="24" stroke="white" stroke-width="2" fill="none"/><path d="M24 24V48 M32 24V48 M40 24V48" stroke="white" stroke-width="1"/><path d="M44 12L52 20L44 28" fill="currentColor" stroke="none"/>' },
-            { id: 'CreateScopes', group: 'coord', path: '<rect x="18" y="18" width="28" height="28" stroke="white" stroke-width="2" stroke-dasharray="4 2" fill="none"/><path d="M10 10L18 18M54 10L46 18M10 54L18 46M54 54L46 46" stroke="currentColor" stroke-width="2"/>' },
-            { id: 'ResetScope', group: 'coord', path: '<rect x="20" y="20" width="24" height="24" stroke="white" stroke-width="2" fill="none"/><path d="M32 14A18 18 0 1 1 14 32" stroke="currentColor" stroke-width="2" fill="none" stroke-dasharray="2 2"/><path d="M32 10V18L36 14Z" fill="currentColor"/>' },
-            { id: 'ClashViewer', group: 'coord', path: '<rect x="18" y="18" width="20" height="20" stroke="white" stroke-width="2" fill="none"/><rect x="26" y="26" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"/><path d="M32 32L42 22M22 42L32 32" stroke="currentColor" stroke-width="2"/><circle cx="32" cy="32" r="2" fill="red"/>' },
+            { id: 'DWGOverrides', group: 'coord', path: '<text x="1" y="42" font-size="22" font-weight="bold" fill="currentColor" font-family="sans-serif">DWG</text><g transform="translate(36, 39) rotate(45) scale(2) translate(-16, -16)"><path d="M 14 28 L 14 14 Q 14 10 10 9 L 10 4 L 12 4 L 12 7 Q 16 9 20 7 L 20 4 L 22 4 L 22 9 Q 18 10 18 14 L 18 28 A 2 2 0 0 1 14 28 Z" fill="none" stroke="white" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/></g>' },
+            { id: 'MaterialMapping', group: 'coord', path: '<circle cx="32" cy="32" r="29" stroke="currentColor" stroke-width="5" fill="none"/><ellipse cx="32" cy="32" rx="13" ry="29" stroke="currentColor" stroke-width="5" fill="none"/><ellipse cx="32" cy="32" rx="29" ry="8" stroke="currentColor" stroke-width="5" fill="none"/><g transform="translate(36, 39) rotate(45) scale(2) translate(-16, -16)"><path d="M 14 28 L 14 14 Q 14 10 10 9 L 10 4 L 12 4 L 12 7 Q 16 9 20 7 L 20 4 L 22 4 L 22 9 Q 18 10 18 14 L 18 28 A 2 2 0 0 1 14 28 Z" fill="none" stroke="white" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/></g>' },
+            { id: 'ApplyColors', group: 'coord', path: '<text x="1" y="42" font-size="22" font-weight="bold" fill="white" font-family="sans-serif">DWG</text><path d="M44 2L60 18L44 34" fill="currentColor" stroke="none"/>' },
+            { id: 'ApplyMaterials', group: 'coord', path: '<circle cx="32" cy="32" r="29" stroke="white" stroke-width="5" fill="none"/><ellipse cx="32" cy="32" rx="13" ry="29" stroke="white" stroke-width="5" fill="none"/><ellipse cx="32" cy="32" rx="29" ry="8" stroke="white" stroke-width="5" fill="none"/><path d="M44 2L60 18L44 34" fill="currentColor" stroke="none"/>' },
+            { id: 'CreateScopes', group: 'coord', path: '<rect x="12" y="12" width="40" height="40" stroke="white" stroke-width="5" stroke-dasharray="4 2" fill="none"/><line x1="12" y1="12" x2="5.64" y2="5.64" stroke="currentColor" stroke-width="5"/><path d="M1.39 1.39L9.88 1.39L1.39 9.88Z" fill="currentColor"/><line x1="52" y1="12" x2="57.66" y2="6.34" stroke="currentColor" stroke-width="5"/><path d="M61.9 2.1L61.9 10.59L53.41 2.1Z" fill="currentColor"/><line x1="12" y1="52" x2="6.34" y2="57.66" stroke="currentColor" stroke-width="5"/><path d="M2.1 61.9L2.1 53.41L10.59 61.9Z" fill="currentColor"/><line x1="52" y1="52" x2="57.66" y2="57.66" stroke="currentColor" stroke-width="5"/><path d="M61.9 61.9L53.41 61.9L61.9 53.41Z" fill="currentColor"/>' },
+            { id: 'ResetScope', group: 'coord', path: '<rect x="18" y="18" width="29" height="29" stroke="white" stroke-width="5" fill="none"/><path d="M32 4A28 28 0 1 1 8.52 16.75" stroke="currentColor" stroke-width="5" fill="none" stroke-dasharray="2 2"/><path d="M19.58 14.4L8.52 16.75L6.16 5.68" fill="currentColor" stroke="none"/>' },
+            { id: 'ClashViewer', group: 'coord', path: '<rect x="3" y="3" width="49" height="49" stroke="white" stroke-width="5" fill="none"/><rect x="11" y="11" width="49" height="49" stroke="currentColor" stroke-width="5" fill="none"/><path d="M31.5 31.5L52 3M3 52L31.5 31.5" stroke="currentColor" stroke-width="5"/><circle cx="31.5" cy="31.5" r="12" fill="red"/>' },
 
             // --- CORE ---
-            { id: 'UserWorkset', group: 'core', path: '<circle cx="32" cy="24" r="8" stroke="white" stroke-width="2" fill="none"/><path d="M16 48C16 38 24 36 32 36C40 36 48 38 48 48" stroke="white" stroke-width="2" fill="none"/><rect x="36" y="40" width="16" height="12" rx="2" fill="currentColor" stroke="#18181D"/>' },
-            { id: 'LinkWorksets', group: 'core', path: '<path d="M20 24H32A6 6 0 0 1 32 36H20A6 6 0 0 1 20 24" stroke="white" stroke-width="2" fill="none"/><path d="M44 24H32A6 6 0 0 0 32 36H44A6 6 0 0 0 44 24" stroke="currentColor" stroke-width="2" fill="none"/><rect x="36" y="40" width="16" height="12" rx="2" fill="#18181D" stroke="white"/>' },
+            { id: 'SyncSettings', group: 'core', path: '<path d="M35.7 16.4 A16 16 0 0 1 35.7 47.6" stroke="currentColor" stroke-width="5" fill="none"/><path d="M28.3 47.6 A16 16 0 0 1 28.3 16.4" stroke="currentColor" stroke-width="5" fill="none"/><path d="M39.8 43.1 L35.7 47.6 L41.4 49.7" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M24.2 20.9 L28.3 16.4 L22.6 14.3" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><circle cx="32" cy="32" r="26" stroke="white" stroke-width="5" fill="none"/><path d="M32 6L32 3 M47.3 11L49 8.5 M56.7 24L59.6 23 M56.7 40L59.6 41 M47.3 53L49 55.5 M32 58L32 61 M16.7 53L15 55.5 M7.3 40L4.4 41 M7.3 24L4.4 23 M16.7 11L15 8.5" stroke="white" stroke-width="5" stroke-linecap="round"/>' },
+            { id: 'SyncLog', group: 'core', path: '<path d="M3 3H47L60 16V60H3V3Z" stroke="white" stroke-width="5" fill="none"/><path d="M47 3V16H60" stroke="white" stroke-width="5" fill="none"/><line x1="9" y1="15" x2="34" y2="15" stroke="#5A5A6A" stroke-width="5"/><circle cx="44" cy="44" r="16" fill="#18181D" stroke="currentColor" stroke-width="5"/><path d="M44 36V44L50.4 50.4" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>' },
+            { id: 'UserWorkset', group: 'core', path: '<circle cx="32" cy="20" r="17" stroke="white" stroke-width="5" fill="none"/><path d="M4 59C4 41 18 41 32 41C46 41 60 41 60 59" stroke="white" stroke-width="5" fill="none"/><rect x="37" y="40" width="16" height="16" rx="2" fill="currentColor" stroke="currentColor" stroke-width="5"/>' },
+            { id: 'LinkWorksets', group: 'core', path: '<rect x="3" y="20" width="30" height="20" rx="10" stroke="white" stroke-width="5" fill="none"/><rect x="30" y="20" width="30" height="20" rx="10" stroke="#5A5A6A" stroke-width="5" fill="none"/><rect x="37" y="40" width="16" height="16" rx="2" fill="currentColor" stroke="currentColor" stroke-width="5"/>' },
         ];
 
         // MAPPING: Links App Tool IDs to Custom Icon IDs
@@ -972,7 +1034,7 @@
             
             // Coord
             'dwg_overrides': 'DWGOverrides',
-            'apply_colors': 'ApplyDWG',
+            'apply_colors': 'ApplyColors',
             'material_mapping': 'MaterialMapping',
             'apply_materials': 'ApplyMaterials',
             'create_scopes': 'CreateScopes',
@@ -980,6 +1042,8 @@
             'clash_viewer': 'ClashViewer',
             
             // Core
+            'sync_settings': 'SyncSettings',
+            'sync_log': 'SyncLog',
             'user_workset': 'UserWorkset',
             'link_worksets': 'LinkWorksets'
         };
@@ -988,20 +1052,10 @@
             const icon = customIcons.find(i => i.id === iconId);
             if (!icon) return null;
 
-            // Background chips logic - kept outlines but removed solid fill for button integration
             return `
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="100%" height="100%">
-                <path d="M8 1H56L63 8V56L56 63H8L1 56V8L8 1Z" stroke="${color}" stroke-width="1" stroke-opacity="0.3" fill="none"/>
-                <path d="M8 6H56" stroke="${color}" stroke-width="1" stroke-opacity="0.5" />
-                <path d="M8 58H56" stroke="${color}" stroke-width="1" stroke-opacity="0.5" />
-                <path d="M2 10L10 2" stroke="${color}" stroke-width="2" stroke-opacity="0.8" />
-                <path d="M54 2L62 10" stroke="${color}" stroke-width="2" stroke-opacity="0.8" />
-                <path d="M62 54L54 62" stroke="${color}" stroke-width="2" stroke-opacity="0.8" />
-                <path d="M10 62L2 54" stroke="${color}" stroke-width="2" stroke-opacity="0.8" />
-                
                 <g style="color: ${color}">
                     ${icon.path}
-                    ${icon.badge ? BADGE_WRENCH_GROUP(color) : ''}
                 </g>
             </svg>`;
         }
@@ -1183,6 +1237,13 @@
                         tools: [
                             { id: 'user_workset', label: 'User Workset', icon: 'user', fn: 'Create a personal workset named after you to keep your work organized and prevent accidental edits to others\' elements.', videoRef: '', changelog: '', requirements: ['Worksharing enabled in project'] },
                             { id: 'link_worksets', label: 'Link Worksets', icon: 'link', fn: 'Organize linked models (RVT, CAD, point clouds) onto dedicated worksets for easier visibility control and model management.', videoRef: '', changelog: '', requirements: ['Worksharing enabled in project', 'Linked models, CAD files, or point clouds in project'] },
+                        ]
+                    },
+                    {
+                        title: 'AutoSync',
+                        tools: [
+                            { id: 'sync_settings', label: 'AutoSync Settings', icon: 'settings', fn: 'Configure automatic synchronization intervals, notification preferences, and sync behavior. Set how often your model syncs to central and control what happens during each sync cycle.', videoRef: '', changelog: '', requirements: ['Worksharing enabled in project', 'Central model accessible on network or BIM 360/ACC'] },
+                            { id: 'sync_log', label: 'Sync Log', icon: 'clock', fn: 'View a timestamped history of all automatic and manual sync operations. Track sync durations, conflicts encountered, and elements borrowed or relinquished during each cycle.', videoRef: '', changelog: '', requirements: ['Worksharing enabled in project', 'At least one sync operation completed'] },
                         ]
                     }
                 ]
