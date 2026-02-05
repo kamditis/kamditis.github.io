@@ -766,7 +766,6 @@
             border-left: 1px solid var(--border);
             padding: 24px;
             overflow-y: auto;
-            display: none;
         }
 
         .detail-changelog .changelog-content {
@@ -1378,13 +1377,7 @@
         }
 
         function renderChangelog(tool) {
-            const changelog = tool.changelog || '';
-            if (changelog) {
-                changelogSection.style.display = 'block';
-                changelogContent.textContent = changelog;
-            } else {
-                changelogSection.style.display = 'none';
-            }
+            changelogContent.textContent = tool.changelog || 'No changelog entries';
         }
 
         function renderDetail(tool) {
@@ -1507,8 +1500,8 @@
                 requirementsList.innerHTML = '<span class="requirements-empty">No additional requirements</span>';
             }
 
-            // Hide changelog when no tool is selected
-            changelogSection.style.display = 'none';
+            // Reset changelog
+            changelogContent.textContent = 'No changelog entries';
 
             lucide.createIcons();
         }
