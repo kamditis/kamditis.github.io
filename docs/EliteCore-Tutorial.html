@@ -1,0 +1,1422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EliteCore Tutorial</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        /* ============================================================
+           COLOR PALETTE — matches EliteCore purple accent
+           ============================================================ */
+        :root {
+            --bg:           #0F0F12;
+            --surface:      #18181D;
+            --surface2:     #222229;
+            --border:       #2E2E38;
+            --border-light: #3D3D4A;
+            --text:         #E8E8ED;
+            --text-dim:     #9898A8;
+            --text-muted:   #5A5A6A;
+
+            /* Region accents */
+            --scan:   #5ED5DD;   /* Cyan */
+            --draft:  #F5B878;   /* Amber — draft/warning */
+            --coord:  #6EE7A8;   /* Green — success/coord */
+            --core:   #A78BFA;   /* Purple — primary accent */
+
+            /* Action colors */
+            --success: #4CAF50;
+            --primary: #2196F3;
+            --warning: #FF9800;
+            --danger:  #F44336;
+        }
+
+        @page { size: letter; margin: 0; }
+        /* Back navigation bar */
+        .back-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 24px;
+            background: rgba(24, 24, 29, 0.92);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+        }
+        .back-nav a {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--core);
+            text-decoration: none;
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            transition: opacity 0.2s;
+        }
+        .back-nav a:hover { opacity: 0.8; }
+        .back-nav a svg { width: 16px; height: 16px; }
+        .back-nav .nav-sep { color: var(--text-muted); font-size: 13px; }
+        .back-nav .nav-title { color: var(--text-dim); font-size: 13px; font-weight: 500; }
+        body { padding-top: 44px; }
+
+        @media print {
+            .back-nav { display: none !important; }
+            body { padding-top: 0 !important; }
+            * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; color-adjust: exact !important; }
+            html { background: var(--bg) !important; }
+            body { background: var(--bg) !important; max-width: none; margin: 0; padding: 0.4in 0.6in; }
+            .slide { box-shadow: none !important; }
+            .slide-title { padding: 0.3in 0; }
+            .slide-section { padding: 0.2in 0.4in; }
+            .slide-footer { display: none; }
+            .col-card, .btn-table, .slide-section, .legend-row, .status-row, .shortcut-group { break-inside: avoid; page-break-inside: avoid; }
+            .slide-header { break-after: avoid; page-break-after: avoid; }
+            .slide.slide-section { break-before: page; page-break-before: always; }
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html {
+            background: var(--bg);
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+            font-size: 12pt;
+            line-height: 1.5;
+            color: var(--text);
+            background: var(--bg);
+            max-width: 8.5in;
+            margin: 0 auto;
+            padding: 0.5in 0.7in;
+        }
+
+        .slide {
+            background: var(--bg);
+            margin-bottom: 0.15in;
+            padding: 0.1in 0;
+        }
+
+        /* ============================================================
+           TITLE SLIDE
+           ============================================================ */
+        .slide-title {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 0.4in 0.5in 0.3in;
+            background: var(--bg);
+            background-image:
+                linear-gradient(rgba(167,139,250,0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(167,139,250,0.03) 1px, transparent 1px);
+            background-size: 20px 20px;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .slide-title .tag {
+            font-family: 'Fira Code', Consolas, monospace;
+            font-size: 11pt;
+            font-weight: 500;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--core);
+            margin-bottom: 0.15in;
+            border: 1px solid var(--border-light);
+            padding: 0.06in 0.2in;
+            border-radius: 3px;
+            background: var(--surface2);
+        }
+
+        .slide-title h1 {
+            font-size: 32pt;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 0.15in;
+            color: var(--text);
+        }
+
+        .slide-title .accent-bar {
+            width: 1in;
+            height: 3px;
+            background: var(--core);
+            margin: 0.08in 0 0.12in;
+        }
+
+        .slide-title .subtitle {
+            font-size: 13pt;
+            color: var(--text-dim);
+            max-width: 7in;
+        }
+
+        .slide-title .version {
+            font-family: 'Fira Code', Consolas, monospace;
+            font-size: 10pt;
+            color: var(--text-muted);
+            margin-top: 0.15in;
+        }
+
+        /* ============================================================
+           SECTION DIVIDER
+           ============================================================ */
+        .slide-section {
+            display: flex;
+            flex-direction: column;
+            padding: 0.2in 0.4in;
+            background: var(--surface);
+            border-left: 6px solid var(--core);
+            border-radius: 4px;
+        }
+
+        .slide-section .section-label {
+            font-family: 'Fira Code', Consolas, monospace;
+            font-size: 11pt;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.15in;
+        }
+
+        .slide-section h2 {
+            font-size: 24pt;
+            font-weight: 800;
+            color: var(--text);
+        }
+
+        .slide-section .section-sub {
+            font-size: 12pt;
+            color: var(--text-dim);
+            margin-top: 0.1in;
+        }
+
+        /* ============================================================
+           CONTENT SLIDE
+           ============================================================ */
+        .slide-content {
+            padding: 0.05in 0;
+        }
+
+        .slide-header {
+            margin-bottom: 0.12in;
+            padding-bottom: 0.06in;
+            border-bottom: 2px solid var(--border);
+            display: flex;
+            align-items: baseline;
+            gap: 0.15in;
+        }
+
+        .slide-header h2 {
+            font-size: 18pt;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .slide-header .tab-label {
+            font-family: 'Fira Code', Consolas, monospace;
+            font-size: 11pt;
+            color: var(--core);
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            padding: 2px 10px;
+            border-radius: 3px;
+        }
+
+        .slide-body {
+            font-size: 12pt;
+        }
+
+        .slide-footer {
+            display: none;
+        }
+
+        .slide-number { color: var(--core); font-weight: 600; }
+
+        /* ============================================================
+           BUTTON REFERENCE TABLE
+           ============================================================ */
+        .btn-table {
+            width: 100%;
+            border-collapse: collapse;
+            break-inside: avoid;
+        }
+
+        .btn-table th {
+            text-align: left;
+            font-family: 'Fira Code', Consolas, monospace;
+            font-size: 10pt;
+            color: var(--text-muted);
+            padding: 0.06in 0.12in;
+            border-bottom: 1px solid var(--border);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .btn-table td {
+            padding: 0.05in 0.1in;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+            font-size: 11pt;
+        }
+
+        .btn-table tr:last-child td { border-bottom: none; }
+
+        .btn-name {
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .btn-pill {
+            display: inline-block;
+            font-family: 'Fira Code', Consolas, monospace;
+            font-size: 10pt;
+            font-weight: 600;
+            padding: 2px 8px;
+            border-radius: 3px;
+            white-space: nowrap;
+        }
+
+        .pill-cyan   { background: rgba(94,213,221,0.15); color: var(--scan); border: 1px solid rgba(94,213,221,0.3); }
+        .pill-green  { background: rgba(110,231,168,0.15); color: var(--coord); border: 1px solid rgba(110,231,168,0.3); }
+        .pill-amber  { background: rgba(245,184,120,0.15); color: var(--draft); border: 1px solid rgba(245,184,120,0.3); }
+        .pill-purple { background: rgba(167,139,250,0.15); color: var(--core); border: 1px solid rgba(167,139,250,0.3); }
+        .pill-blue   { background: rgba(33,150,243,0.15); color: var(--primary); border: 1px solid rgba(33,150,243,0.3); }
+        .pill-red    { background: rgba(244,67,54,0.15); color: var(--danger); border: 1px solid rgba(244,67,54,0.3); }
+        .pill-gray   { background: var(--surface2); color: var(--text-dim); border: 1px solid var(--border); }
+
+        .key {
+            font-family: 'Fira Code', Consolas, monospace;
+            font-size: 10pt;
+            font-weight: 600;
+            background: var(--surface2);
+            color: var(--core);
+            padding: 1px 6px;
+            border-radius: 3px;
+            border: 1px solid var(--border);
+        }
+
+        .desc { color: var(--text-dim); font-size: 10pt; }
+
+        /* ============================================================
+           TWO COLUMN
+           ============================================================ */
+        .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 0.15in; }
+
+        .col-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 0.15in;
+            break-inside: avoid;
+        }
+
+        .col-card h3 {
+            font-size: 13pt;
+            font-weight: 700;
+            margin-bottom: 0.1in;
+            padding-bottom: 0.05in;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .col-card ul { list-style: none; padding: 0; }
+        .col-card li {
+            font-size: 11pt;
+            padding: 0.03in 0;
+            padding-left: 0.25in;
+            position: relative;
+            color: var(--text-dim);
+        }
+
+        .col-card li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0.16in;
+            width: 0.08in;
+            height: 0.08in;
+            border-radius: 50%;
+        }
+
+        .col-cyan li::before  { background: var(--scan); }
+        .col-green li::before { background: var(--coord); }
+        .col-amber li::before { background: var(--draft); }
+        .col-purple li::before { background: var(--core); }
+
+        .col-card li strong { color: var(--text); }
+
+        /* ============================================================
+           KEYBOARD SHORTCUTS GRID
+           ============================================================ */
+        .shortcut-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.12in;
+        }
+
+        .shortcut-group h4 {
+            font-family: 'Fira Code', Consolas, monospace;
+            font-size: 11pt;
+            color: var(--core);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.1in;
+        }
+
+        .shortcut-item {
+            display: flex;
+            gap: 0.1in;
+            align-items: baseline;
+            padding: 0.03in 0;
+        }
+
+        .shortcut-item .desc { font-size: 9pt; }
+
+        /* ============================================================
+           STATUS COLORS ROW
+           ============================================================ */
+        .status-row {
+            display: flex;
+            gap: 0.15in;
+            flex-wrap: wrap;
+        }
+
+        .status-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12pt;
+            padding: 4px 12px;
+            border-radius: 4px;
+            border: 2px solid;
+        }
+
+        .status-chip .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        /* ============================================================
+           LEGEND
+           ============================================================ */
+        .legend-row {
+            display: flex;
+            gap: 0.25in;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .legend-swatch {
+            width: 24px;
+            height: 24px;
+            border-radius: 4px;
+        }
+
+        /* ============================================================
+           END SLIDE
+           ============================================================ */
+        .slide-end {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 0.5in;
+            background: var(--surface);
+            background-image:
+                linear-gradient(rgba(167,139,250,0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(167,139,250,0.03) 1px, transparent 1px);
+            background-size: 20px 20px;
+            border-radius: 4px;
+        }
+
+        .slide-end h2 { font-size: 24pt; font-weight: 800; margin-bottom: 0.1in; }
+        .slide-end .accent-bar { width: 0.6in; height: 3px; background: var(--core); margin-bottom: 0.2in; }
+        .slide-end .contact { font-size: 12pt; color: var(--text-dim); line-height: 1.8; }
+        .slide-end .contact strong { color: var(--core); }
+    </style>
+</head>
+<body>
+
+    <nav class="back-nav">
+        <a href="../index.html">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+            EliteCAD Tools
+        </a>
+        <span class="nav-sep">/</span>
+        <span class="nav-title">EliteCore Documentation</span>
+    </nav>
+
+    <!-- ============================================================ -->
+    <!-- TITLE SLIDE                                                  -->
+    <!-- ============================================================ -->
+    <div class="slide slide-title">
+        <div class="tag">Revit Add-in</div>
+        <h1>EliteCore</h1>
+        <div class="accent-bar"></div>
+        <p class="subtitle">A tutorial walkthrough of every ribbon button, dialog, and workflow in the core utilities plugin for project setup, auto-sync, and tab coloring</p>
+        <p class="version">v1.0.3 / Tutorial &amp; Reference Guide</p>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 01: RIBBON OVERVIEW                                  -->
+    <!-- ============================================================ -->
+    <div class="slide slide-section">
+        <div class="section-label">Section 01</div>
+        <h2>Ribbon overview</h2>
+        <div class="section-sub">The &ldquo;Elite Core&rdquo; tab with three panels: Project Setup, Auto Sync, and Tab Colors</div>
+    </div>
+
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>Ribbon panels &amp; buttons</h2>
+            <span class="tab-label">Elite Core</span>
+        </div>
+        <div class="slide-body">
+            <p style="color:var(--text-dim);margin-bottom:0.15in;font-size:11pt;">EliteCore installs a dedicated &ldquo;Elite Core&rdquo; tab in the Revit ribbon. It contains three panels grouping core utilities for project setup, automatic syncing, and tab color customization. Supports Revit 2022 through 2026.</p>
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0.2in;">
+                <div class="col-card" style="border-left:3px solid var(--core);">
+                    <h3 style="color:var(--core);">Project Setup panel</h3>
+                    <ul class="col-purple">
+                        <li><strong>User Workset</strong> &mdash; Create and activate personal workset</li>
+                        <li><strong>Link Worksets</strong> &mdash; Organize all links onto dedicated worksets</li>
+                        <li><strong>Setup Wizard</strong> &mdash; Shared parameter binding manager</li>
+                    </ul>
+                </div>
+                <div class="col-card" style="border-left:3px solid var(--scan);">
+                    <h3 style="color:var(--scan);">Auto Sync panel</h3>
+                    <ul class="col-cyan">
+                        <li><strong>Auto Sync Settings</strong> &mdash; Configure sync intervals and behavior</li>
+                        <li><strong>Sync Log</strong> &mdash; View sync history and statistics</li>
+                    </ul>
+                </div>
+                <div class="col-card" style="border-left:3px solid var(--draft);">
+                    <h3 style="color:var(--draft);">Tab Colors panel</h3>
+                    <ul class="col-amber">
+                        <li><strong>Tab Color Settings</strong> &mdash; Configure document tab color scheme</li>
+                        <li><strong>Toggle Colors</strong> &mdash; Enable or disable tab colors instantly</li>
+                    </ul>
+                </div>
+            </div>
+            <p style="margin-top:0.15in;font-size:10pt;color:var(--text-muted);">Icons auto-swap between Light and Dark variants to match Revit&rsquo;s current UI theme. The add-in uses ricaun.Revit.UI for ribbon creation with automatic DPI scaling.</p>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 02: USER WORKSET                                     -->
+    <!-- ============================================================ -->
+    <div class="slide slide-section">
+        <div class="section-label">Section 02</div>
+        <h2>Project Setup &mdash; User Workset</h2>
+        <div class="section-sub">Create and activate a personal workset named after your Autodesk username</div>
+    </div>
+
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>User Workset command</h2>
+            <span class="tab-label">Project Setup &gt; User Workset</span>
+        </div>
+        <div class="slide-body">
+            <table class="btn-table">
+                <tr>
+                    <th>Action</th>
+                    <th>Details</th>
+                </tr>
+                <tr>
+                    <td class="btn-name">Creates workset</td>
+                    <td>Named <span class="btn-pill pill-purple">01 - {username}</span> using your Revit username</td>
+                </tr>
+                <tr>
+                    <td class="btn-name">Sets active</td>
+                    <td>Immediately switches to the new workset as the active workset</td>
+                </tr>
+                <tr>
+                    <td class="btn-name">Opens dialog</td>
+                    <td>Launches the native Revit Worksets dialog for verification</td>
+                </tr>
+                <tr>
+                    <td class="btn-name">Skips duplicates</td>
+                    <td>If the workset already exists, simply activates it without creating a new one</td>
+                </tr>
+            </table>
+
+            <div style="margin-top:0.2in;">
+                <div class="col-card" style="border-left:3px solid var(--coord);">
+                    <h3 style="color:var(--coord);">Auto-activation on document open</h3>
+                    <ul class="col-green">
+                        <li><strong>Automatic:</strong> When any workshared document opens, EliteCore searches for a <span class="btn-pill pill-purple">01 - {username}</span> workset</li>
+                        <li><strong>Silent:</strong> If found, it is set as active automatically &mdash; no dialog or notification</li>
+                        <li><strong>Always on:</strong> This happens every time, ensuring you always start on your personal workset</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div style="margin-top:0.15in;">
+                <div class="col-card" style="border-left:3px solid var(--danger);">
+                    <h3 style="color:var(--danger);">Requirements</h3>
+                    <ul class="col-purple">
+                        <li><strong>Worksharing must be enabled</strong> &mdash; if not, shows message: &ldquo;This command requires a workshared document. Enable worksharing first.&rdquo;</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 03: LINK WORKSETS                                    -->
+    <!-- ============================================================ -->
+    <div class="slide slide-section">
+        <div class="section-label">Section 03</div>
+        <h2>Project Setup &mdash; Link Worksets</h2>
+        <div class="section-sub">Organize all linked models, CAD files, point clouds, and coordination models onto dedicated worksets</div>
+    </div>
+
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>Link Worksets command</h2>
+            <span class="tab-label">Project Setup &gt; Link Worksets</span>
+        </div>
+        <div class="slide-body">
+            <p style="color:var(--text-dim);margin-bottom:0.15in;font-size:11pt;">Scans the document for all linked content and assigns each to a dedicated workset following a standardized naming convention. Reuses existing worksets when present.</p>
+
+            <table class="btn-table">
+                <tr>
+                    <th>Link Type</th>
+                    <th>Workset Name</th>
+                    <th>Grouping</th>
+                </tr>
+                <tr>
+                    <td class="btn-name">Revit Links</td>
+                    <td><span class="btn-pill pill-purple">Link - {linkName}.rvt</span></td>
+                    <td class="desc">Individual workset per link. Skips links with &ldquo;PLACEHOLDER&rdquo; in name.</td>
+                </tr>
+                <tr>
+                    <td class="btn-name">Point Clouds</td>
+                    <td><span class="btn-pill pill-cyan">Link - {cloudName}</span></td>
+                    <td class="desc">Individual workset per point cloud instance</td>
+                </tr>
+                <tr>
+                    <td class="btn-name">CAD Links</td>
+                    <td><span class="btn-pill pill-amber">Link - CAD LINKS</span></td>
+                    <td class="desc">All CAD imports grouped onto a single workset</td>
+                </tr>
+                <tr>
+                    <td class="btn-name">Coordination Models</td>
+                    <td><span class="btn-pill pill-green">Link - Coordination Models</span></td>
+                    <td class="desc">All coordination models grouped onto a single workset</td>
+                </tr>
+            </table>
+
+            <p style="margin-top:0.15in;font-size:10pt;color:var(--text-muted);">After creating/assigning worksets, the native Revit Worksets dialog opens to show the organized structure. Requires worksharing to be enabled.</p>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 04: SETUP WIZARD                                     -->
+    <!-- ============================================================ -->
+    <div class="slide slide-section">
+        <div class="section-label">Section 04</div>
+        <h2>Project Setup &mdash; Setup Wizard</h2>
+        <div class="section-sub">Manage shared parameters required by all Elite add-ins from a single dialog</div>
+    </div>
+
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>Setup Wizard dialog</h2>
+            <span class="tab-label">Project Setup &gt; Setup Wizard</span>
+        </div>
+        <div class="slide-body">
+            <p style="color:var(--text-dim);margin-bottom:0.15in;font-size:11pt;">Displays all shared parameters required by Elite add-ins (EliteCoord, EliteDraft, EliteScan) and allows binding missing parameters to the project in one click.</p>
+
+            <div class="two-col">
+                <div class="col-card" style="border-left:3px solid var(--core);">
+                    <h3 style="color:var(--core);">Status indicators</h3>
+                    <ul class="col-purple">
+                        <li><strong style="color:var(--success);">Green dot</strong> &mdash; Parameter already bound in document</li>
+                        <li><strong style="color:var(--danger);">Red dot</strong> &mdash; Parameter missing from document</li>
+                        <li><strong style="color:var(--text-muted);">Gray dot</strong> &mdash; Planned (Phase 2, not yet implemented)</li>
+                    </ul>
+                </div>
+                <div class="col-card" style="border-left:3px solid var(--core);">
+                    <h3 style="color:var(--core);">Dialog controls</h3>
+                    <ul class="col-purple">
+                        <li><strong>Parameter list</strong> &mdash; Grouped by source add-in with columns: Status, Name, Type, Categories</li>
+                        <li><strong>Add Missing Parameters</strong> &mdash; Creates and binds all missing parameters (enabled only when missing parameters exist)</li>
+                        <li><strong>Close</strong> &mdash; Dismiss the dialog</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>Parameter registry</h2>
+            <span class="tab-label">Setup Wizard</span>
+        </div>
+        <div class="slide-body">
+            <div class="col-card" style="border-left:3px solid var(--coord);margin-bottom:0.15in;">
+                <h3 style="color:var(--coord);">EliteCoord <span class="btn-pill pill-green" style="font-size:9pt;">1 parameter</span></h3>
+                <ul class="col-green">
+                    <li><strong>Navis Material</strong> &mdash; Material override for Navisworks export <span class="desc">(Material)</span></li>
+                </ul>
+            </div>
+
+            <div class="col-card" style="border-left:3px solid var(--draft);margin-bottom:0.15in;">
+                <h3 style="color:var(--draft);">EliteDraft &mdash; Fabrication Parts <span class="btn-pill pill-amber" style="font-size:9pt;">13 parameters</span></h3>
+                <ul class="col-amber">
+                    <li><strong>Spool - Description</strong> &mdash; Spool description for fabrication sheets <span class="desc">(Text)</span></li>
+                    <li><strong>SM - OFFSET</strong> &mdash; SpoolMaster offset value <span class="desc">(Number)</span></li>
+                    <li><strong>SM - SET</strong> &mdash; SpoolMaster set value <span class="desc">(Number)</span></li>
+                    <li><strong>SM - CALC TRANSITION LENGTH</strong> &mdash; Calculated transition length <span class="desc">(Length)</span></li>
+                    <li><strong>SM - Top Extension</strong> &mdash; Top extension length <span class="desc">(Length)</span></li>
+                    <li><strong>SM - Bottom Extension</strong> &mdash; Bottom extension length <span class="desc">(Length)</span></li>
+                    <li><strong>SM - Elbow Radius</strong> &mdash; Elbow radius <span class="desc">(Length)</span></li>
+                    <li><strong>Hanger - Elevation Offset</strong> &mdash; Hanger elevation offset from level <span class="desc">(Length)</span></li>
+                    <li><strong>Hanger - Rod Length</strong> &mdash; Primary rod length <span class="desc">(Length)</span></li>
+                    <li><strong>Hanger - Rod Length #2</strong> &mdash; Secondary rod length <span class="desc">(Length)</span></li>
+                    <li><strong>Hanger - Total Length</strong> &mdash; Total assembly length <span class="desc">(Length)</span></li>
+                    <li><strong>Hanger - Unistrut Length</strong> &mdash; Unistrut channel length <span class="desc">(Length)</span></li>
+                    <li><strong>Hanger - Free Size</strong> &mdash; Free-form size text <span class="desc">(Text)</span></li>
+                </ul>
+            </div>
+
+            <div class="col-card" style="border-left:3px solid var(--draft);margin-bottom:0.15in;">
+                <h3 style="color:var(--draft);">EliteDraft &mdash; Sheets <span class="btn-pill pill-amber" style="font-size:9pt;">7 parameters</span></h3>
+                <ul class="col-amber">
+                    <li><strong>Spool - Weight</strong> &mdash; Total spool weight <span class="desc">(Number)</span></li>
+                    <li><strong>Spool - Weld Inches</strong> &mdash; Total weld inches <span class="desc">(Number)</span></li>
+                    <li><strong>Spool - Map</strong> &mdash; Spool map reference <span class="desc">(Text)</span></li>
+                    <li><strong>Spool - Area</strong> &mdash; Spool area designation <span class="desc">(Text)</span></li>
+                    <li><strong>Spool - Note</strong> &mdash; Spool note text <span class="desc">(Text)</span></li>
+                    <li><strong>Sheet Discipline</strong> &mdash; Sheet discipline classification <span class="desc">(Text)</span></li>
+                    <li><strong>Sheet Function</strong> &mdash; Sheet function classification <span class="desc">(Text)</span></li>
+                </ul>
+            </div>
+
+            <div class="col-card" style="border-left:3px solid var(--scan);">
+                <h3 style="color:var(--scan);">EliteScan &mdash; Phase 2 <span class="btn-pill pill-gray" style="font-size:9pt;">Planned</span></h3>
+                <ul class="col-cyan">
+                    <li><strong>ScanID</strong> &mdash; Unique scan point identifier <span class="desc">(Text)</span></li>
+                    <li><strong>PointCloudId</strong> &mdash; Associated point cloud identifier <span class="desc">(Number)</span></li>
+                    <li><strong>AnalysisRadius</strong> &mdash; Point cloud analysis radius <span class="desc">(Length)</span></li>
+                    <li><strong>Level</strong> &mdash; Associated level name <span class="desc">(Text)</span></li>
+                    <li><strong>NorthOffset</strong> &mdash; North direction offset angle <span class="desc">(Angle)</span></li>
+                    <li><strong>ImagePath_Local</strong> &mdash; Local path to captured image <span class="desc">(Text)</span></li>
+                    <li><strong>SupportFolderPath</strong> &mdash; Path to support files folder <span class="desc">(Text)</span></li>
+                </ul>
+            </div>
+
+            <p style="margin-top:0.15in;font-size:10pt;color:var(--text-muted);">Shared parameter file: <span class="key">%LOCALAPPDATA%\EliteTools\SharedParameters\ECD_SharedParameters.txt</span></p>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 05: AUTO-SYNC SETTINGS                               -->
+    <!-- ============================================================ -->
+    <div class="slide slide-section">
+        <div class="section-label">Section 05</div>
+        <h2>Auto-Sync &mdash; Settings</h2>
+        <div class="section-sub">Configure automatic synchronization intervals, idle detection, and relinquish behavior</div>
+    </div>
+
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>Auto-Sync Settings dialog</h2>
+            <span class="tab-label">Auto Sync &gt; Settings</span>
+        </div>
+        <div class="slide-body">
+            <p style="color:var(--text-dim);margin-bottom:0.15in;font-size:11pt;">Configure how and when EliteCore automatically synchronizes your workshared document with central. Settings can be saved per-project or as a global default.</p>
+
+            <table class="btn-table">
+                <tr>
+                    <th>Section</th>
+                    <th>Controls</th>
+                    <th>Default</th>
+                </tr>
+                <tr>
+                    <td class="btn-name">Interval Sync</td>
+                    <td>Enable checkbox + dropdown: <span class="btn-pill pill-purple">15</span> <span class="btn-pill pill-purple">30</span> <span class="btn-pill pill-purple">45</span> <span class="btn-pill pill-purple">60</span> minutes</td>
+                    <td class="desc">Enabled, 30 min</td>
+                </tr>
+                <tr>
+                    <td class="btn-name">Idle Sync</td>
+                    <td>Enable checkbox + minutes input &mdash; sync after period of inactivity</td>
+                    <td class="desc">Disabled, 10 min</td>
+                </tr>
+                <tr>
+                    <td class="btn-name">Sync on Save</td>
+                    <td>Checkbox &mdash; trigger sync whenever you save locally</td>
+                    <td class="desc">Disabled</td>
+                </tr>
+                <tr>
+                    <td class="btn-name">Pre-close Reminder</td>
+                    <td>Checkbox &mdash; remind to sync before closing document</td>
+                    <td class="desc">Enabled</td>
+                </tr>
+                <tr>
+                    <td class="btn-name">Quiet Mode</td>
+                    <td>Checkbox &mdash; suppress all sync dialogs and notifications</td>
+                    <td class="desc">Disabled</td>
+                </tr>
+                <tr>
+                    <td class="btn-name">Compact Central</td>
+                    <td>Checkbox &mdash; compact the central model when syncing</td>
+                    <td class="desc">Disabled</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>Relinquish &amp; thresholds</h2>
+            <span class="tab-label">Auto Sync &gt; Settings</span>
+        </div>
+        <div class="slide-body">
+            <div class="two-col">
+                <div class="col-card" style="border-left:3px solid var(--core);">
+                    <h3 style="color:var(--core);">Relinquish options</h3>
+                    <ul class="col-purple">
+                        <li><strong>User-created worksets</strong> &mdash; Release ownership of worksets you created <span class="desc">(Default: enabled)</span></li>
+                        <li><strong>Checked-out elements</strong> &mdash; Release ownership of individually checked-out elements <span class="desc">(Default: enabled)</span></li>
+                    </ul>
+                </div>
+                <div class="col-card" style="border-left:3px solid var(--draft);">
+                    <h3 style="color:var(--draft);">Status thresholds</h3>
+                    <ul class="col-amber">
+                        <li><strong>Warning (yellow)</strong> &mdash; Minutes since last sync before showing warning <span class="desc">(Default: 20 min)</span></li>
+                        <li><strong>Overdue (red)</strong> &mdash; Minutes since last sync before marking overdue <span class="desc">(Default: 45 min)</span></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div style="margin-top:0.15in;">
+                <div class="col-card" style="border-left:3px solid var(--coord);">
+                    <h3 style="color:var(--coord);">Save location</h3>
+                    <ul class="col-green">
+                        <li><strong>Project-specific</strong> &mdash; Check &ldquo;Save as project-specific settings&rdquo; to save settings for this project only</li>
+                        <li><strong>Global default</strong> &mdash; Unchecked saves as the default for all projects without their own settings</li>
+                    </ul>
+                </div>
+            </div>
+
+            <p style="margin-top:0.12in;font-size:10pt;color:var(--text-muted);">Bottom buttons: <span class="btn-pill pill-gray">Reset Defaults</span> <span class="btn-pill pill-gray">Cancel</span> <span class="btn-pill pill-purple">Save</span></p>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 06: AUTO-SYNC HOW IT WORKS                           -->
+    <!-- ============================================================ -->
+    <div class="slide slide-section">
+        <div class="section-label">Section 06</div>
+        <h2>Auto-Sync &mdash; How it works</h2>
+        <div class="section-sub">Background service that monitors your document and triggers syncs automatically</div>
+    </div>
+
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>Sync status states</h2>
+            <span class="tab-label">Auto Sync</span>
+        </div>
+        <div class="slide-body">
+            <p style="color:var(--text-dim);margin-bottom:0.15in;font-size:11pt;">The Auto-Sync service runs in the background and tracks the sync status of every open workshared document. Status changes based on time since last sync and the thresholds configured in settings.</p>
+
+            <div class="status-row" style="margin-bottom:0.15in;">
+                <div class="status-chip" style="border-color:var(--success);background:rgba(76,175,80,0.1);">
+                    <div class="dot" style="background:var(--success);"></div>
+                    <span style="color:var(--success);">Synced</span>
+                </div>
+                <div class="status-chip" style="border-color:var(--warning);background:rgba(255,152,0,0.1);">
+                    <div class="dot" style="background:var(--warning);"></div>
+                    <span style="color:var(--warning);">Warning</span>
+                </div>
+                <div class="status-chip" style="border-color:var(--danger);background:rgba(244,67,54,0.1);">
+                    <div class="dot" style="background:var(--danger);"></div>
+                    <span style="color:var(--danger);">Overdue</span>
+                </div>
+                <div class="status-chip" style="border-color:var(--primary);background:rgba(33,150,243,0.1);">
+                    <div class="dot" style="background:var(--primary);"></div>
+                    <span style="color:var(--primary);">Syncing</span>
+                </div>
+                <div class="status-chip" style="border-color:var(--danger);background:rgba(244,67,54,0.1);">
+                    <div class="dot" style="background:var(--danger);"></div>
+                    <span style="color:var(--danger);">Failed</span>
+                </div>
+                <div class="status-chip" style="border-color:var(--text-muted);background:rgba(90,90,106,0.1);">
+                    <div class="dot" style="background:var(--text-muted);"></div>
+                    <span style="color:var(--text-muted);">N/A</span>
+                </div>
+            </div>
+
+            <table class="btn-table">
+                <tr>
+                    <th>Event</th>
+                    <th>Service response</th>
+                </tr>
+                <tr>
+                    <td class="btn-name">Idling</td>
+                    <td>Checked every 30 seconds &mdash; evaluates if interval sync is due or idle threshold exceeded</td>
+                </tr>
+                <tr>
+                    <td class="btn-name">Document Synced</td>
+                    <td>Updates last sync time, logs sync to history, clears any failed status</td>
+                </tr>
+                <tr>
+                    <td class="btn-name">Document Closing</td>
+                    <td>If pre-close reminder enabled and sync overdue: shows dialog &ldquo;It&rsquo;s been X minutes since your last sync. Close anyway?&rdquo;</td>
+                </tr>
+                <tr>
+                    <td class="btn-name">Document Saved</td>
+                    <td>If sync-on-save enabled, triggers synchronization immediately</td>
+                </tr>
+                <tr>
+                    <td class="btn-name">Document Changed</td>
+                    <td>Updates last activity timestamp for idle tracking</td>
+                </tr>
+                <tr>
+                    <td class="btn-name">Document Opened</td>
+                    <td>Initializes tracking, loads settings, seeds last sync time to prevent immediate sync</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>Sync execution flow</h2>
+            <span class="tab-label">Auto Sync</span>
+        </div>
+        <div class="slide-body">
+            <p style="color:var(--text-dim);margin-bottom:0.15in;font-size:11pt;">When a sync is triggered (by interval, idle, or save), the service follows this sequence:</p>
+
+            <div class="col-card" style="border-left:3px solid var(--core);">
+                <h3 style="color:var(--core);">Execution steps</h3>
+                <ul class="col-purple">
+                    <li><strong>1. Guard check</strong> &mdash; Verify document isn&rsquo;t already syncing (prevents re-entry)</li>
+                    <li><strong>2. Status update</strong> &mdash; Set status to <span class="btn-pill pill-blue" style="font-size:9pt;">Syncing</span></li>
+                    <li><strong>3. Build options</strong> &mdash; Configure relinquish settings, compact flag, and comment (<em>&ldquo;Auto-sync (interval)&rdquo;</em>)</li>
+                    <li><strong>4. Synchronize</strong> &mdash; Call <span class="key">doc.SynchronizeWithCentral()</span></li>
+                    <li><strong>5. Measure</strong> &mdash; Record duration with Stopwatch</li>
+                    <li><strong>6. Log result</strong> &mdash; Write success/failure to sync log with duration and type</li>
+                    <li><strong>7. Notify</strong> &mdash; If not in quiet mode, show status notification on failure</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 07: SYNC LOG                                         -->
+    <!-- ============================================================ -->
+    <div class="slide slide-section">
+        <div class="section-label">Section 07</div>
+        <h2>Auto-Sync &mdash; Sync Log</h2>
+        <div class="section-sub">View sync history, success rates, and error details for the current project</div>
+    </div>
+
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>Sync Log window</h2>
+            <span class="tab-label">Auto Sync &gt; Sync Log</span>
+        </div>
+        <div class="slide-body">
+            <p style="color:var(--text-dim);margin-bottom:0.15in;font-size:11pt;">Displays a chronological history of all sync operations for the current project. Most recent entries appear first. Maximum 1,000 entries are retained.</p>
+
+            <table class="btn-table">
+                <tr>
+                    <th>Column</th>
+                    <th>Description</th>
+                </tr>
+                <tr>
+                    <td class="btn-name" style="color:var(--success);">&#10004; / <span style="color:var(--danger);">&#10008;</span></td>
+                    <td>Status icon &mdash; green checkmark for success, red X for failure</td>
+                </tr>
+                <tr>
+                    <td class="btn-name">Time</td>
+                    <td>Formatted timestamp (e.g., &ldquo;2/5/2026 3:45 PM&rdquo;)</td>
+                </tr>
+                <tr>
+                    <td class="btn-name">Type</td>
+                    <td>
+                        <span class="btn-pill pill-purple">Manual</span>
+                        <span class="btn-pill pill-cyan">Interval</span>
+                        <span class="btn-pill pill-amber">Idle</span>
+                        <span class="btn-pill pill-green">OnSave</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="btn-name">Duration</td>
+                    <td>Sync duration (e.g., &ldquo;2.3s&rdquo;)</td>
+                </tr>
+                <tr>
+                    <td class="btn-name">Details</td>
+                    <td>Error message if failed; otherwise empty</td>
+                </tr>
+            </table>
+
+            <div style="margin-top:0.15in;" class="col-card" style="border-left:3px solid var(--core);">
+                <p style="font-size:11pt;color:var(--text-dim);">
+                    <strong style="color:var(--text);">Footer summary:</strong>
+                    Last sync: <span class="btn-pill pill-purple" style="font-size:9pt;">timestamp</span> &bull;
+                    Total: <span class="btn-pill pill-gray" style="font-size:9pt;">X</span> &bull;
+                    Success: <span class="btn-pill pill-green" style="font-size:9pt;">Y</span> &bull;
+                    Failed: <span class="btn-pill pill-red" style="font-size:9pt;">Z</span>
+                </p>
+            </div>
+
+            <p style="margin-top:0.12in;font-size:10pt;color:var(--text-muted);">Toolbar: <span class="btn-pill pill-gray">Refresh</span> reloads log from disk. <span class="btn-pill pill-gray">Close</span> dismisses the window.</p>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 08: TAB COLORS SETTINGS                              -->
+    <!-- ============================================================ -->
+    <div class="slide slide-section">
+        <div class="section-label">Section 08</div>
+        <h2>Tab Colors &mdash; Settings</h2>
+        <div class="section-sub">Configure document tab coloring with visual styles, palettes, regex filters, and family document modes</div>
+    </div>
+
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>Tab Color Settings dialog</h2>
+            <span class="tab-label">Tab Colors &gt; Settings</span>
+        </div>
+        <div class="slide-body">
+            <p style="color:var(--text-dim);margin-bottom:0.15in;font-size:11pt;">Configure how Revit document tabs are colored. Choose a visual style, assignment mode, and palette. Colors apply immediately on save.</p>
+
+            <table class="btn-table">
+                <tr>
+                    <th>Setting</th>
+                    <th>Options</th>
+                    <th>Details</th>
+                </tr>
+                <tr>
+                    <td class="btn-name">Enable</td>
+                    <td>Checkbox</td>
+                    <td class="desc">Master toggle for tab coloring</td>
+                </tr>
+                <tr>
+                    <td class="btn-name">Color Style</td>
+                    <td>
+                        <span class="btn-pill pill-purple">TopBar</span>
+                        <span class="btn-pill pill-purple">Background</span>
+                        <span class="btn-pill pill-purple">Border</span>
+                    </td>
+                    <td class="desc">TopBar: 3px colored top edge. Background: full fill with auto-contrast text. Border: colored left/top/right border.</td>
+                </tr>
+                <tr>
+                    <td class="btn-name">Opacity</td>
+                    <td>Slider 0.3&ndash;1.0</td>
+                    <td class="desc">Only visible in Background mode. Controls unselected tab transparency. Default: 0.85</td>
+                </tr>
+                <tr>
+                    <td class="btn-name">Color Mode</td>
+                    <td>
+                        <span class="btn-pill pill-purple">Order-based</span>
+                        <span class="btn-pill pill-amber">Filter-based</span>
+                    </td>
+                    <td class="desc">Order: sequential palette by document open order. Filter: regex pattern matching against document title.</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>Order palette &amp; filter rules</h2>
+            <span class="tab-label">Tab Colors &gt; Settings</span>
+        </div>
+        <div class="slide-body">
+            <div class="two-col">
+                <div class="col-card" style="border-left:3px solid var(--core);">
+                    <h3 style="color:var(--core);">Order-based palette</h3>
+                    <ul class="col-purple">
+                        <li><strong>Color list</strong> &mdash; 10 default colors shown as swatches with hex codes</li>
+                        <li><strong>Add</strong> &mdash; Append a new color to the palette</li>
+                        <li><strong>Remove</strong> &mdash; Delete the selected color</li>
+                        <li><strong>Up / Down</strong> &mdash; Reorder colors in the palette</li>
+                        <li><strong>Wraps around</strong> &mdash; When palette is exhausted, cycles back to first color</li>
+                    </ul>
+                </div>
+                <div class="col-card" style="border-left:3px solid var(--draft);">
+                    <h3 style="color:var(--draft);">Filter-based rules</h3>
+                    <ul class="col-amber">
+                        <li><strong>On checkbox</strong> &mdash; Enable or disable individual rules</li>
+                        <li><strong>Color swatch</strong> &mdash; Click to change the rule&rsquo;s color</li>
+                        <li><strong>Label</strong> &mdash; Friendly name for the rule</li>
+                        <li><strong>Pattern</strong> &mdash; Regex pattern (case-insensitive). Shows &ldquo;!&rdquo; if invalid.</li>
+                        <li><strong>First match wins</strong> &mdash; Rules evaluated top to bottom; first matching rule determines the color</li>
+                    </ul>
+                </div>
+            </div>
+
+            <p style="margin-top:0.12in;font-size:10pt;color:var(--text-muted);">Color picker popup: click any swatch to open an 8&times;5 grid of curated colors plus a hex input field for manual entry.</p>
+        </div>
+    </div>
+
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>Family document styling</h2>
+            <span class="tab-label">Tab Colors &gt; Settings</span>
+        </div>
+        <div class="slide-body">
+            <p style="color:var(--text-dim);margin-bottom:0.15in;font-size:11pt;">Family documents (.rfa) can be styled separately from project documents to make them easy to distinguish at a glance.</p>
+
+            <table class="btn-table">
+                <tr>
+                    <th>Mode</th>
+                    <th>Behavior</th>
+                </tr>
+                <tr>
+                    <td class="btn-name"><span class="btn-pill pill-purple">SingleColor</span></td>
+                    <td>All family docs share one fixed color (default: <span class="key">#5A5A6A</span> gray)</td>
+                </tr>
+                <tr>
+                    <td class="btn-name"><span class="btn-pill pill-cyan">PaletteCycle</span></td>
+                    <td>Each family doc gets its own palette color, cycling independently from project documents</td>
+                </tr>
+                <tr>
+                    <td class="btn-name"><span class="btn-pill pill-amber">Dimmed</span></td>
+                    <td>Palette colors with reduced saturation (&minus;40%) and brightness (&minus;20%) via HSL transform</td>
+                </tr>
+                <tr>
+                    <td class="btn-name"><span class="btn-pill pill-green">BottomIndicator</span></td>
+                    <td>Normal palette colors with a 2px white bottom border marker to distinguish from projects</td>
+                </tr>
+            </table>
+
+            <p style="margin-top:0.12in;font-size:10pt;color:var(--text-muted);">Bottom buttons: <span class="btn-pill pill-gray">Reset Defaults</span> <span class="btn-pill pill-gray">Cancel</span> <span class="btn-pill pill-purple">Save</span></p>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 09: TAB COLORS HOW IT WORKS                          -->
+    <!-- ============================================================ -->
+    <div class="slide slide-section">
+        <div class="section-label">Section 09</div>
+        <h2>Tab Colors &mdash; How it works</h2>
+        <div class="section-sub">Behind the scenes: MFC pointer matching, color assignment, and visual style rendering</div>
+    </div>
+
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>Technical overview</h2>
+            <span class="tab-label">Tab Colors</span>
+        </div>
+        <div class="slide-body">
+            <p style="color:var(--text-dim);margin-bottom:0.15in;font-size:11pt;">Tab coloring works by matching Revit&rsquo;s internal MFC document pointers to WPF tab controls, then applying custom styles. Uses the same approach as pyRevit for reliable tab identification.</p>
+
+            <div class="col-card" style="border-left:3px solid var(--core);margin-bottom:0.15in;">
+                <h3 style="color:var(--core);">MFC document pointer matching</h3>
+                <ul class="col-purple">
+                    <li><strong>API &rarr; MFC:</strong> Uses reflection to get <span class="key">doc.getMFCDoc().GetPointerValue()</span> &rarr; unique IntPtr per document</li>
+                    <li><strong>Tab &rarr; MFC:</strong> Navigates TabItem &rarr; DataContext &rarr; LayoutDocument &rarr; Content &rarr; MFCMDIChildFrameControl &rarr; IntPtr</li>
+                    <li><strong>Match:</strong> Builds a map of MFC ID &rarr; Document Title from the API, then matches each TabItem by its MFC pointer</li>
+                </ul>
+            </div>
+
+            <div class="two-col">
+                <div class="col-card" style="border-left:3px solid var(--core);">
+                    <h3 style="color:var(--core);">Order-based assignment</h3>
+                    <ul class="col-purple">
+                        <li><strong>Sequential</strong> &mdash; First project gets palette[0], second gets palette[1], etc.</li>
+                        <li><strong>Separate cycles</strong> &mdash; Family docs cycle palette independently from projects</li>
+                        <li><strong>Wraps around</strong> &mdash; When palette exhausted, returns to start</li>
+                    </ul>
+                </div>
+                <div class="col-card" style="border-left:3px solid var(--draft);">
+                    <h3 style="color:var(--draft);">Filter-based assignment</h3>
+                    <ul class="col-amber">
+                        <li><strong>Top-to-bottom</strong> &mdash; Rules evaluated in UI order</li>
+                        <li><strong>First match wins</strong> &mdash; Stop at first matching regex</li>
+                        <li><strong>Case-insensitive</strong> &mdash; Pattern matching ignores case</li>
+                        <li><strong>Fallback</strong> &mdash; Use <span class="key">.*</span> as last rule to catch all unmatched docs</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>Visual style rendering</h2>
+            <span class="tab-label">Tab Colors</span>
+        </div>
+        <div class="slide-body">
+            <table class="btn-table">
+                <tr>
+                    <th>Style</th>
+                    <th>Selected tab</th>
+                    <th>Unselected tab</th>
+                </tr>
+                <tr>
+                    <td class="btn-name"><span class="btn-pill pill-purple">TopBar</span></td>
+                    <td>3px colored bar on top edge, full opacity</td>
+                    <td>3px colored bar, 50% opacity</td>
+                </tr>
+                <tr>
+                    <td class="btn-name"><span class="btn-pill pill-purple">Background</span></td>
+                    <td>Full color fill, auto-contrast text (white on dark, black on light)</td>
+                    <td>Opacity-controlled fill (default 85%), hover lightens by 30 RGB</td>
+                </tr>
+                <tr>
+                    <td class="btn-name"><span class="btn-pill pill-purple">Border</span></td>
+                    <td>2px colored left/top/right border, full opacity</td>
+                    <td>1px border, 50% opacity</td>
+                </tr>
+            </table>
+
+            <div style="margin-top:0.15in;" class="col-card" style="border-left:3px solid var(--scan);">
+                <h3 style="color:var(--scan);">Toggle Colors button</h3>
+                <ul class="col-cyan">
+                    <li><strong>Instant toggle</strong> &mdash; No dialog; immediately enables or disables tab coloring</li>
+                    <li><strong>Off:</strong> Removes all tab colors, unsubscribes from Idling event</li>
+                    <li><strong>On:</strong> Subscribes to Idling event, colors apply within 500ms</li>
+                    <li><strong>Preserves settings</strong> &mdash; Only changes enabled state, all other settings remain</li>
+                </ul>
+            </div>
+
+            <p style="margin-top:0.12in;font-size:10pt;color:var(--text-muted);">The service hooks into Revit&rsquo;s Idling event (throttled to 500ms intervals) to discover tabs, match documents, and apply/update styles.</p>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 10: DEFAULT COLOR PALETTE                            -->
+    <!-- ============================================================ -->
+    <div class="slide slide-section">
+        <div class="section-label">Section 10</div>
+        <h2>Default color palette</h2>
+        <div class="section-sub">The 10 built-in colors used for order-based tab assignment</div>
+    </div>
+
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>Built-in palette colors</h2>
+            <span class="tab-label">Tab Colors</span>
+        </div>
+        <div class="slide-body">
+            <p style="color:var(--text-dim);margin-bottom:0.15in;font-size:11pt;">These 10 colors ship as the default order palette. Documents are assigned colors sequentially as they are opened. All colors can be customized, reordered, or replaced.</p>
+
+            <div class="legend-row" style="margin-bottom:0.15in;">
+                <div class="legend-item">
+                    <div class="legend-swatch" style="background:#E06C75;"></div>
+                    <span class="desc">#E06C75 Red</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-swatch" style="background:#61AFEF;"></div>
+                    <span class="desc">#61AFEF Blue</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-swatch" style="background:#98C379;"></div>
+                    <span class="desc">#98C379 Green</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-swatch" style="background:#E5C07B;"></div>
+                    <span class="desc">#E5C07B Yellow</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-swatch" style="background:#C678DD;"></div>
+                    <span class="desc">#C678DD Purple</span>
+                </div>
+            </div>
+            <div class="legend-row">
+                <div class="legend-item">
+                    <div class="legend-swatch" style="background:#56B6C2;"></div>
+                    <span class="desc">#56B6C2 Cyan</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-swatch" style="background:#D19A66;"></div>
+                    <span class="desc">#D19A66 Orange</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-swatch" style="background:#BE5046;"></div>
+                    <span class="desc">#BE5046 Dark Red</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-swatch" style="background:#7EC8E3;"></div>
+                    <span class="desc">#7EC8E3 Light Blue</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-swatch" style="background:#A78BFA;"></div>
+                    <span class="desc">#A78BFA Violet</span>
+                </div>
+            </div>
+
+            <p style="margin-top:0.2in;font-size:10pt;color:var(--text-muted);">These colors are inspired by the One Dark Pro color scheme. The palette wraps around when all 10 are assigned. Use filter-based mode for deterministic color assignment by project name.</p>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 11: FILE STORAGE                                     -->
+    <!-- ============================================================ -->
+    <div class="slide slide-section">
+        <div class="section-label">Section 11</div>
+        <h2>File storage locations</h2>
+        <div class="section-sub">Where EliteCore stores settings, logs, and shared parameter files</div>
+    </div>
+
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>Storage paths</h2>
+            <span class="tab-label">Reference</span>
+        </div>
+        <div class="slide-body">
+            <table class="btn-table">
+                <tr>
+                    <th>File</th>
+                    <th>Location</th>
+                </tr>
+                <tr>
+                    <td class="btn-name">Auto-Sync settings (project)</td>
+                    <td><span class="key">%LOCALAPPDATA%\EliteTools\{ProjectGUID}\Core\AutoSyncSettings.json</span></td>
+                </tr>
+                <tr>
+                    <td class="btn-name">Auto-Sync settings (global)</td>
+                    <td><span class="key">%LOCALAPPDATA%\EliteTools\Core\AutoSyncSettings.json</span></td>
+                </tr>
+                <tr>
+                    <td class="btn-name">Sync log</td>
+                    <td><span class="key">%LOCALAPPDATA%\EliteTools\{ProjectGUID}\Core\SyncLog.json</span></td>
+                </tr>
+                <tr>
+                    <td class="btn-name">Tab Color settings</td>
+                    <td><span class="key">%LOCALAPPDATA%\EliteTools\Core\TabColorSettings.json</span></td>
+                </tr>
+                <tr>
+                    <td class="btn-name">Shared parameters</td>
+                    <td><span class="key">%LOCALAPPDATA%\EliteTools\SharedParameters\ECD_SharedParameters.txt</span></td>
+                </tr>
+                <tr>
+                    <td class="btn-name">Plugin (Debug)</td>
+                    <td><span class="key">%APPDATA%\Autodesk\Revit\Addins\{version}\EliteCore\</span></td>
+                </tr>
+            </table>
+
+            <p style="margin-top:0.12in;font-size:10pt;color:var(--text-muted);">Tab Color settings are always global (shared across all projects). Auto-Sync settings can be project-specific or global. The sync log is always project-specific.</p>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 12: GETTING STARTED                                  -->
+    <!-- ============================================================ -->
+    <div class="slide slide-section">
+        <div class="section-label">Section 12</div>
+        <h2>Getting started</h2>
+        <div class="section-sub">Recommended setup workflow for a new project</div>
+    </div>
+
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>Step-by-step setup</h2>
+            <span class="tab-label">Workflow</span>
+        </div>
+        <div class="slide-body">
+            <table class="btn-table">
+                <tr>
+                    <th>Step</th>
+                    <th>Action</th>
+                    <th>Details</th>
+                </tr>
+                <tr>
+                    <td class="btn-name"><span class="btn-pill pill-purple">1</span></td>
+                    <td class="btn-name">Enable worksharing</td>
+                    <td class="desc">Go to Collaborate tab &rarr; Collaborate button &rarr; &ldquo;Collaborate within your network&rdquo;. Required for Project Setup and Auto-Sync features.</td>
+                </tr>
+                <tr>
+                    <td class="btn-name"><span class="btn-pill pill-purple">2</span></td>
+                    <td class="btn-name">User Workset</td>
+                    <td class="desc">Click <span class="btn-pill pill-purple">User Workset</span> to create and activate your personal workset. This auto-activates on every future document open.</td>
+                </tr>
+                <tr>
+                    <td class="btn-name"><span class="btn-pill pill-purple">3</span></td>
+                    <td class="btn-name">Link Worksets</td>
+                    <td class="desc">Click <span class="btn-pill pill-purple">Link Worksets</span> to organize all linked models, CAD files, point clouds, and coordination models onto dedicated worksets.</td>
+                </tr>
+                <tr>
+                    <td class="btn-name"><span class="btn-pill pill-purple">4</span></td>
+                    <td class="btn-name">Setup Wizard</td>
+                    <td class="desc">Click <span class="btn-pill pill-purple">Setup Wizard</span> to review and bind shared parameters required by other Elite add-ins. Click &ldquo;Add Missing Parameters&rdquo; to create them all.</td>
+                </tr>
+                <tr>
+                    <td class="btn-name"><span class="btn-pill pill-purple">5</span></td>
+                    <td class="btn-name">Configure Auto-Sync</td>
+                    <td class="desc">Click <span class="btn-pill pill-cyan">Auto Sync Settings</span> to set your sync interval (30 min recommended), enable pre-close reminder, and choose relinquish options.</td>
+                </tr>
+                <tr>
+                    <td class="btn-name"><span class="btn-pill pill-purple">6</span></td>
+                    <td class="btn-name">Customize Tab Colors</td>
+                    <td class="desc">Click <span class="btn-pill pill-amber">Tab Color Settings</span> to choose a visual style. TopBar is recommended for subtlety, Dimmed family mode for clarity.</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>Tips &amp; advanced workflows</h2>
+            <span class="tab-label">Workflow</span>
+        </div>
+        <div class="slide-body">
+            <div class="two-col">
+                <div class="col-card" style="border-left:3px solid var(--core);">
+                    <h3 style="color:var(--core);">Auto-Sync profiles</h3>
+                    <ul class="col-purple">
+                        <li><strong>Large teams:</strong> 15-minute intervals to keep data fresh</li>
+                        <li><strong>Frequent changes:</strong> Enable sync-on-save for real-time updates</li>
+                        <li><strong>Strict standards:</strong> Enable compact central on sync</li>
+                        <li><strong>External coordination:</strong> Disable relinquish to hold element ownership</li>
+                    </ul>
+                </div>
+                <div class="col-card" style="border-left:3px solid var(--draft);">
+                    <h3 style="color:var(--draft);">Filter rule examples</h3>
+                    <ul class="col-amber">
+                        <li><strong>Project codes:</strong> <span class="key">^230.*</span> &rarr; Blue for all &ldquo;230-XXX&rdquo; projects</li>
+                        <li><strong>Disciplines:</strong> <span class="key">^AR-.*</span> &rarr; Blue, <span class="key">^MEP-.*</span> &rarr; Green</li>
+                        <li><strong>Test files:</strong> <span class="key">.*TEST.*</span> &rarr; Red for easy identification</li>
+                        <li><strong>Catch-all:</strong> <span class="key">.*</span> at bottom &rarr; default color for unmatched</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div style="margin-top:0.15in;">
+                <div class="col-card" style="border-left:3px solid var(--danger);">
+                    <h3 style="color:var(--danger);">Troubleshooting</h3>
+                    <ul class="col-purple">
+                        <li><strong>Tab colors not updating:</strong> Click Toggle Colors twice to reset the service</li>
+                        <li><strong>Sync failing:</strong> Disable quiet mode to see error messages in the sync dialog</li>
+                        <li><strong>Workset not activating:</strong> Verify worksharing is enabled and you are authorized</li>
+                        <li><strong>Parameters not appearing:</strong> Check Setup Wizard &mdash; green dots mean bound, red dots mean missing</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- END SLIDE                                                    -->
+    <!-- ============================================================ -->
+    <div class="slide slide-end">
+        <h2>EliteCore</h2>
+        <div class="accent-bar"></div>
+        <div class="contact">
+            <strong>Project Setup</strong> &bull; <strong>Auto Sync</strong> &bull; <strong>Tab Colors</strong> &mdash; Core utilities for Revit<br>
+            Revit 2022&ndash;2026 &bull; .NET 4.8 / .NET 8.0 &bull; v1.0.3
+        </div>
+    </div>
+
+</body>
+</html>

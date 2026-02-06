@@ -1,0 +1,1731 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EliteScan Tutorial</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        /* ============================================================
+           COLOR PALETTE — EliteScan (Cyan accent)
+           ============================================================ */
+        :root {
+            --bg:           #0F0F12;
+            --surface:      #18181D;
+            --surface2:     #222229;
+            --border:       #2E2E38;
+            --border-light: #3D3D4A;
+            --text:         #E8E8ED;
+            --text-dim:     #9898A8;
+            --text-muted:   #5A5A6A;
+
+            /* Region accents */
+            --scan:   #5ED5DD;   /* Cyan — primary accent */
+            --draft:  #F5B878;   /* Amber */
+            --coord:  #6EE7A8;   /* Green */
+            --core:   #A78BFA;   /* Purple */
+
+            /* Action colors */
+            --success: #4CAF50;
+            --primary: #2196F3;
+            --warning: #FF9800;
+            --danger:  #F44336;
+        }
+
+        @page { size: letter; margin: 0; }
+        /* Back navigation bar */
+        .back-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 24px;
+            background: rgba(24, 24, 29, 0.92);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+        }
+        .back-nav a {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--scan);
+            text-decoration: none;
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            transition: opacity 0.2s;
+        }
+        .back-nav a:hover { opacity: 0.8; }
+        .back-nav a svg { width: 16px; height: 16px; }
+        .back-nav .nav-sep { color: var(--text-muted); font-size: 13px; }
+        .back-nav .nav-title { color: var(--text-dim); font-size: 13px; font-weight: 500; }
+        body { padding-top: 44px; }
+
+        @media print {
+            .back-nav { display: none !important; }
+            body { padding-top: 0 !important; }
+            * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; color-adjust: exact !important; }
+            html { background: var(--bg) !important; }
+            body { background: var(--bg) !important; max-width: none; margin: 0; padding: 0.4in 0.6in; }
+            .slide { box-shadow: none !important; }
+            .slide-title { padding: 0.3in 0; }
+            .slide-section { padding: 0.2in 0.4in; }
+            .slide-footer { display: none; }
+            .col-card, .btn-table, .slide-section, .legend-row, .status-row, .shortcut-group { break-inside: avoid; page-break-inside: avoid; }
+            .slide-header { break-after: avoid; page-break-after: avoid; }
+            .slide.slide-section { break-before: page; page-break-before: always; }
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html {
+            background: var(--bg);
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+            font-size: 12pt;
+            line-height: 1.5;
+            color: var(--text);
+            background: var(--bg);
+            max-width: 8.5in;
+            margin: 0 auto;
+            padding: 0.5in 0.7in;
+        }
+
+        .slide {
+            background: var(--bg);
+            margin-bottom: 0.15in;
+            padding: 0.1in 0;
+        }
+
+        /* ============================================================
+           TITLE SLIDE
+           ============================================================ */
+        .slide-title {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 0.4in 0.5in 0.3in;
+            background: var(--bg);
+            background-image:
+                linear-gradient(rgba(94,213,221,0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(94,213,221,0.03) 1px, transparent 1px);
+            background-size: 20px 20px;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .slide-title .tag {
+            font-family: 'Fira Code', Consolas, monospace;
+            font-size: 11pt;
+            font-weight: 500;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--scan);
+            margin-bottom: 0.15in;
+            border: 1px solid var(--border-light);
+            padding: 0.06in 0.2in;
+            border-radius: 3px;
+            background: var(--surface2);
+        }
+
+        .slide-title h1 {
+            font-size: 32pt;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 0.15in;
+            color: var(--text);
+        }
+
+        .slide-title .accent-bar {
+            width: 1in;
+            height: 3px;
+            background: var(--scan);
+            margin: 0.08in 0 0.12in;
+        }
+
+        .slide-title .subtitle {
+            font-size: 13pt;
+            color: var(--text-dim);
+            max-width: 7in;
+        }
+
+        .slide-title .version {
+            font-family: 'Fira Code', Consolas, monospace;
+            font-size: 10pt;
+            color: var(--text-muted);
+            margin-top: 0.15in;
+        }
+
+        /* ============================================================
+           SECTION DIVIDER
+           ============================================================ */
+        .slide-section {
+            display: flex;
+            flex-direction: column;
+            padding: 0.2in 0.4in;
+            background: var(--surface);
+            border-left: 6px solid var(--scan);
+            border-radius: 4px;
+        }
+
+        .slide-section .section-label {
+            font-family: 'Fira Code', Consolas, monospace;
+            font-size: 11pt;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.15in;
+        }
+
+        .slide-section h2 {
+            font-size: 24pt;
+            font-weight: 800;
+            color: var(--text);
+        }
+
+        .slide-section .section-sub {
+            font-size: 12pt;
+            color: var(--text-dim);
+            margin-top: 0.1in;
+        }
+
+        /* ============================================================
+           CONTENT SLIDE
+           ============================================================ */
+        .slide-content {
+            padding: 0.05in 0;
+        }
+
+        .slide-header {
+            margin-bottom: 0.12in;
+            padding-bottom: 0.06in;
+            border-bottom: 2px solid var(--border);
+            display: flex;
+            align-items: baseline;
+            gap: 0.15in;
+        }
+
+        .slide-header h2 {
+            font-size: 18pt;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .slide-header .tab-label {
+            font-family: 'Fira Code', Consolas, monospace;
+            font-size: 11pt;
+            color: var(--scan);
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            padding: 2px 10px;
+            border-radius: 3px;
+        }
+
+        .slide-body {
+            font-size: 12pt;
+        }
+
+        .slide-footer {
+            display: none;
+        }
+
+        .slide-number { color: var(--scan); font-weight: 600; }
+
+        /* ============================================================
+           BUTTON REFERENCE TABLE
+           ============================================================ */
+        .btn-table {
+            width: 100%;
+            border-collapse: collapse;
+            break-inside: avoid;
+        }
+
+        .btn-table th {
+            text-align: left;
+            font-family: 'Fira Code', Consolas, monospace;
+            font-size: 10pt;
+            color: var(--text-muted);
+            padding: 0.06in 0.12in;
+            border-bottom: 1px solid var(--border);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .btn-table td {
+            padding: 0.05in 0.1in;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+            font-size: 11pt;
+        }
+
+        .btn-table tr:last-child td { border-bottom: none; }
+
+        .btn-name {
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .btn-pill {
+            display: inline-block;
+            font-family: 'Fira Code', Consolas, monospace;
+            font-size: 10pt;
+            font-weight: 600;
+            padding: 2px 8px;
+            border-radius: 3px;
+            white-space: nowrap;
+        }
+
+        .pill-cyan   { background: rgba(94,213,221,0.15); color: var(--scan); border: 1px solid rgba(94,213,221,0.3); }
+        .pill-green  { background: rgba(110,231,168,0.15); color: var(--coord); border: 1px solid rgba(110,231,168,0.3); }
+        .pill-amber  { background: rgba(245,184,120,0.15); color: var(--draft); border: 1px solid rgba(245,184,120,0.3); }
+        .pill-purple { background: rgba(167,139,250,0.15); color: var(--core); border: 1px solid rgba(167,139,250,0.3); }
+        .pill-blue   { background: rgba(33,150,243,0.15); color: var(--primary); border: 1px solid rgba(33,150,243,0.3); }
+        .pill-red    { background: rgba(244,67,54,0.15); color: var(--danger); border: 1px solid rgba(244,67,54,0.3); }
+        .pill-gray   { background: var(--surface2); color: var(--text-dim); border: 1px solid var(--border); }
+
+        .key {
+            font-family: 'Fira Code', Consolas, monospace;
+            font-size: 10pt;
+            font-weight: 600;
+            background: var(--surface2);
+            color: var(--scan);
+            padding: 1px 6px;
+            border-radius: 3px;
+            border: 1px solid var(--border);
+        }
+
+        .desc { color: var(--text-dim); font-size: 10pt; }
+
+        /* ============================================================
+           TWO COLUMN
+           ============================================================ */
+        .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 0.15in; }
+
+        .col-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 0.15in;
+            break-inside: avoid;
+        }
+
+        .col-card h3 {
+            font-size: 13pt;
+            font-weight: 700;
+            margin-bottom: 0.1in;
+            padding-bottom: 0.05in;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .col-card ul { list-style: none; padding: 0; }
+        .col-card li {
+            font-size: 11pt;
+            padding: 0.03in 0;
+            padding-left: 0.25in;
+            position: relative;
+            color: var(--text-dim);
+        }
+
+        .col-card li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0.16in;
+            width: 0.08in;
+            height: 0.08in;
+            border-radius: 50%;
+        }
+
+        .col-cyan li::before  { background: var(--scan); }
+        .col-green li::before { background: var(--coord); }
+        .col-amber li::before { background: var(--draft); }
+        .col-purple li::before { background: var(--core); }
+
+        .col-card li strong { color: var(--text); }
+
+        /* ============================================================
+           KEYBOARD SHORTCUTS GRID
+           ============================================================ */
+        .shortcut-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.12in;
+        }
+
+        .shortcut-group h4 {
+            font-family: 'Fira Code', Consolas, monospace;
+            font-size: 11pt;
+            color: var(--scan);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.1in;
+        }
+
+        .shortcut-item {
+            display: flex;
+            gap: 0.1in;
+            align-items: baseline;
+            padding: 0.03in 0;
+        }
+
+        .shortcut-item .desc { font-size: 9pt; }
+
+        /* ============================================================
+           STATUS COLORS ROW
+           ============================================================ */
+        .status-row {
+            display: flex;
+            gap: 0.15in;
+            flex-wrap: wrap;
+        }
+
+        .status-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12pt;
+            padding: 4px 12px;
+            border-radius: 4px;
+            border: 2px solid;
+        }
+
+        .status-chip .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        /* ============================================================
+           LEGEND ROW
+           ============================================================ */
+        .legend-row {
+            display: flex;
+            gap: 0.25in;
+            align-items: center;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .legend-swatch {
+            width: 24px;
+            height: 24px;
+            border-radius: 4px;
+        }
+
+        /* ============================================================
+           END SLIDE
+           ============================================================ */
+        .slide-end {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 0.5in;
+            background: var(--surface);
+            background-image:
+                linear-gradient(rgba(94,213,221,0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(94,213,221,0.03) 1px, transparent 1px);
+            background-size: 20px 20px;
+            border-radius: 4px;
+        }
+
+        .slide-end h2 { font-size: 24pt; font-weight: 800; margin-bottom: 0.1in; }
+        .slide-end .accent-bar { width: 0.6in; height: 3px; background: var(--scan); margin-bottom: 0.2in; }
+        .slide-end .contact { font-size: 12pt; color: var(--text-dim); line-height: 1.8; }
+        .slide-end .contact strong { color: var(--scan); }
+    </style>
+</head>
+<body>
+
+    <nav class="back-nav">
+        <a href="../index.html">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+            EliteCAD Tools
+        </a>
+        <span class="nav-sep">/</span>
+        <span class="nav-title">EliteScan Documentation</span>
+    </nav>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 1: TITLE                                               -->
+    <!-- ============================================================ -->
+    <div class="slide slide-title">
+        <div class="tag">Revit Add-in</div>
+        <h1>EliteScan</h1>
+        <div class="accent-bar"></div>
+        <p class="subtitle">A tutorial walkthrough of every ribbon button, dialog, and workflow in the point cloud deviation analysis plugin</p>
+        <p class="version">v1.2.0 / Tutorial &amp; Reference Guide</p>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 2: RIBBON OVERVIEW                                     -->
+    <!-- ============================================================ -->
+    <div class="slide slide-section">
+        <div class="section-label">Section 01</div>
+        <h2>Ribbon overview</h2>
+        <div class="section-sub">The "Elite Scan" tab with four panels: Analysis, Viewer, Overlay, and Point Clouds</div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 3: RIBBON — PANEL CARDS                                -->
+    <!-- ============================================================ -->
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>Ribbon panels &amp; buttons</h2>
+            <span class="tab-label">Elite Scan</span>
+        </div>
+        <div class="slide-body">
+            <p style="color:var(--text-dim);margin-bottom:0.15in;font-size:11pt;">EliteScan installs a dedicated "Elite Scan" tab in the Revit ribbon. It contains four panels grouping point cloud analysis, visualization, and data management tools. Supports Revit 2022 through 2026.</p>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.2in;">
+                <div class="col-card" style="border-left:3px solid var(--scan);">
+                    <h3 style="color:var(--scan);">Analysis panel</h3>
+                    <ul class="col-cyan">
+                        <li><strong>Place Scans</strong> &mdash; Auto-places scan locations from RCS origins</li>
+                        <li><strong>Run Analysis</strong> &mdash; CloudCompare deviation analysis workflow</li>
+                        <li><strong>View Report</strong> &mdash; Opens comprehensive results window</li>
+                        <li><strong>Settings</strong> &mdash; Configure scoring thresholds and categories</li>
+                    </ul>
+                </div>
+                <div class="col-card" style="border-left:3px solid var(--draft);">
+                    <h3 style="color:var(--draft);">Viewer panel</h3>
+                    <ul class="col-amber">
+                        <li><strong>360 Viewer</strong> &mdash; Dockable equirectangular panorama pane</li>
+                    </ul>
+                </div>
+                <div class="col-card" style="border-left:3px solid var(--coord);">
+                    <h3 style="color:var(--coord);">Overlay panel</h3>
+                    <ul class="col-green">
+                        <li><strong>Show Overlay</strong> &mdash; Colors elements by score (A-F grades)</li>
+                        <li><strong>Clear Overlay</strong> &mdash; Removes all color overrides</li>
+                    </ul>
+                </div>
+                <div class="col-card" style="border-left:3px solid var(--core);">
+                    <h3 style="color:var(--core);">Point Clouds panel</h3>
+                    <ul class="col-purple">
+                        <li><strong>Revit 2 ReCap</strong> &mdash; RCP file repair utility</li>
+                        <li><strong>Cloud Reset</strong> &mdash; Resets RCP visibility to full density</li>
+                        <li><strong>Load Cloud</strong> &mdash; Batch-loads RCP files into project</li>
+                    </ul>
+                </div>
+            </div>
+            <p style="margin-top:0.15in;font-size:10pt;color:var(--text-muted);">Icons auto-swap between Light and Dark variants to match Revit's current UI theme. The add-in uses ricaun.Revit.UI for ribbon creation with automatic DPI scaling.</p>
+        </div>
+        <div class="slide-footer">
+            <span>EliteScan Tutorial</span>
+            <span class="slide-number">3</span>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 4: SECTION — ANALYSIS PANEL: PLACE SCANS              -->
+    <!-- ============================================================ -->
+    <div class="slide slide-section">
+        <div class="section-label">Section 02</div>
+        <h2>Analysis panel &mdash; Place Scans</h2>
+        <div class="section-sub">Auto-places Scan Location family instances at each scan origin from RCS point cloud files</div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 5: PLACE SCANS BUTTON                                  -->
+    <!-- ============================================================ -->
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>Place Scans button</h2>
+            <span class="tab-label">Analysis &gt; Place Scans</span>
+        </div>
+        <div class="slide-body">
+            <p style="color:var(--text-dim);margin-bottom:0.15in;font-size:11pt;">Automatically places Scan Location family instances at each scan origin detected in linked point cloud files. Each instance is populated with metadata required for analysis.</p>
+            <div class="two-col" style="gap:0.3in;">
+                <div class="col-card" style="border-left:3px solid var(--scan);">
+                    <h3 style="color:var(--scan);">Requirements</h3>
+                    <ul class="col-cyan">
+                        <li><strong>Point cloud linked</strong> as RCP or RCS in the active project</li>
+                        <li><strong>Scan Location family loaded</strong> in the project (auto-prompts if missing)</li>
+                        <li><strong>RCS files accessible</strong> in the RCP's source folder structure</li>
+                        <li><strong>Active 3D view</strong> or plan view for placement visualization</li>
+                    </ul>
+                </div>
+                <div class="col-card" style="border-left:3px solid var(--coord);">
+                    <h3 style="color:var(--coord);">What it sets</h3>
+                    <ul class="col-green">
+                        <li><strong>ScanID</strong> &mdash; Scan name from RCS file</li>
+                        <li><strong>PointCloudId</strong> &mdash; PointCloudInstance.Id for reference</li>
+                        <li><strong>Level</strong> &mdash; Closest Revit level by elevation</li>
+                        <li><strong>AnalysisRadius</strong> &mdash; Default 50 ft (configurable)</li>
+                        <li><strong>SupportFolderPath</strong> &mdash; Parent folder of RCS file</li>
+                        <li><strong>Location</strong> &mdash; XYZ coordinates of scan origin</li>
+                    </ul>
+                </div>
+            </div>
+            <p style="margin-top:0.12in;font-size:10pt;color:var(--text-muted);">Skips scans that already have instances placed. If an instance's ScanID matches an existing instance's ScanID parameter, placement is bypassed to avoid duplicates.</p>
+        </div>
+        <div class="slide-footer">
+            <span>EliteScan Tutorial</span>
+            <span class="slide-number">5</span>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 6: SECTION — ANALYSIS PANEL: RUN ANALYSIS             -->
+    <!-- ============================================================ -->
+    <div class="slide slide-section">
+        <div class="section-label">Section 03</div>
+        <h2>Analysis panel &mdash; Run Analysis</h2>
+        <div class="section-sub">CloudCompare C2M deviation analysis workflow with multi-scan support</div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 7: RUN ANALYSIS — SCAN SELECTION DIALOG               -->
+    <!-- ============================================================ -->
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>Run Analysis &mdash; Scan Selection Dialog</h2>
+            <span class="tab-label">Analysis &gt; Run Analysis</span>
+        </div>
+        <div class="slide-body">
+            <p style="color:var(--text-dim);margin-bottom:0.15in;font-size:11pt;">Opens a dialog listing all Scan Location instances. Choose which scans to analyze, or run analysis for all scans at once.</p>
+            <table class="btn-table">
+                <tr><th style="width:180px;">Control</th><th>What it does</th></tr>
+                <tr>
+                    <td><span class="btn-name">Scan List</span></td>
+                    <td>CheckBox list showing all placed scan instances. Each row displays ScanID, Level, and coordinates. Check the scans you want to analyze.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-pill pill-cyan">Analyze Selected</span></td>
+                    <td>Runs analysis workflow only for checked scans. Grayed out if no scans are selected.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-pill pill-gray">Analyze All</span></td>
+                    <td>Runs analysis workflow for every scan in the project, regardless of selection state.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-pill pill-gray">Cancel</span></td>
+                    <td>Closes the dialog without running any analysis.</td>
+                </tr>
+            </table>
+            <p style="margin-top:0.12in;font-size:10pt;color:var(--text-muted);">Tip: Use "Analyze Selected" when you only need to update specific scans after model changes. Use "Analyze All" for the initial full-project analysis.</p>
+        </div>
+        <div class="slide-footer">
+            <span>EliteScan Tutorial</span>
+            <span class="slide-number">7</span>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 8: RUN ANALYSIS — PROGRESS DIALOG                     -->
+    <!-- ============================================================ -->
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>Run Analysis &mdash; Progress Dialog</h2>
+            <span class="tab-label">Analysis &gt; Run Analysis</span>
+        </div>
+        <div class="slide-body">
+            <p style="color:var(--text-dim);margin-bottom:0.15in;font-size:11pt;">Modal progress dialog displays the current scan, operation step, progress bar, and cancel button. Each scan runs through four steps sequentially.</p>
+            <table class="btn-table">
+                <tr><th style="width:180px;">Step</th><th>What happens</th></tr>
+                <tr>
+                    <td><span class="btn-pill pill-cyan">1. Export Geometry</span></td>
+                    <td>Collects elements within AnalysisRadius of scan. Filters by included categories (Settings). Exports to E57 format via CustomExporter API. Saved to <span class="key">%LOCALAPPDATA%\EliteTools\EliteScan\TempGeometry\[ScanID].e57</span>.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-pill pill-cyan">2. Export Cloud</span></td>
+                    <td>Extracts RCS point cloud to E57 format using CloudCompare CLI. Crops to a box matching the AnalysisRadius. Saved to <span class="key">%LOCALAPPDATA%\EliteTools\EliteScan\TempClouds\[ScanID].e57</span>.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-pill pill-cyan">3. CloudCompare C2M</span></td>
+                    <td>Runs Cloud-to-Mesh distance calculation using CloudCompare CLI. Geometry E57 is the reference mesh, Cloud E57 is compared against it. Outputs per-point deviation scalars.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-pill pill-cyan">4. Compute Statistics</span></td>
+                    <td>Parses CloudCompare output. Groups points by originating element using spatial queries. Computes mean deviation, max deviation, % in tolerance, point count per element. Assigns letter grades (A-F). Saves to <span class="key">%LOCALAPPDATA%\EliteTools\EliteScan\Results\[timestamp].json</span>.</td>
+                </tr>
+            </table>
+            <p style="margin-top:0.12in;font-size:10pt;color:var(--text-muted);">Canceling aborts the current scan and skips remaining scans. Partial results are not saved. CloudCompare executable path must be configured in Settings.</p>
+        </div>
+        <div class="slide-footer">
+            <span>EliteScan Tutorial</span>
+            <span class="slide-number">8</span>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 9: SECTION — RESULTS WINDOW                            -->
+    <!-- ============================================================ -->
+    <div class="slide slide-section">
+        <div class="section-label">Section 04</div>
+        <h2>Results Window</h2>
+        <div class="section-sub">Comprehensive interface for reviewing deviation analysis, verifying elements, and exporting reports</div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 10: RESULTS WINDOW — HEADER & SUMMARY                 -->
+    <!-- ============================================================ -->
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>Results Window &mdash; Header &amp; Summary Panel</h2>
+            <span class="tab-label">Analysis &gt; View Report</span>
+        </div>
+        <div class="slide-body">
+            <p style="color:var(--text-dim);margin-bottom:0.15in;font-size:11pt;">Opens after analysis completes or via View Report button. The header displays the analysis timestamp dropdown with a refresh icon. The summary panel shows aggregate statistics.</p>
+            <table class="btn-table">
+                <tr><th style="width:180px;">Summary stat</th><th>Meaning</th></tr>
+                <tr>
+                    <td><span class="btn-name">Total Elements</span></td>
+                    <td>Count of all elements analyzed across all scans in this analysis session.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-name">Accurate (A-B)</span></td>
+                    <td>Count of elements scoring A or B grades (≥80% in tolerance). Indicates well-constructed elements.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-name">Accuracy Rate</span></td>
+                    <td>Percentage of elements with A or B scores. Higher is better. Excludes verified elements from calculation.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-name">Scan count</span></td>
+                    <td>Total number of scans included in this analysis. Multi-scan elements show best score across all scans.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-name">Conflicts warning</span></td>
+                    <td>Red warning badge appears if an element has conflicting scores across scans (e.g., A in one scan, F in another). Indicates potential issue.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-name">Score Distribution</span></td>
+                    <td>Five color-coded badges showing count of A, B, C, D, F scores. Green (A), light green (B), yellow (C), orange (D), red (F).</td>
+                </tr>
+            </table>
+        </div>
+        <div class="slide-footer">
+            <span>EliteScan Tutorial</span>
+            <span class="slide-number">10</span>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 11: RESULTS WINDOW — GLOBAL SCAN SELECTION            -->
+    <!-- ============================================================ -->
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>Results Window &mdash; Global Scan Selection Controls</h2>
+            <span class="tab-label">Analysis &gt; View Report</span>
+        </div>
+        <div class="slide-body">
+            <p style="color:var(--text-dim);margin-bottom:0.15in;font-size:11pt;">Four radio buttons control how element scores are aggregated when multiple scans cover the same element. Applies to the entire element list.</p>
+            <table class="btn-table">
+                <tr><th style="width:180px;">Mode</th><th>How it works</th></tr>
+                <tr>
+                    <td><span class="btn-pill pill-green">Best Visibility</span></td>
+                    <td>Uses the scan with the most points captured for this element. Prioritizes completeness of data over score. Default mode.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-pill pill-amber">Best Score</span></td>
+                    <td>Uses the scan that gave the element its highest letter grade (e.g., if Scan A = B and Scan B = A, uses Scan B's score). Optimistic scoring.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-pill pill-blue">Top 10 Average</span></td>
+                    <td>Averages the numerical scores from the top 10 scans by point count. Balances visibility and accuracy. Useful for multi-scan verification.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-pill pill-purple">Custom</span></td>
+                    <td>Allows per-element scan selection via the Scan Selector dropdown in each element row. Most granular control. Use for investigating discrepancies.</td>
+                </tr>
+            </table>
+            <p style="margin-top:0.12in;font-size:10pt;color:var(--text-muted);">Changing the mode recalculates all displayed scores, mean deviations, and percentages immediately. Verified elements are unaffected.</p>
+        </div>
+        <div class="slide-footer">
+            <span>EliteScan Tutorial</span>
+            <span class="slide-number">11</span>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 12: RESULTS WINDOW — DISCIPLINE GROUPS                -->
+    <!-- ============================================================ -->
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>Results Window &mdash; Discipline Groups &amp; Categories</h2>
+            <span class="tab-label">Analysis &gt; View Report</span>
+        </div>
+        <div class="slide-body">
+            <p style="color:var(--text-dim);margin-bottom:0.15in;font-size:11pt;">Elements are organized into discipline groups (Architectural, Structural, MEP), each containing category expanders. Click a category to expand and see individual element rows.</p>
+            <div class="two-col" style="gap:0.3in;">
+                <div class="col-card" style="border-left:3px solid var(--scan);">
+                    <h3 style="color:var(--scan);">Group Header</h3>
+                    <ul class="col-cyan">
+                        <li><strong>Discipline name</strong> (e.g., "Architectural")</li>
+                        <li><strong>Element count</strong> in parentheses (e.g., "(23)")</li>
+                        <li><strong>Average score</strong> for the discipline shown as colored badge</li>
+                        <li><strong>Expand/collapse icon</strong> to show/hide categories</li>
+                    </ul>
+                </div>
+                <div class="col-card" style="border-left:3px solid var(--coord);">
+                    <h3 style="color:var(--coord);">Category Expander</h3>
+                    <ul class="col-green">
+                        <li><strong>Category name</strong> (e.g., "Walls", "Ducts")</li>
+                        <li><strong>Element count</strong> for this category</li>
+                        <li><strong>Average score badge</strong> for category</li>
+                        <li><strong>Chevron icon</strong> to expand and show element rows</li>
+                    </ul>
+                </div>
+            </div>
+            <p style="margin-top:0.12in;font-size:10pt;color:var(--text-muted);">Verified elements are excluded from discipline and category averages to show true construction accuracy. Verified elements display with cyan backgrounds.</p>
+        </div>
+        <div class="slide-footer">
+            <span>EliteScan Tutorial</span>
+            <span class="slide-number">12</span>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 13: RESULTS WINDOW — ELEMENT ROWS                     -->
+    <!-- ============================================================ -->
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>Results Window &mdash; Element Rows</h2>
+            <span class="tab-label">Analysis &gt; View Report</span>
+        </div>
+        <div class="slide-body">
+            <p style="color:var(--text-dim);margin-bottom:0.15in;font-size:11pt;">Each element row displays detailed deviation statistics, verification controls, scan selection, and screenshot indicators.</p>
+            <table class="btn-table">
+                <tr><th style="width:160px;">Column/Control</th><th>Details</th></tr>
+                <tr>
+                    <td><span class="btn-name">Verify Checkbox</span></td>
+                    <td>When checked, marks element as verified. Opens Verify Element Dialog for reason and screenshot. Verified elements get cyan background and are excluded from scores.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-name">Score Badge</span></td>
+                    <td>Letter grade (A-F) with color: A (green), B (light green), C (yellow), D (orange), F (red), Reviewed (cyan). Reflects current scan selection mode.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-name">Element Name</span></td>
+                    <td>Element description with ElementId in parentheses. Click to select element in Revit viewport.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-name">Conflict Indicator</span></td>
+                    <td>Red warning triangle icon appears if element has conflicting scores across scans (e.g., A in one scan, F in another). Hover for tooltip.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-name">% In Tolerance</span></td>
+                    <td>Percentage of captured points within the tolerance threshold (default 0.05 ft). Higher is better.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-name">Mean Deviation</span></td>
+                    <td>Average distance of all points from the element surface, in feet. Lower is better.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-name">Point Count</span></td>
+                    <td>Number of point cloud points captured for this element. More points = higher confidence in score.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-name">Scan Selector</span></td>
+                    <td>Dropdown showing all scans that captured this element. Only enabled in "Custom" mode. Shows ScanID with score/point count in parentheses.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-name">Image Indicator</span></td>
+                    <td>Small camera icon appears if element has an associated screenshot. Green if screenshot exists, gray if not.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-pill pill-cyan">Capture</span></td>
+                    <td>Opens 360° Panorama Viewer, zooms to element, prompts user to navigate scan, and captures Revit + Panorama side-by-side screenshot.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-pill pill-gray">Upload</span></td>
+                    <td>Opens file dialog to upload an external screenshot (from site photos, etc.). Copies file to EliteScan screenshots folder and links to element.</td>
+                </tr>
+            </table>
+        </div>
+        <div class="slide-footer">
+            <span>EliteScan Tutorial</span>
+            <span class="slide-number">13</span>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 14: RESULTS WINDOW — BOTTOM BAR                       -->
+    <!-- ============================================================ -->
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>Results Window &mdash; Bottom Bar Controls</h2>
+            <span class="tab-label">Analysis &gt; View Report</span>
+        </div>
+        <div class="slide-body">
+            <p style="color:var(--text-dim);margin-bottom:0.15in;font-size:11pt;">Bottom toolbar provides viewport navigation, visualization, data management, and export capabilities.</p>
+            <table class="btn-table">
+                <tr><th style="width:180px;">Button</th><th>What it does</th></tr>
+                <tr>
+                    <td><span class="btn-pill pill-cyan">Zoom to Element</span></td>
+                    <td>Zooms the active 3D view to the selected element with optimal framing. Auto-unhides element if hidden. Disabled if no element selected.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-pill pill-gray">Isolate Scan</span></td>
+                    <td>Checkbox. When enabled, hides all point clouds except the one associated with the selected element's current scan. Useful for visual verification.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-pill pill-blue">Show Deviations</span></td>
+                    <td>Loads per-point deviation data from .points.bin file. Colors points by deviation (green=accurate, red=deviated). Applies to selected element's scan. Resource-intensive.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-pill pill-green">Quick Deviations</span></td>
+                    <td>Lightweight version of Show Deviations. Uses sampled point cloud without loading full deviation data. Faster but less precise. Good for quick checks.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-pill pill-gray">Clear Visualization</span></td>
+                    <td>Removes all point cloud colorization and resets to default gray display. Also removes any temporary graphics.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-pill pill-gray">Load</span></td>
+                    <td>Opens file dialog to load a previous analysis JSON result file. Useful for comparing historical analyses.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-pill pill-gray">Save</span></td>
+                    <td>Saves current analysis results to JSON file in custom location. Includes verification reasons, screenshots, and scan selections.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-pill pill-gray">Export CSV</span></td>
+                    <td>Exports all element data to CSV spreadsheet. Includes Category, ElementId, Name, Score, Mean/Max Deviation, % In Tolerance, Point Count, ScanID, Verified, Reason.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-pill pill-purple">Export Report</span></td>
+                    <td>Generates comprehensive HTML report with embedded CSS, base64 screenshots, executive summary, category breakdown, and verification details.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-pill pill-gray">Close</span></td>
+                    <td>Closes the Results Window. Results remain saved in %LOCALAPPDATA%\EliteTools\EliteScan\Results\ and can be reopened via View Report.</td>
+                </tr>
+            </table>
+        </div>
+        <div class="slide-footer">
+            <span>EliteScan Tutorial</span>
+            <span class="slide-number">14</span>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 15: SECTION — SCORING SYSTEM                          -->
+    <!-- ============================================================ -->
+    <div class="slide slide-section">
+        <div class="section-label">Section 05</div>
+        <h2>Scoring System</h2>
+        <div class="section-sub">Letter grade thresholds and multi-scan scoring modes</div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 16: SCORING — GRADE TABLE                              -->
+    <!-- ============================================================ -->
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>Scoring &mdash; Grade Thresholds</h2>
+            <span class="tab-label">Settings</span>
+        </div>
+        <div class="slide-body">
+            <p style="color:var(--text-dim);margin-bottom:0.15in;font-size:11pt;">Elements receive letter grades (A-F) based on the percentage of captured points within the tolerance threshold (default 0.05 ft / 0.6 inches). Verified elements receive a "Reviewed" grade.</p>
+            <div style="margin-bottom:0.15in;">
+                <div class="legend-row" style="flex-wrap:wrap;gap:0.15in;">
+                    <div class="legend-item">
+                        <div class="legend-swatch" style="background:#4CAF50;"></div>
+                        <span><strong>A</strong> &mdash; 90%+ in tolerance</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-swatch" style="background:#8BC34A;"></div>
+                        <span><strong>B</strong> &mdash; 80%+ in tolerance</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-swatch" style="background:#FDD835;"></div>
+                        <span><strong>C</strong> &mdash; 70%+ in tolerance</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-swatch" style="background:#FF9800;"></div>
+                        <span><strong>D</strong> &mdash; 60%+ in tolerance</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-swatch" style="background:#F44336;"></div>
+                        <span><strong>F</strong> &mdash; Below 60%</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-swatch" style="background:#5ED5DD;"></div>
+                        <span><strong>Reviewed</strong> &mdash; Verified by user</span>
+                    </div>
+                </div>
+            </div>
+            <p style="margin-bottom:0.12in;font-size:11pt;color:var(--text-dim);">Thresholds are fully configurable in Settings. Tolerance defines the acceptable deviation distance (default 0.05 ft). Grade thresholds define the percentage cutoffs for A/B/C/D/F.</p>
+            <div class="col-card" style="border-left:3px solid var(--scan);">
+                <h3 style="color:var(--scan);">Multi-scan scoring modes</h3>
+                <ul class="col-cyan">
+                    <li><strong>Best Visibility</strong> &mdash; Uses scan with most captured points. Default. Prioritizes data completeness.</li>
+                    <li><strong>Best Score</strong> &mdash; Uses scan with highest grade. Optimistic. Good for "prove it's right" scenarios.</li>
+                    <li><strong>Top 10 Average</strong> &mdash; Averages scores from top 10 scans by point count. Balanced. Reduces outlier influence.</li>
+                    <li><strong>Custom</strong> &mdash; Allows per-element scan selection. Maximum control. Use for investigating conflicts.</li>
+                </ul>
+            </div>
+        </div>
+        <div class="slide-footer">
+            <span>EliteScan Tutorial</span>
+            <span class="slide-number">16</span>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 17: SECTION — ELEMENT VERIFICATION                    -->
+    <!-- ============================================================ -->
+    <div class="slide slide-section">
+        <div class="section-label">Section 06</div>
+        <h2>Element Verification</h2>
+        <div class="section-sub">Document reasons for deviations with screenshots and structured notes</div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 18: VERIFY ELEMENT DIALOG                              -->
+    <!-- ============================================================ -->
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>Verify Element Dialog</h2>
+            <span class="tab-label">Results Window</span>
+        </div>
+        <div class="slide-body">
+            <p style="color:var(--text-dim);margin-bottom:0.15in;font-size:11pt;">Opens when checking the Verify checkbox on an element row. Captures structured documentation for why an element deviates from scan data.</p>
+            <table class="btn-table">
+                <tr><th style="width:180px;">Field</th><th>Details</th></tr>
+                <tr>
+                    <td><span class="btn-name">Element Info</span></td>
+                    <td>Read-only header showing element description, ElementId, category, and current score. Helps confirm you're verifying the correct element.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-name">Screenshot Preview</span></td>
+                    <td>Displays existing screenshot if one was previously captured or uploaded. Empty state shows "No screenshot" message.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-name">Reason Selection</span></td>
+                    <td>6 radio button options: <strong>Confirmed Accurate</strong> (scan error), <strong>Post-Scan Change</strong> (built after scan), <strong>Known Deviation</strong> (intentional), <strong>Insufficient Data</strong> (poor scan coverage), <strong>Category Exclusion</strong> (wrong category), <strong>Other</strong> (custom reason).</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-name">Additional Notes</span></td>
+                    <td>Multi-line text box for freeform notes. Useful for detailed explanations, RFI numbers, or coordination notes.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-name">Screenshot Option</span></td>
+                    <td>Checkbox: "Capture screenshot for this element". When checked, dialog closes and 360° Panorama Viewer opens for screenshot workflow.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-pill pill-gray">Cancel</span></td>
+                    <td>Closes dialog without saving. Unchecks the Verify checkbox.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-pill pill-cyan">Save</span></td>
+                    <td>Saves verification data to element record. Element gets cyan background, checkbox stays checked, image badge updates. Data persists in JSON.</td>
+                </tr>
+            </table>
+        </div>
+        <div class="slide-footer">
+            <span>EliteScan Tutorial</span>
+            <span class="slide-number">18</span>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 19: VERIFICATION SCREENSHOT WORKFLOW                   -->
+    <!-- ============================================================ -->
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>Verification Screenshot Workflow</h2>
+            <span class="tab-label">Results Window</span>
+        </div>
+        <div class="slide-body">
+            <p style="color:var(--text-dim);margin-bottom:0.15in;font-size:11pt;">Two methods for associating screenshots with verified elements: automated Capture workflow or manual Upload workflow.</p>
+            <div class="two-col" style="gap:0.3in;">
+                <div class="col-card" style="border-left:3px solid var(--scan);">
+                    <h3 style="color:var(--scan);">Capture button workflow</h3>
+                    <ul class="col-cyan">
+                        <li><strong>1. Click Capture</strong> in element row</li>
+                        <li><strong>2. Panorama Viewer opens</strong> if not already visible</li>
+                        <li><strong>3. Banner appears</strong> at top: "Navigate to view element. Press Capture when ready."</li>
+                        <li><strong>4. Auto-zooms</strong> Revit viewport to element</li>
+                        <li><strong>5. User navigates</strong> the 360° panorama to show element</li>
+                        <li><strong>6. User clicks Capture</strong> in banner</li>
+                        <li><strong>7. Side-by-side screenshot</strong> saved: Revit 3D view (left) + Panorama (right)</li>
+                        <li><strong>8. Filename format:</strong> <span class="key">[ElementId]_[timestamp].png</span></li>
+                        <li><strong>9. Saved to:</strong> <span class="key">%LOCALAPPDATA%\EliteTools\EliteScan\Screenshots\</span></li>
+                    </ul>
+                </div>
+                <div class="col-card" style="border-left:3px solid var(--coord);">
+                    <h3 style="color:var(--coord);">Upload button workflow</h3>
+                    <ul class="col-green">
+                        <li><strong>1. Click Upload</strong> in element row</li>
+                        <li><strong>2. File dialog opens</strong> (PNG, JPG, BMP supported)</li>
+                        <li><strong>3. User selects</strong> an external image (e.g., site photo, markup)</li>
+                        <li><strong>4. File is copied</strong> to EliteScan screenshots folder</li>
+                        <li><strong>5. Filename renamed:</strong> <span class="key">[ElementId]_[timestamp].png</span></li>
+                        <li><strong>6. Element record</strong> updated with screenshot path</li>
+                        <li><strong>7. Image badge</strong> turns green in element row</li>
+                        <li><strong>Use case:</strong> Link field photos, RFI images, or pre-existing documentation</li>
+                    </ul>
+                </div>
+            </div>
+            <p style="margin-top:0.12in;font-size:10pt;color:var(--text-muted);">Screenshots are embedded as base64 in HTML reports and displayed in the Verify Element Dialog preview. They are NOT stored in the JSON file itself, only the file path reference.</p>
+        </div>
+        <div class="slide-footer">
+            <span>EliteScan Tutorial</span>
+            <span class="slide-number">19</span>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 20: SECTION — 360° PANORAMA VIEWER                    -->
+    <!-- ============================================================ -->
+    <div class="slide slide-section">
+        <div class="section-label">Section 07</div>
+        <h2>360° Panorama Viewer</h2>
+        <div class="section-sub">Dockable pane for equirectangular scan panorama visualization with Revit view sync</div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 21: PANORAMA VIEWER — TOOLBAR                          -->
+    <!-- ============================================================ -->
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>360° Panorama Viewer &mdash; Toolbar</h2>
+            <span class="tab-label">Viewer &gt; 360 Viewer</span>
+        </div>
+        <div class="slide-body">
+            <p style="color:var(--text-dim);margin-bottom:0.15in;font-size:11pt;">Dockable pane displaying equirectangular panorama images from FARO scans or E57 exports. Toolbar provides navigation, synchronization, and screenshot controls.</p>
+            <table class="btn-table">
+                <tr><th style="width:160px;">Control</th><th>What it does</th></tr>
+                <tr>
+                    <td><span class="btn-pill pill-cyan">SYNC Toggle</span></td>
+                    <td>When enabled (blue), panorama view direction automatically syncs with Revit's active 3D view camera. Updates on mouse release to avoid performance lag.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-pill pill-gray">Resync</span></td>
+                    <td>Forces immediate sync of panorama to match Revit camera direction. Useful when SYNC toggle is disabled or after manual navigation.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-pill pill-gray">Reset</span></td>
+                    <td>Resets panorama view to default orientation (0° yaw, 0° pitch). Also resets zoom to 100%.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-pill pill-gray">Pop Out</span></td>
+                    <td>Opens panorama in a separate floating window. Useful for dual-monitor workflows. Window can be resized and positioned independently.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-pill pill-cyan">Screenshot</span></td>
+                    <td>Captures side-by-side screenshot: Revit 3D view (left) + Panorama (right). Saves to %LOCALAPPDATA%\EliteTools\EliteScan\Screenshots\ with timestamp.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-name">Scan Dropdown</span></td>
+                    <td>Lists all placed scan locations. Select a scan to load its panorama image. Shows ScanID and coordinates in dropdown.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-name">Range Control</span></td>
+                    <td>Slider (10-200 ft) controls point cloud visibility range in Revit. Only affects display, not analysis. Useful for reducing clutter.</td>
+                </tr>
+            </table>
+        </div>
+        <div class="slide-footer">
+            <span>EliteScan Tutorial</span>
+            <span class="slide-number">21</span>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 22: PANORAMA VIEWER — MAIN AREA & HOTSPOTS            -->
+    <!-- ============================================================ -->
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>360° Panorama Viewer &mdash; Main Area &amp; Hotspots</h2>
+            <span class="tab-label">Viewer &gt; 360 Viewer</span>
+        </div>
+        <div class="slide-body">
+            <p style="color:var(--text-dim);margin-bottom:0.15in;font-size:11pt;">Main display area shows equirectangular panorama with interactive navigation. Hotspots appear as white circles indicating linked scans.</p>
+            <div class="two-col" style="gap:0.3in;">
+                <div class="col-card" style="border-left:3px solid var(--scan);">
+                    <h3 style="color:var(--scan);">Navigation controls</h3>
+                    <ul class="col-cyan">
+                        <li><strong>Click + Drag</strong> &mdash; Rotates view (yaw and pitch)</li>
+                        <li><strong>Scroll Wheel</strong> &mdash; Zooms in/out (50%-200%)</li>
+                        <li><strong>Right-Click</strong> &mdash; Places temporary view direction line in Revit 3D view. Shows where panorama is looking.</li>
+                        <li><strong>Double-Click</strong> &mdash; Resets zoom to 100%</li>
+                    </ul>
+                </div>
+                <div class="col-card" style="border-left:3px solid var(--coord);">
+                    <h3 style="color:var(--coord);">Hotspot behavior</h3>
+                    <ul class="col-green">
+                        <li><strong>White circles</strong> mark positions of linked scans visible from current scan</li>
+                        <li><strong>Hover</strong> inverts colors (black circle, white border) and shows ScanID label</li>
+                        <li><strong>Click hotspot</strong> to navigate to that scan (loads its panorama)</li>
+                        <li><strong>Hotspot distance</strong> max: 100 ft (configurable in Settings)</li>
+                    </ul>
+                </div>
+            </div>
+            <p style="margin-top:0.12in;font-size:10pt;color:var(--text-muted);">No Scan Selected state displays a centered message: "No scan selected. Choose a scan from the dropdown." with a list of available scans below.</p>
+        </div>
+        <div class="slide-footer">
+            <span>EliteScan Tutorial</span>
+            <span class="slide-number">22</span>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 23: PANORAMA VIEWER — VIEW SYNC                        -->
+    <!-- ============================================================ -->
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>360° Panorama Viewer &mdash; View Sync</h2>
+            <span class="tab-label">Viewer &gt; 360 Viewer</span>
+        </div>
+        <div class="slide-body">
+            <p style="color:var(--text-dim);margin-bottom:0.15in;font-size:11pt;">SYNC toggle enables bidirectional view synchronization between Revit's 3D viewport and the panorama viewer. Requires a perspective 3D view named "Pano View" (auto-created if missing).</p>
+            <div class="col-card" style="border-left:3px solid var(--scan);">
+                <h3 style="color:var(--scan);">How View Sync works</h3>
+                <ul class="col-cyan">
+                    <li><strong>Creates "Pano View"</strong> &mdash; 3D perspective view with 60° FOV if it doesn't exist. Reused across sessions.</li>
+                    <li><strong>Sets camera position</strong> &mdash; Moves to selected scan's XYZ coordinates with 5.5 ft eye height offset.</li>
+                    <li><strong>Sets view direction</strong> &mdash; Matches panorama's yaw (horizontal rotation) and pitch (vertical angle).</li>
+                    <li><strong>Updates on mouse release</strong> &mdash; Listens for panorama drag events, syncs Revit camera after user stops dragging (avoids lag).</li>
+                    <li><strong>Right-click indicator</strong> &mdash; Draws temporary red line in Revit showing exact panorama view direction.</li>
+                    <li><strong>Bidirectional</strong> &mdash; Resync button pushes Revit camera direction back to panorama.</li>
+                </ul>
+            </div>
+            <p style="margin-top:0.12in;font-size:10pt;color:var(--text-muted);">Sync only works in the "Pano View" 3D view. If user switches to a different view while SYNC is enabled, sync pauses and resumes when returning to Pano View.</p>
+        </div>
+        <div class="slide-footer">
+            <span>EliteScan Tutorial</span>
+            <span class="slide-number">23</span>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 24: SECTION — OVERLAY & QUICK VISUALIZATION           -->
+    <!-- ============================================================ -->
+    <div class="slide slide-section">
+        <div class="section-label">Section 08</div>
+        <h2>Overlay &amp; Quick Visualization</h2>
+        <div class="section-sub">Visual feedback of analysis results directly in Revit's 3D viewport</div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 25: SHOW OVERLAY & CLEAR OVERLAY                       -->
+    <!-- ============================================================ -->
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>Show Overlay &amp; Clear Overlay</h2>
+            <span class="tab-label">Overlay</span>
+        </div>
+        <div class="slide-body">
+            <p style="color:var(--text-dim);margin-bottom:0.15in;font-size:11pt;">Show Overlay applies color overrides to elements based on their analysis scores. Clear Overlay removes all color overrides.</p>
+            <div class="two-col" style="gap:0.3in;">
+                <div class="col-card" style="border-left:3px solid var(--coord);">
+                    <h3 style="color:var(--coord);">Show Overlay</h3>
+                    <ul class="col-green">
+                        <li><strong>Loads most recent results</strong> from %LOCALAPPDATA%\EliteTools\EliteScan\Results\</li>
+                        <li><strong>Colors by score:</strong> A = green (#4CAF50), B = light green (#8BC34A), C = yellow (#FDD835), D = orange (#FF9800), F = red (#F44336), Reviewed = cyan (#5ED5DD)</li>
+                        <li><strong>Uses OverrideGraphicSettings</strong> to set element fill/projection colors in active view</li>
+                        <li><strong>Applies to all categories</strong> in the analysis results</li>
+                        <li><strong>Non-destructive</strong> &mdash; Original materials preserved, only view overrides applied</li>
+                        <li><strong>Persists across sessions</strong> &mdash; Overrides saved with view</li>
+                    </ul>
+                </div>
+                <div class="col-card" style="border-left:3px solid var(--scan);">
+                    <h3 style="color:var(--scan);">Clear Overlay</h3>
+                    <ul class="col-cyan">
+                        <li><strong>Removes all color overrides</strong> from active view</li>
+                        <li><strong>Resets to default shading</strong> (materials and categories restore)</li>
+                        <li><strong>Does NOT delete</strong> analysis results (only removes visualization)</li>
+                        <li><strong>Quick toggle</strong> &mdash; Use to compare "before/after" overlays</li>
+                    </ul>
+                </div>
+            </div>
+            <p style="margin-top:0.12in;font-size:10pt;color:var(--text-muted);">Quick Deviations vs Show Deviations: Quick Deviations is a lightweight point cloud sample for fast checks. Show Deviations loads full per-point deviation data from .points.bin files for accurate color gradients (green=accurate, red=deviated).</p>
+        </div>
+        <div class="slide-footer">
+            <span>EliteScan Tutorial</span>
+            <span class="slide-number">25</span>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 26: SECTION — SETTINGS CONFIGURATION                  -->
+    <!-- ============================================================ -->
+    <div class="slide slide-section">
+        <div class="section-label">Section 09</div>
+        <h2>Settings Configuration</h2>
+        <div class="section-sub">Configure scoring thresholds, analysis parameters, paths, and included categories</div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 27: SETTINGS WINDOW — TEMPLATES & SCORING             -->
+    <!-- ============================================================ -->
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>Settings &mdash; Templates &amp; Scoring Thresholds</h2>
+            <span class="tab-label">Analysis &gt; Settings</span>
+        </div>
+        <div class="slide-body">
+            <p style="color:var(--text-dim);margin-bottom:0.15in;font-size:11pt;">Settings window organizes configuration into sections. Templates allow saving/loading preset configurations. Scoring thresholds define tolerance and grade cutoffs.</p>
+            <table class="btn-table">
+                <tr><th style="width:180px;">Section</th><th>Controls</th></tr>
+                <tr>
+                    <td><span class="btn-name">Templates</span></td>
+                    <td>Dropdown to select saved templates. <span class="btn-pill pill-cyan" style="font-size:9pt;">Save as Template</span> creates new preset. <span class="btn-pill pill-red" style="font-size:9pt;">Delete</span> removes selected template. Templates stored in <span class="key">%LOCALAPPDATA%\EliteTools\EliteScan\Templates\</span>.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-name">Tolerance (ft)</span></td>
+                    <td>Numeric input (default 0.05 ft = 0.6 inches). Points within this distance are considered "in tolerance". Used to calculate % In Tolerance statistic.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-name">Grade A Threshold</span></td>
+                    <td>Percentage input (default 90%). Elements with ≥90% points in tolerance receive an A grade.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-name">Grade B Threshold</span></td>
+                    <td>Percentage input (default 80%). Elements with 80-89% points in tolerance receive a B grade.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-name">Grade C Threshold</span></td>
+                    <td>Percentage input (default 70%). Elements with 70-79% points in tolerance receive a C grade.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-name">Grade D Threshold</span></td>
+                    <td>Percentage input (default 60%). Elements with 60-69% points in tolerance receive a D grade.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-name">Grade F</span></td>
+                    <td>Implicit. Elements below D threshold (< 60%) receive an F grade.</td>
+                </tr>
+            </table>
+        </div>
+        <div class="slide-footer">
+            <span>EliteScan Tutorial</span>
+            <span class="slide-number">27</span>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 28: SETTINGS WINDOW — ANALYSIS & PATHS                 -->
+    <!-- ============================================================ -->
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>Settings &mdash; Analysis Settings &amp; Paths</h2>
+            <span class="tab-label">Analysis &gt; Settings</span>
+        </div>
+        <div class="slide-body">
+            <table class="btn-table">
+                <tr><th style="width:180px;">Setting</th><th>Details</th></tr>
+                <tr>
+                    <td><span class="btn-name">Default Radius (ft)</span></td>
+                    <td>Numeric input (default 50 ft). Sets initial AnalysisRadius parameter when placing scan locations. Can be overridden per-scan by editing the family instance parameter.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-name">Hotspot Max Distance</span></td>
+                    <td>Numeric input (default 100 ft). Controls maximum distance for displaying scan-to-scan hotspots in 360° Panorama Viewer. Scans farther apart won't show hotspots.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-name">CloudCompare Path</span></td>
+                    <td>File path input with Browse button. Points to <span class="key">CloudCompare.exe</span>. Required for Run Analysis workflow. Default: <span class="key">C:\Program Files\CloudCompare\CloudCompare.exe</span>.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-name">Point Cloud Root</span></td>
+                    <td>Folder path input with Browse button. Root directory where RCS files are stored. Used as fallback if RCP doesn't contain absolute paths to RCS files.</td>
+                </tr>
+            </table>
+            <p style="margin-top:0.15in;color:var(--text-dim);font-size:11pt;"><strong>Paths section:</strong> Critical for analysis workflow. If CloudCompare.exe is not found, Run Analysis will fail immediately with error message.</p>
+        </div>
+        <div class="slide-footer">
+            <span>EliteScan Tutorial</span>
+            <span class="slide-number">28</span>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 29: SETTINGS WINDOW — 360 VIEWER & SCAN FAMILY        -->
+    <!-- ============================================================ -->
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>Settings &mdash; 360° Panorama &amp; Scan Family</h2>
+            <span class="tab-label">Analysis &gt; Settings</span>
+        </div>
+        <div class="slide-body">
+            <table class="btn-table">
+                <tr><th style="width:180px;">Setting</th><th>Details</th></tr>
+                <tr>
+                    <td><span class="btn-name">Panorama Source</span></td>
+                    <td>Radio buttons: <span class="btn-pill pill-cyan" style="font-size:9pt;">FARO (180°)</span> or <span class="btn-pill pill-gray" style="font-size:9pt;">E57 Export (270°)</span>. FARO mode looks for native FARO panorama JPGs in scan folders. E57 Export mode generates panoramas from E57 files via CloudCompare. Default: FARO.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-name">Family Name</span></td>
+                    <td>Text input (default "Scan Location"). Specifies which family type represents scan locations. Used by Place Scans and Run Analysis to identify scan instances.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-name">ScanID Parameter</span></td>
+                    <td>Text input (default "ScanID"). Specifies which instance parameter stores the scan identifier. Must match the parameter name in the Scan Location family.</td>
+                </tr>
+            </table>
+            <p style="margin-top:0.15in;color:var(--text-dim);font-size:11pt;"><strong>360° Panorama Viewer:</strong> FARO mode requires original FARO scan folder structure with panorama_*.jpg files. E57 Export mode works with any E57-compatible scan data but requires CloudCompare for panorama generation (slower).</p>
+        </div>
+        <div class="slide-footer">
+            <span>EliteScan Tutorial</span>
+            <span class="slide-number">29</span>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 30: SETTINGS WINDOW — ELEMENT EXCLUSION FILTERS       -->
+    <!-- ============================================================ -->
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>Settings &mdash; Element Exclusion Filters</h2>
+            <span class="tab-label">Analysis &gt; Settings</span>
+        </div>
+        <div class="slide-body">
+            <p style="color:var(--text-dim);margin-bottom:0.15in;font-size:11pt;">Define parameter filters to exclude specific elements from analysis. Useful for filtering out temporary elements, reference objects, or elements with specific properties.</p>
+            <table class="btn-table">
+                <tr><th style="width:180px;">Control</th><th>What it does</th></tr>
+                <tr>
+                    <td><span class="btn-name">Filter List</span></td>
+                    <td>DataGrid showing all exclusion filter rules. Each row has Parameter Name, Condition (Equals, Contains, NotEquals), and Value columns.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-pill pill-green">+ Add Filter</span></td>
+                    <td>Adds new blank row to filter list. Fill in parameter name (e.g., "Comments"), condition (dropdown), and value (e.g., "DEMO"). Elements matching filter are excluded from analysis.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-pill pill-red">Remove</span></td>
+                    <td>Deletes selected filter row. Changes take effect on next Run Analysis.</td>
+                </tr>
+            </table>
+            <p style="margin-top:0.12in;font-size:10pt;color:var(--text-muted);">Example use cases: Exclude demolition elements (Comments = "DEMO"), exclude placeholder families (Family Name Contains "Placeholder"), exclude phased elements (Phase Status = "Demolished").</p>
+        </div>
+        <div class="slide-footer">
+            <span>EliteScan Tutorial</span>
+            <span class="slide-number">30</span>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 31: SETTINGS WINDOW — INCLUDED CATEGORIES              -->
+    <!-- ============================================================ -->
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>Settings &mdash; Included Categories</h2>
+            <span class="tab-label">Analysis &gt; Settings</span>
+        </div>
+        <div class="slide-body">
+            <p style="color:var(--text-dim);margin-bottom:0.15in;font-size:11pt;">Checkbox list organized by discipline. Only checked categories are included in Run Analysis. Unchecked categories are ignored even if elements exist within scan radius.</p>
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0.15in;">
+                <div class="col-card" style="border-left:3px solid var(--draft);">
+                    <h3 style="color:var(--draft);">Architectural</h3>
+                    <ul class="col-amber">
+                        <li>Walls</li>
+                        <li>Floors</li>
+                        <li>Roofs</li>
+                        <li>Ceilings</li>
+                        <li>Doors</li>
+                        <li>Windows</li>
+                        <li>Stairs</li>
+                        <li>Railings</li>
+                    </ul>
+                </div>
+                <div class="col-card" style="border-left:3px solid var(--core);">
+                    <h3 style="color:var(--core);">Structural</h3>
+                    <ul class="col-purple">
+                        <li>Structural Framing</li>
+                        <li>Structural Columns</li>
+                        <li>Structural Foundations</li>
+                    </ul>
+                </div>
+                <div class="col-card" style="border-left:3px solid var(--coord);">
+                    <h3 style="color:var(--coord);">MEP Standard</h3>
+                    <ul class="col-green">
+                        <li>Ducts</li>
+                        <li>Pipes</li>
+                        <li>Cable Trays</li>
+                        <li>Conduits</li>
+                        <li>Duct Fittings</li>
+                        <li>Pipe Fittings</li>
+                    </ul>
+                </div>
+                <div class="col-card" style="border-left:3px solid var(--scan);">
+                    <h3 style="color:var(--scan);">MEP Electrical</h3>
+                    <ul class="col-cyan">
+                        <li>Lighting Fixtures</li>
+                        <li>Electrical Fixtures</li>
+                        <li>Electrical Equipment</li>
+                    </ul>
+                </div>
+                <div class="col-card" style="border-left:3px solid var(--draft);">
+                    <h3 style="color:var(--draft);">MEP Equipment</h3>
+                    <ul class="col-amber">
+                        <li>Mechanical Equipment</li>
+                        <li>Plumbing Fixtures</li>
+                    </ul>
+                </div>
+                <div class="col-card" style="border-left:3px solid var(--core);">
+                    <h3 style="color:var(--core);">MEP Fabrication</h3>
+                    <ul class="col-purple">
+                        <li>Fabrication Ductwork</li>
+                        <li>Fabrication Pipework</li>
+                        <li>Fabrication Containment</li>
+                        <li>Fabrication Hangers</li>
+                    </ul>
+                </div>
+                <div class="col-card" style="border-left:3px solid var(--coord);">
+                    <h3 style="color:var(--coord);">Generic</h3>
+                    <ul class="col-green">
+                        <li>Generic Models</li>
+                        <li>Specialty Equipment</li>
+                    </ul>
+                </div>
+            </div>
+            <p style="margin-top:0.15in;font-size:10pt;color:var(--text-muted);">Bottom bar: <span class="btn-pill pill-gray" style="font-size:9pt;">Reset to Defaults</span> restores factory settings. <span class="btn-pill pill-gray" style="font-size:9pt;">Cancel</span> closes without saving. <span class="btn-pill pill-cyan" style="font-size:9pt;">Save</span> applies changes.</p>
+        </div>
+        <div class="slide-footer">
+            <span>EliteScan Tutorial</span>
+            <span class="slide-number">31</span>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 32: SECTION — EXPORT & REPORTS                        -->
+    <!-- ============================================================ -->
+    <div class="slide slide-section">
+        <div class="section-label">Section 10</div>
+        <h2>Export &amp; Reports</h2>
+        <div class="section-sub">CSV data export and comprehensive HTML report generation</div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 33: CSV EXPORT                                         -->
+    <!-- ============================================================ -->
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>CSV Export</h2>
+            <span class="tab-label">Results Window &gt; Export CSV</span>
+        </div>
+        <div class="slide-body">
+            <p style="color:var(--text-dim);margin-bottom:0.15in;font-size:11pt;">Exports all element analysis data to a CSV spreadsheet file. Opens file dialog to choose save location. Includes all element rows, verified and unverified.</p>
+            <table class="btn-table">
+                <tr><th style="width:180px;">CSV Column</th><th>Data</th></tr>
+                <tr><td><span class="btn-name">Category</span></td><td>Element category name (e.g., "Walls", "Ducts")</td></tr>
+                <tr><td><span class="btn-name">ElementId</span></td><td>Revit ElementId integer value</td></tr>
+                <tr><td><span class="btn-name">Name</span></td><td>Element description (type name + optional instance name)</td></tr>
+                <tr><td><span class="btn-name">Score</span></td><td>Letter grade (A, B, C, D, F, Reviewed)</td></tr>
+                <tr><td><span class="btn-name">Mean Deviation (ft)</span></td><td>Average point-to-surface distance</td></tr>
+                <tr><td><span class="btn-name">Max Deviation (ft)</span></td><td>Worst single point deviation</td></tr>
+                <tr><td><span class="btn-name">% In Tolerance</span></td><td>Percentage of points within tolerance threshold</td></tr>
+                <tr><td><span class="btn-name">Point Count</span></td><td>Number of captured points</td></tr>
+                <tr><td><span class="btn-name">ScanID</span></td><td>Scan name used for this element's score</td></tr>
+                <tr><td><span class="btn-name">Verified</span></td><td>TRUE if element is verified, FALSE otherwise</td></tr>
+                <tr><td><span class="btn-name">Reason</span></td><td>Verification reason (if verified)</td></tr>
+                <tr><td><span class="btn-name">Notes</span></td><td>Additional notes (if verified)</td></tr>
+            </table>
+            <p style="margin-top:0.12in;font-size:10pt;color:var(--text-muted);">CSV files can be opened in Excel, imported into PowerBI dashboards, or used for custom analysis scripts. Encoding: UTF-8 with BOM for Excel compatibility.</p>
+        </div>
+        <div class="slide-footer">
+            <span>EliteScan Tutorial</span>
+            <span class="slide-number">33</span>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 34: HTML REPORT                                        -->
+    <!-- ============================================================ -->
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>HTML Report</h2>
+            <span class="tab-label">Results Window &gt; Export Report</span>
+        </div>
+        <div class="slide-body">
+            <p style="color:var(--text-dim);margin-bottom:0.15in;font-size:11pt;">Generates a comprehensive, self-contained HTML report with embedded CSS and base64-encoded screenshots. No external dependencies. Opens in default browser after generation.</p>
+            <div class="two-col" style="gap:0.3in;">
+                <div class="col-card" style="border-left:3px solid var(--scan);">
+                    <h3 style="color:var(--scan);">Report sections</h3>
+                    <ul class="col-cyan">
+                        <li><strong>Header</strong> &mdash; Project name, analysis timestamp, overall accuracy rate</li>
+                        <li><strong>Executive Summary</strong> &mdash; Total elements, accurate count, score distribution chart, key findings</li>
+                        <li><strong>Category Breakdown</strong> &mdash; Discipline-grouped tables with element details, sorted by score (F first)</li>
+                        <li><strong>Verification Details</strong> &mdash; Collapsible section showing all verified elements with reasons, notes, and embedded screenshots</li>
+                        <li><strong>Settings Appendix</strong> &mdash; Analysis parameters, tolerance, grade thresholds, included categories</li>
+                    </ul>
+                </div>
+                <div class="col-card" style="border-left:3px solid var(--coord);">
+                    <h3 style="color:var(--coord);">Report features</h3>
+                    <ul class="col-green">
+                        <li><strong>Embedded CSS</strong> &mdash; Dark theme matching EliteScan UI</li>
+                        <li><strong>Base64 screenshots</strong> &mdash; Images embedded directly in HTML</li>
+                        <li><strong>Color-coded badges</strong> &mdash; Scores use same colors as UI</li>
+                        <li><strong>Sortable tables</strong> &mdash; JavaScript table sorting (optional)</li>
+                        <li><strong>Print-optimized</strong> &mdash; CSS @page rules for letter-size printing</li>
+                        <li><strong>Portable</strong> &mdash; Single HTML file, no external dependencies</li>
+                    </ul>
+                </div>
+            </div>
+            <p style="margin-top:0.12in;font-size:10pt;color:var(--text-muted);">Reports are saved to user-selected location with timestamp in filename: <span class="key">EliteScan_Report_[timestamp].html</span>. Typical file size: 500KB-5MB depending on screenshot count.</p>
+        </div>
+        <div class="slide-footer">
+            <span>EliteScan Tutorial</span>
+            <span class="slide-number">34</span>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 35: SECTION — FILE STORAGE LOCATIONS                  -->
+    <!-- ============================================================ -->
+    <div class="slide slide-section">
+        <div class="section-label">Section 11</div>
+        <h2>File Storage Locations</h2>
+        <div class="section-sub">Where EliteScan stores settings, results, temporary data, and logs</div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 36: FILE STORAGE PATHS                                 -->
+    <!-- ============================================================ -->
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>File Storage Paths</h2>
+        </div>
+        <div class="slide-body">
+            <p style="color:var(--text-dim);margin-bottom:0.15in;font-size:11pt;">All EliteScan data is stored under <span class="key">%LOCALAPPDATA%\EliteTools\EliteScan\</span> (typically <span class="key">C:\Users\[Username]\AppData\Local\EliteTools\EliteScan\</span>).</p>
+            <table class="btn-table">
+                <tr><th style="width:200px;">Path</th><th>Contents</th></tr>
+                <tr>
+                    <td><span class="key">Settings\</span></td>
+                    <td>User preferences JSON file. Stores tolerance, thresholds, CloudCompare path, included categories, scan family settings.</td>
+                </tr>
+                <tr>
+                    <td><span class="key">Results\</span></td>
+                    <td>Analysis result JSON files. Each file is timestamped: <span class="key">[ProjectName]_[timestamp].json</span>. Contains element scores, deviations, scan selections, verification data.</td>
+                </tr>
+                <tr>
+                    <td><span class="key">TempGeometry\</span></td>
+                    <td>E57 geometry exports. Created during Run Analysis (Step 1). Contains mesh representations of Revit elements. Auto-cleaned after analysis.</td>
+                </tr>
+                <tr>
+                    <td><span class="key">TempClouds\</span></td>
+                    <td>E57 point cloud crops. Created during Run Analysis (Step 2). Contains radius-cropped point clouds. Auto-cleaned after analysis.</td>
+                </tr>
+                <tr>
+                    <td><span class="key">DeviationData\</span></td>
+                    <td>.points.bin files with per-point deviation scalars. Created during Run Analysis (Step 4). Used by Show Deviations visualization. Persistent.</td>
+                </tr>
+                <tr>
+                    <td><span class="key">Screenshots\</span></td>
+                    <td>Verification screenshots. Filename format: <span class="key">[ElementId]_[timestamp].png</span>. Side-by-side Revit + Panorama captures or uploaded images.</td>
+                </tr>
+                <tr>
+                    <td><span class="key">Logs\</span></td>
+                    <td>Diagnostic log files. One per day: <span class="key">EliteScan_[date].log</span>. Contains CloudCompare output, errors, performance metrics.</td>
+                </tr>
+                <tr>
+                    <td><span class="key">Templates\</span></td>
+                    <td>Saved settings templates. JSON files with user-defined presets (e.g., "Mechanical Only", "Tight Tolerance").</td>
+                </tr>
+            </table>
+            <p style="margin-top:0.12in;font-size:10pt;color:var(--text-muted);">To reset EliteScan to factory defaults, delete the entire <span class="key">%LOCALAPPDATA%\EliteTools\EliteScan\</span> folder. Settings and templates will regenerate on next launch.</p>
+        </div>
+        <div class="slide-footer">
+            <span>EliteScan Tutorial</span>
+            <span class="slide-number">36</span>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 37: SECTION — TROUBLESHOOTING                         -->
+    <!-- ============================================================ -->
+    <div class="slide slide-section">
+        <div class="section-label">Section 12</div>
+        <h2>Troubleshooting</h2>
+        <div class="section-sub">Common issues and solutions</div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 38: TROUBLESHOOTING GUIDE                              -->
+    <!-- ============================================================ -->
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>Troubleshooting Guide</h2>
+        </div>
+        <div class="slide-body">
+            <div class="two-col" style="gap:0.3in;">
+                <div class="col-card" style="border-left:3px solid var(--danger);">
+                    <h3 style="color:var(--danger);">CloudCompare Not Found</h3>
+                    <ul class="col-cyan">
+                        <li><strong>Symptom:</strong> Run Analysis fails with "CloudCompare.exe not found" error</li>
+                        <li><strong>Solution:</strong> Open Settings, verify CloudCompare Path points to valid exe</li>
+                        <li><strong>Download:</strong> <span style="font-size:10pt;">cloudcompare.org</span> (free, open-source)</li>
+                        <li><strong>Default path:</strong> <span class="key">C:\Program Files\CloudCompare\CloudCompare.exe</span></li>
+                    </ul>
+                </div>
+                <div class="col-card" style="border-left:3px solid var(--warning);">
+                    <h3 style="color:var(--warning);">No Scans Found</h3>
+                    <ul class="col-amber">
+                        <li><strong>Symptom:</strong> Place Scans reports "No scans found in point cloud"</li>
+                        <li><strong>Causes:</strong> RCP has no linked RCS files, RCS files missing from disk, wrong Point Cloud Root path</li>
+                        <li><strong>Solution:</strong> Verify RCS files exist, check RCP properties, set Point Cloud Root in Settings</li>
+                    </ul>
+                </div>
+                <div class="col-card" style="border-left:3px solid var(--warning);">
+                    <h3 style="color:var(--warning);">Panorama Images Not Loading</h3>
+                    <ul class="col-amber">
+                        <li><strong>Symptom:</strong> 360 Viewer shows "No panorama found" message</li>
+                        <li><strong>FARO mode:</strong> Verify original FARO scan folders with panorama_*.jpg files are accessible</li>
+                        <li><strong>E57 Export mode:</strong> Check CloudCompare path, verify E57 files contain panorama data</li>
+                        <li><strong>Fallback:</strong> Switch panorama source mode in Settings</li>
+                    </ul>
+                </div>
+                <div class="col-card" style="border-left:3px solid var(--primary);">
+                    <h3 style="color:var(--primary);">View Sync Not Working</h3>
+                    <ul class="col-cyan">
+                        <li><strong>Symptom:</strong> SYNC toggle enabled but panorama doesn't follow Revit camera</li>
+                        <li><strong>Cause:</strong> Active view is not "Pano View" 3D perspective view</li>
+                        <li><strong>Solution:</strong> Click Resync to auto-create "Pano View" or manually switch to it</li>
+                    </ul>
+                </div>
+                <div class="col-card" style="border-left:3px solid var(--warning);">
+                    <h3 style="color:var(--warning);">Analysis Results Not Loading</h3>
+                    <ul class="col-amber">
+                        <li><strong>Symptom:</strong> View Report opens empty window or shows "No results found"</li>
+                        <li><strong>Cause:</strong> No completed analyses, corrupted JSON, results folder moved</li>
+                        <li><strong>Solution:</strong> Check <span class="key">%LOCALAPPDATA%\EliteTools\EliteScan\Results\</span> for .json files, re-run analysis if needed</li>
+                    </ul>
+                </div>
+                <div class="col-card" style="border-left:3px solid var(--danger);">
+                    <h3 style="color:var(--danger);">Out of Memory During Analysis</h3>
+                    <ul class="col-cyan">
+                        <li><strong>Symptom:</strong> Revit crashes or analysis fails on large projects</li>
+                        <li><strong>Cause:</strong> Too many elements, large point clouds, insufficient RAM</li>
+                        <li><strong>Solution:</strong> Reduce AnalysisRadius, analyze fewer scans at once, exclude non-critical categories in Settings</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="slide-footer">
+            <span>EliteScan Tutorial</span>
+            <span class="slide-number">38</span>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 39: END                                                -->
+    <!-- ============================================================ -->
+    <div class="slide slide-end">
+        <h2>EliteScan Tutorial</h2>
+        <div class="accent-bar"></div>
+        <div class="contact">
+            <strong>Analysis</strong> &bull; <strong>Viewer</strong> &bull; <strong>Overlay</strong> &bull; <strong>Point Clouds</strong> &mdash; Point cloud deviation analysis for Revit<br>
+            Revit 2022&ndash;2026 &bull; .NET 4.8 / .NET 8.0 &bull; CloudCompare integration &bull; v1.2.0
+        </div>
+    </div>
+
+</body>
+</html>

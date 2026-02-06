@@ -1,0 +1,1084 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EliteDraft Tutorial</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        /* ============================================================
+           COLOR PALETTE — matches EliteDraft Styles.xaml
+           ============================================================ */
+        :root {
+            --bg:           #0F0F12;
+            --surface:      #18181D;
+            --surface2:     #222229;
+            --border:       #2E2E38;
+            --border-light: #3D3D4A;
+            --text:         #E8E8ED;
+            --text-dim:     #9898A8;
+            --text-muted:   #5A5A6A;
+
+            /* Region accents */
+            --scan:   #5ED5DD;   /* Cyan */
+            --draft:  #F5B878;   /* Amber — primary accent */
+            --coord:  #6EE7A8;   /* Green — success/coord */
+            --core:   #A78BFA;   /* Purple — core/special */
+
+            /* Action colors */
+            --success: #4CAF50;
+            --primary: #2196F3;
+            --warning: #FF9800;
+            --danger:  #F44336;
+        }
+
+        @page { size: letter; margin: 0; }
+        /* Back navigation bar */
+        .back-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 24px;
+            background: rgba(24, 24, 29, 0.92);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+        }
+        .back-nav a {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--draft);
+            text-decoration: none;
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            transition: opacity 0.2s;
+        }
+        .back-nav a:hover { opacity: 0.8; }
+        .back-nav a svg { width: 16px; height: 16px; }
+        .back-nav .nav-sep { color: var(--text-muted); font-size: 13px; }
+        .back-nav .nav-title { color: var(--text-dim); font-size: 13px; font-weight: 500; }
+        body { padding-top: 44px; }
+
+        @media print {
+            .back-nav { display: none !important; }
+            body { padding-top: 0 !important; }
+            * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; color-adjust: exact !important; }
+            html { background: var(--bg) !important; }
+            body { background: var(--bg) !important; max-width: none; margin: 0; padding: 0.4in 0.6in; }
+            .slide { box-shadow: none !important; }
+            .slide-title { padding: 0.3in 0; }
+            .slide-section { padding: 0.2in 0.4in; }
+            .slide-footer { display: none; }
+            /* Prevent splitting inside key blocks */
+            .col-card, .btn-table, .slide-section, .legend-row, .status-row, .shortcut-group { break-inside: avoid; page-break-inside: avoid; }
+            /* Keep section headers with their content */
+            .slide-header { break-after: avoid; page-break-after: avoid; }
+            /* Section dividers always start a new page */
+            .slide.slide-section { break-before: page; page-break-before: always; }
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html {
+            background: var(--bg);
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+            font-size: 12pt;
+            line-height: 1.5;
+            color: var(--text);
+            background: var(--bg);
+            max-width: 8.5in;
+            margin: 0 auto;
+            padding: 0.5in 0.7in;
+        }
+
+        .slide {
+            background: var(--bg);
+            margin-bottom: 0.15in;
+            padding: 0.1in 0;
+        }
+
+        /* ============================================================
+           TITLE SLIDE
+           ============================================================ */
+        .slide-title {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 0.4in 0.5in 0.3in;
+            background: var(--bg);
+            background-image:
+                linear-gradient(rgba(245,184,120,0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(245,184,120,0.03) 1px, transparent 1px);
+            background-size: 20px 20px;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .slide-title .tag {
+            font-family: 'Fira Code', Consolas, monospace;
+            font-size: 11pt;
+            font-weight: 500;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--draft);
+            margin-bottom: 0.15in;
+            border: 1px solid var(--border-light);
+            padding: 0.06in 0.2in;
+            border-radius: 3px;
+            background: var(--surface2);
+        }
+
+        .slide-title h1 {
+            font-size: 32pt;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 0.15in;
+            color: var(--text);
+        }
+
+        .slide-title .accent-bar {
+            width: 1in;
+            height: 3px;
+            background: var(--draft);
+            margin: 0.08in 0 0.12in;
+        }
+
+        .slide-title .subtitle {
+            font-size: 13pt;
+            color: var(--text-dim);
+            max-width: 7in;
+        }
+
+        .slide-title .version {
+            font-family: 'Fira Code', Consolas, monospace;
+            font-size: 10pt;
+            color: var(--text-muted);
+            margin-top: 0.15in;
+        }
+
+        /* ============================================================
+           SECTION DIVIDER
+           ============================================================ */
+        .slide-section {
+            display: flex;
+            flex-direction: column;
+            padding: 0.2in 0.4in;
+            background: var(--surface);
+            border-left: 6px solid var(--draft);
+            border-radius: 4px;
+        }
+
+        .slide-section .section-label {
+            font-family: 'Fira Code', Consolas, monospace;
+            font-size: 11pt;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.15in;
+        }
+
+        .slide-section h2 {
+            font-size: 24pt;
+            font-weight: 800;
+            color: var(--text);
+        }
+
+        .slide-section .section-sub {
+            font-size: 12pt;
+            color: var(--text-dim);
+            margin-top: 0.1in;
+        }
+
+        /* ============================================================
+           CONTENT SLIDE
+           ============================================================ */
+        .slide-content {
+            padding: 0.05in 0;
+        }
+
+        .slide-header {
+            margin-bottom: 0.12in;
+            padding-bottom: 0.06in;
+            border-bottom: 2px solid var(--border);
+            display: flex;
+            align-items: baseline;
+            gap: 0.15in;
+        }
+
+        .slide-header h2 {
+            font-size: 18pt;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .slide-header .tab-label {
+            font-family: 'Fira Code', Consolas, monospace;
+            font-size: 11pt;
+            color: var(--draft);
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            padding: 2px 10px;
+            border-radius: 3px;
+        }
+
+        .slide-body {
+            font-size: 12pt;
+        }
+
+        .slide-footer {
+            display: none;
+        }
+
+        .slide-number { color: var(--draft); font-weight: 600; }
+
+        /* ============================================================
+           BUTTON REFERENCE TABLE
+           ============================================================ */
+        .btn-table {
+            width: 100%;
+            border-collapse: collapse;
+            break-inside: avoid;
+        }
+
+        .btn-table th {
+            text-align: left;
+            font-family: 'Fira Code', Consolas, monospace;
+            font-size: 10pt;
+            color: var(--text-muted);
+            padding: 0.06in 0.12in;
+            border-bottom: 1px solid var(--border);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .btn-table td {
+            padding: 0.05in 0.1in;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+            font-size: 11pt;
+        }
+
+        .btn-table tr:last-child td { border-bottom: none; }
+
+        .btn-name {
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .btn-pill {
+            display: inline-block;
+            font-family: 'Fira Code', Consolas, monospace;
+            font-size: 10pt;
+            font-weight: 600;
+            padding: 2px 8px;
+            border-radius: 3px;
+            white-space: nowrap;
+        }
+
+        .pill-cyan   { background: rgba(94,213,221,0.15); color: var(--scan); border: 1px solid rgba(94,213,221,0.3); }
+        .pill-green  { background: rgba(110,231,168,0.15); color: var(--coord); border: 1px solid rgba(110,231,168,0.3); }
+        .pill-amber  { background: rgba(245,184,120,0.15); color: var(--draft); border: 1px solid rgba(245,184,120,0.3); }
+        .pill-purple { background: rgba(167,139,250,0.15); color: var(--core); border: 1px solid rgba(167,139,250,0.3); }
+        .pill-blue   { background: rgba(33,150,243,0.15); color: var(--primary); border: 1px solid rgba(33,150,243,0.3); }
+        .pill-red    { background: rgba(244,67,54,0.15); color: var(--danger); border: 1px solid rgba(244,67,54,0.3); }
+        .pill-gray   { background: var(--surface2); color: var(--text-dim); border: 1px solid var(--border); }
+
+        .key {
+            font-family: 'Fira Code', Consolas, monospace;
+            font-size: 10pt;
+            font-weight: 600;
+            background: var(--surface2);
+            color: var(--draft);
+            padding: 1px 6px;
+            border-radius: 3px;
+            border: 1px solid var(--border);
+        }
+
+        .desc { color: var(--text-dim); font-size: 10pt; }
+
+        /* ============================================================
+           TWO COLUMN
+           ============================================================ */
+        .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 0.15in; }
+
+        .col-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 0.15in;
+            break-inside: avoid;
+        }
+
+        .col-card h3 {
+            font-size: 13pt;
+            font-weight: 700;
+            margin-bottom: 0.1in;
+            padding-bottom: 0.05in;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .col-card ul { list-style: none; padding: 0; }
+        .col-card li {
+            font-size: 11pt;
+            padding: 0.03in 0;
+            padding-left: 0.25in;
+            position: relative;
+            color: var(--text-dim);
+        }
+
+        .col-card li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0.16in;
+            width: 0.08in;
+            height: 0.08in;
+            border-radius: 50%;
+        }
+
+        .col-cyan li::before  { background: var(--scan); }
+        .col-green li::before { background: var(--coord); }
+        .col-amber li::before { background: var(--draft); }
+        .col-purple li::before { background: var(--core); }
+
+        .col-card li strong { color: var(--text); }
+
+        /* ============================================================
+           KEYBOARD SHORTCUTS GRID
+           ============================================================ */
+        .shortcut-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.12in;
+        }
+
+        .shortcut-group h4 {
+            font-family: 'Fira Code', Consolas, monospace;
+            font-size: 11pt;
+            color: var(--coord);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.1in;
+        }
+
+        .shortcut-item {
+            display: flex;
+            gap: 0.1in;
+            align-items: baseline;
+            padding: 0.03in 0;
+        }
+
+        .shortcut-item .desc { font-size: 9pt; }
+
+        /* ============================================================
+           STATUS COLORS ROW
+           ============================================================ */
+        .status-row {
+            display: flex;
+            gap: 0.15in;
+            flex-wrap: wrap;
+        }
+
+        .status-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12pt;
+            padding: 4px 12px;
+            border-radius: 4px;
+            border: 2px solid;
+        }
+
+        .status-chip .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        /* ============================================================
+           WORST OFFENDER LEGEND
+           ============================================================ */
+        .legend-row {
+            display: flex;
+            gap: 0.25in;
+            align-items: center;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .legend-swatch {
+            width: 24px;
+            height: 24px;
+            border-radius: 4px;
+        }
+
+        /* ============================================================
+           END SLIDE
+           ============================================================ */
+        .slide-end {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 0.5in;
+            background: var(--surface);
+            background-image:
+                linear-gradient(rgba(245,184,120,0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(245,184,120,0.03) 1px, transparent 1px);
+            background-size: 20px 20px;
+            border-radius: 4px;
+        }
+
+        .slide-end h2 { font-size: 24pt; font-weight: 800; margin-bottom: 0.1in; }
+        .slide-end .accent-bar { width: 0.6in; height: 3px; background: var(--draft); margin-bottom: 0.2in; }
+        .slide-end .contact { font-size: 12pt; color: var(--text-dim); line-height: 1.8; }
+        .slide-end .contact strong { color: var(--draft); }
+    </style>
+</head>
+<body>
+
+    <nav class="back-nav">
+        <a href="../index.html">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+            EliteCAD Tools
+        </a>
+        <span class="nav-sep">/</span>
+        <span class="nav-title">EliteDraft Documentation</span>
+    </nav>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 1: TITLE                                               -->
+    <!-- ============================================================ -->
+    <div class="slide slide-title">
+        <div class="tag">Revit Add-in</div>
+        <h1>EliteDraft</h1>
+        <div class="accent-bar"></div>
+        <p class="subtitle">A tutorial walkthrough of every ribbon button, dialog, and workflow in the MEP fabrication plugin</p>
+        <p class="version">v1.0.12 / Tutorial &amp; Reference Guide</p>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 2: RIBBON OVERVIEW                                     -->
+    <!-- ============================================================ -->
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>Ribbon overview</h2>
+        </div>
+        <div class="slide-body">
+            <p style="color:var(--text-dim);margin-bottom:0.1in;font-size:11pt;">The plugin adds an "Elite Draft" tab to the Revit ribbon with three panels:</p>
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0.2in;">
+                <div class="col-card" style="border-left:3px solid var(--draft);">
+                    <h3 style="color:var(--draft);">Hangers panel</h3>
+                    <ul class="col-amber">
+                        <li><strong>Hanger Settings</strong> &mdash; Configure placement rules</li>
+                        <li><strong>Single Pipes</strong> &mdash; Place individual hangers</li>
+                        <li><strong>Pipe Rack</strong> &mdash; Place trapeze hangers</li>
+                        <li><strong>Duct Hangers</strong> &mdash; Place duct hangers</li>
+                        <li><strong>Rack Adjust</strong> &mdash; Adjust trapeze positions</li>
+                        <li><strong>Fill Info</strong> &mdash; Fill hanger parameters</li>
+                    </ul>
+                </div>
+                <div class="col-card" style="border-left:3px solid var(--scan);">
+                    <h3 style="color:var(--scan);">Annotation panel</h3>
+                    <ul class="col-cyan">
+                        <li><strong>Quick Tag</strong> &mdash; Tag duct fittings</li>
+                        <li><strong>Tag Settings</strong> &mdash; Configure tag positions</li>
+                        <li><strong>Elbow Extension</strong> &mdash; Fill elbow params</li>
+                        <li><strong>Transition</strong> &mdash; Fill transition params</li>
+                        <li><strong>Batch Spools</strong> &mdash; Spool sheet manager</li>
+                        <li><strong>Renumber</strong> &mdash; Renumber spool parts</li>
+                    </ul>
+                </div>
+                <div class="col-card" style="border-left:3px solid var(--coord);">
+                    <h3 style="color:var(--coord);">View panel</h3>
+                    <ul class="col-green">
+                        <li><strong>Isolate Service</strong> &mdash; Isolate by service name</li>
+                        <li><strong>Hide Service</strong> &mdash; Hide by service name</li>
+                    </ul>
+                </div>
+            </div>
+            <p style="margin-top:0.1in;font-size:10pt;color:var(--text-muted);">Supports Revit 2022-2026. Revit 2022-2024 use .NET Framework 4.8; Revit 2025-2026 use .NET 8.0. Icons auto-swap between Light and Dark themes.</p>
+        </div>
+        <div class="slide-footer">
+            <span>EliteDraft Tutorial</span>
+            <span class="slide-number">2</span>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 3: SECTION — HANGERS PANEL                             -->
+    <!-- ============================================================ -->
+    <div class="slide slide-section">
+        <div class="section-label">Section 01</div>
+        <h2>Hangers panel</h2>
+        <div class="section-sub">Automated hanger and trapeze placement for fabrication pipes and ducts</div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 4: HANGERS — BUTTON REFERENCE                          -->
+    <!-- ============================================================ -->
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>Hanger ribbon buttons</h2>
+            <span class="tab-label">Hangers</span>
+        </div>
+        <div class="slide-body">
+            <table class="btn-table">
+                <tr>
+                    <th style="width:160px;">Button</th>
+                    <th>What it does</th>
+                </tr>
+                <tr>
+                    <td><span class="btn-pill pill-amber">Hanger Settings</span></td>
+                    <td>Opens the main <strong>Hanger &amp; Support Layout</strong> dialog. Configure placement rules, hanger button assignments, material categories, and spacing standards. Also acts as the launch point for running hanger placement.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-pill pill-amber">Single Pipes</span></td>
+                    <td>Places individual hangers on selected (or all visible) fabrication pipes. Uses the spacing rules and hanger button defined in Hanger Settings. Runs silently without opening a dialog.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-pill pill-amber">Pipe Rack</span></td>
+                    <td>Places trapeze (rack) hangers on grouped pipes. Pipes at similar elevations and running parallel are grouped together. Uses min/max pipe counts and rod setback from settings.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-pill pill-amber">Duct Hangers</span></td>
+                    <td>Places duct hangers on selected (or all visible) fabrication ducts. Supports both round and rectangular duct types with separate hanger button assignments.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-pill pill-amber">Rack Adjust</span></td>
+                    <td>Adjusts positions of existing trapeze/rack hangers. Use after placing trapezes to fine-tune rod positions and unistrut lengths.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-pill pill-amber">Fill Info</span></td>
+                    <td>Fills shared hanger parameters across all hangers in the project: Elevation Offset, Rod Length, Rod Length #2, Total Length, Unistrut Length, and Free Size. Reads values from fabrication dimensions.</td>
+                </tr>
+            </table>
+        </div>
+        <div class="slide-footer">
+            <span>EliteDraft Tutorial</span>
+            <span class="slide-number">4</span>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 5: HANGERS — SETTINGS DIALOG (TOP HALF)                -->
+    <!-- ============================================================ -->
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>Hanger Settings dialog &mdash; Placement Settings</h2>
+            <span class="tab-label">Hanger Settings</span>
+        </div>
+        <div class="slide-body">
+            <p style="color:var(--text-dim);margin-bottom:0.1in;font-size:11pt;">The top section of the Hanger &amp; Support Layout dialog configures global placement behavior and hanger button assignments.</p>
+            <div class="two-col" style="gap:0.3in;">
+                <div class="col-card" style="border-left:3px solid var(--draft);">
+                    <h3 style="color:var(--draft);">Placement settings</h3>
+                    <ul class="col-amber">
+                        <li><strong>Place at pipe ends</strong> &mdash; Checkbox to always place hangers at pipe start/end points</li>
+                        <li><strong>Clash detection</strong> &mdash; Checks hanger positions against nearby MEP elements to avoid rod and strap clashes</li>
+                        <li><strong>Edge clearance</strong> &mdash; Minimum distance from pipe ends (ft &amp; in)</li>
+                        <li><strong>Ignore short pipes</strong> &mdash; Skip pipes shorter than a threshold (in inches)</li>
+                    </ul>
+                </div>
+                <div class="col-card" style="border-left:3px solid var(--draft);">
+                    <h3 style="color:var(--draft);">Trapeze settings</h3>
+                    <ul class="col-amber">
+                        <li><strong>Min pipes for trapeze</strong> &mdash; Minimum number of parallel pipes to group</li>
+                        <li><strong>Max pipes per trapeze</strong> &mdash; Maximum pipes in a single trapeze</li>
+                        <li><strong>Rod setback</strong> &mdash; Distance from outside of insulation to rod centerline (inches)</li>
+                        <li><strong>Parallel angle tolerance</strong> &mdash; Maximum angle between pipes to consider them parallel (degrees)</li>
+                        <li><strong>Grouping vertical tolerance</strong> &mdash; Maximum vertical distance between pipes to group them</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="col-card" style="margin-top:0.15in;border-left:3px solid var(--core);">
+                <h3 style="color:var(--core);">Hanger selection (4 ComboBoxes with previews)</h3>
+                <ul class="col-purple">
+                    <li><strong>Single Pipe</strong> &mdash; Default hanger button for individual pipe hangers. Preview thumbnail shows the selected hanger type.</li>
+                    <li><strong>Pipe Rack</strong> &mdash; Hanger button for trapeze/rack configurations</li>
+                    <li><strong>Round Duct</strong> &mdash; Hanger button for round duct hangers</li>
+                    <li><strong>Rect Duct</strong> &mdash; Hanger button for rectangular duct hangers</li>
+                </ul>
+            </div>
+        </div>
+        <div class="slide-footer">
+            <span>EliteDraft Tutorial</span>
+            <span class="slide-number">5</span>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 6: HANGERS — SETTINGS DIALOG (BOTTOM HALF)             -->
+    <!-- ============================================================ -->
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>Hanger Settings dialog &mdash; Material Categories &amp; Spacing</h2>
+            <span class="tab-label">Hanger Settings</span>
+        </div>
+        <div class="slide-body">
+            <p style="color:var(--text-dim);margin-bottom:0.1in;font-size:11pt;">The bottom section defines spacing rules per material category. Each category has a list of pipe size ranges with maximum spacing distances.</p>
+            <div class="two-col" style="gap:0.3in;">
+                <div class="col-card" style="border-left:3px solid var(--draft);">
+                    <h3 style="color:var(--draft);">Category list (left)</h3>
+                    <ul class="col-amber">
+                        <li><strong>Material + Medium</strong> categories with enable/disable checkboxes</li>
+                        <li><strong>Add</strong> &mdash; Create a new material category</li>
+                        <li><strong>Remove</strong> &mdash; Delete the selected category</li>
+                        <li>Each category can have its own "Require end supports" override</li>
+                    </ul>
+                </div>
+                <div class="col-card" style="border-left:3px solid var(--draft);">
+                    <h3 style="color:var(--draft);">Size rules DataGrid (right)</h3>
+                    <ul class="col-amber">
+                        <li><strong>Max NPS (in)</strong> &mdash; Upper limit of pipe size range</li>
+                        <li><strong>Max Spacing (ft)</strong> &mdash; Maximum distance between hangers</li>
+                        <li><strong>Hanger Button</strong> &mdash; Optional per-size override (ComboBox)</li>
+                        <li><strong>Enabled</strong> &mdash; Toggle individual size rules on/off</li>
+                    </ul>
+                </div>
+            </div>
+            <table class="btn-table" style="margin-top:0.15in;">
+                <tr><th style="width:180px;">Button</th><th>Action</th></tr>
+                <tr>
+                    <td><span class="btn-pill pill-amber">Load ETB Standards</span></td>
+                    <td>Replace all spacing values with Engineering Toolbox standards (MSS SP-58, ASME B31.1) based on the category's material and medium.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-pill pill-amber">Add Standard Sizes</span></td>
+                    <td>Add missing standard pipe sizes (1/2" - 18") while keeping existing spacing values intact.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-pill pill-gray">Reset Category</span></td>
+                    <td>Reset the selected category to generic default spacing values.</td>
+                </tr>
+            </table>
+            <p style="margin-top:0.12in;font-size:10pt;color:var(--text-muted);">Footer buttons: <strong>Save Settings...</strong> and <strong>Load Settings...</strong> export/import the full configuration as JSON. <strong>Cancel</strong> discards changes. <strong>Finish</strong> saves and closes.</p>
+        </div>
+        <div class="slide-footer">
+            <span>EliteDraft Tutorial</span>
+            <span class="slide-number">6</span>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 7: SECTION — ANNOTATION PANEL: TAGGING                 -->
+    <!-- ============================================================ -->
+    <div class="slide slide-section" style="border-left-color:var(--scan);">
+        <div class="section-label">Section 02</div>
+        <h2>Annotation panel &mdash; Tagging</h2>
+        <div class="section-sub">Quick Tag, Duct Annotation Settings, and parameter fill commands for elbows and transitions</div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 8: QUICK TAG DIALOG                                    -->
+    <!-- ============================================================ -->
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>Quick Tag dialog</h2>
+            <span class="tab-label">Annotation</span>
+        </div>
+        <div class="slide-body">
+            <p style="color:var(--text-dim);margin-bottom:0.1in;font-size:11pt;">The Quick Tag dialog provides a fast way to tag fabrication duct fittings in the active view. Select which fitting types to include, then tag by selection or by visibility.</p>
+            <div class="two-col" style="gap:0.3in;">
+                <div class="col-card" style="border-left:3px solid var(--draft);">
+                    <h3 style="color:var(--draft);">Fitting type checkboxes</h3>
+                    <ul class="col-amber">
+                        <li><strong>Straights</strong> &mdash; Straight duct sections</li>
+                        <li><strong>Radius Elbows</strong> &mdash; Radius Bend, Reducing Bend, Drop Cheek Bend</li>
+                        <li><strong>Square Elbows</strong> &mdash; Square Bend, Elbow</li>
+                        <li><strong>Transitions</strong> &mdash; Transition, Radius Offset, Mitred Offset, Square to Round</li>
+                    </ul>
+                    <p style="font-size:10pt;color:var(--text-muted);margin-top:0.08in;">Dimmed checkboxes indicate no tag positions are configured for that type. Open Tag Settings to configure.</p>
+                </div>
+                <div class="col-card" style="border-left:3px solid var(--draft);">
+                    <h3 style="color:var(--draft);">Actions</h3>
+                    <ul class="col-amber">
+                        <li><strong>Tag Selected</strong> &mdash; Tags only the currently selected duct fittings in the view</li>
+                        <li><strong>Tag All Visible</strong> &mdash; Tags every visible duct fitting in the active view</li>
+                        <li><strong>Progress bar</strong> &mdash; Displays tagging progress during batch operations</li>
+                        <li><strong>Settings...</strong> &mdash; Opens the Duct Annotation Settings dialog</li>
+                    </ul>
+                    <p style="font-size:10pt;color:var(--text-muted);margin-top:0.08in;">Ducts facing up/down relative to the view (appearing as circles in plan) are automatically skipped.</p>
+                </div>
+            </div>
+        </div>
+        <div class="slide-footer">
+            <span>EliteDraft Tutorial</span>
+            <span class="slide-number">8</span>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 9: DUCT ANNOTATION SETTINGS                            -->
+    <!-- ============================================================ -->
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>Duct Annotation Settings dialog</h2>
+            <span class="tab-label">Annotation</span>
+        </div>
+        <div class="slide-body">
+            <p style="color:var(--text-dim);margin-bottom:0.1in;font-size:11pt;">Configure tag positions per fitting type using an interactive 3x3 grid diagram. Each position can have its own tag family, offsets, orientation, and leader settings.</p>
+            <div class="two-col" style="gap:0.3in;">
+                <div class="col-card" style="border-left:3px solid var(--draft);">
+                    <h3 style="color:var(--draft);">Fitting type tabs</h3>
+                    <ul class="col-amber">
+                        <li><strong>Straight</strong> &mdash; Rectangular duct body with C1/C2 connectors</li>
+                        <li><strong>Radius Elbow</strong> &mdash; 90-degree bend with inner/outer sides</li>
+                        <li><strong>Square Elbow</strong> &mdash; 90-degree mitered bend</li>
+                        <li><strong>Transition</strong> &mdash; Reducer with large (C1) and small (C2) ends</li>
+                    </ul>
+                    <p style="font-size:10pt;color:var(--text-muted);margin-top:0.08in;">Each tab shows a schematic diagram with 9 clickable position nodes arranged in a 3x3 grid. Amber-highlighted nodes have tags assigned.</p>
+                </div>
+                <div class="col-card" style="border-left:3px solid var(--core);">
+                    <h3 style="color:var(--core);">Position settings (right panel)</h3>
+                    <ul class="col-purple">
+                        <li><strong>Enabled</strong> &mdash; Toggle this position on/off</li>
+                        <li><strong>Tag Family</strong> &mdash; Select which tag family to place at this position</li>
+                        <li><strong>Perpendicular offset</strong> &mdash; Distance from duct surface (+ away from duct)</li>
+                        <li><strong>Parallel offset</strong> &mdash; Distance along flow direction (+ downstream)</li>
+                        <li><strong>Orientation</strong> &mdash; Along Duct, Horizontal, or Vertical</li>
+                        <li><strong>Show Leader</strong> &mdash; Enable/disable leader line</li>
+                        <li><strong>Clear Position</strong> &mdash; Remove tag assignment from this node</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-card" style="margin-top:0.15in;">
+                <h3>3x3 Grid Position Reference</h3>
+                <table class="btn-table">
+                    <tr>
+                        <th></th>
+                        <th style="text-align:center;">ConnectorA (1)</th>
+                        <th style="text-align:center;">Center (2)</th>
+                        <th style="text-align:center;">ConnectorB (3)</th>
+                    </tr>
+                    <tr>
+                        <td><span class="btn-pill pill-amber">Inside</span></td>
+                        <td style="text-align:center;">1</td>
+                        <td style="text-align:center;">2</td>
+                        <td style="text-align:center;">3</td>
+                    </tr>
+                    <tr>
+                        <td><span class="btn-pill pill-gray">Center</span></td>
+                        <td style="text-align:center;">4</td>
+                        <td style="text-align:center;">5</td>
+                        <td style="text-align:center;">6</td>
+                    </tr>
+                    <tr>
+                        <td><span class="btn-pill pill-amber">Outside</span></td>
+                        <td style="text-align:center;">7</td>
+                        <td style="text-align:center;">8</td>
+                        <td style="text-align:center;">9</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="slide-footer">
+            <span>EliteDraft Tutorial</span>
+            <span class="slide-number">9</span>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 10: ELBOW & TRANSITION COMMANDS                        -->
+    <!-- ============================================================ -->
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>Elbow Extension &amp; Transition parameter commands</h2>
+            <span class="tab-label">Annotation</span>
+        </div>
+        <div class="slide-body">
+            <p style="color:var(--text-dim);margin-bottom:0.12in;font-size:11pt;">These silent commands read fabrication dimensions from parts in the active view and write calculated values to shared parameters for use in tags and schedules.</p>
+            <div class="two-col" style="gap:0.3in;">
+                <div class="col-card" style="border-left:3px solid var(--scan);">
+                    <h3 style="color:var(--scan);">Elbow Extension</h3>
+                    <ul class="col-cyan">
+                        <li>Scans all fabrication parts in the active view</li>
+                        <li>Reads <strong>Top Extension</strong>, <strong>Bottom Extension</strong>, and <strong>Inner Radius</strong> from fabrication dimensions</li>
+                        <li>Writes values to shared parameters:
+                            <span class="key">SM - Top Extension</span>
+                            <span class="key">SM - Bottom Extension</span>
+                            <span class="key">SM - Elbow Radius</span></li>
+                        <li>Skips parts without elbow dimensions (straights, transitions, etc.)</li>
+                    </ul>
+                </div>
+                <div class="col-card" style="border-left:3px solid var(--scan);">
+                    <h3 style="color:var(--scan);">Transition</h3>
+                    <ul class="col-cyan">
+                        <li>Identifies transitions by <strong>Fabrication Fitting Description</strong> (Transition, Radius Offset, Mitred Offset, Square to Round)</li>
+                        <li>Calculates vertical offset type: <span class="btn-pill pill-amber" style="font-size:9pt;">FT</span> <span class="btn-pill pill-amber" style="font-size:9pt;">FB</span> <span class="btn-pill pill-amber" style="font-size:9pt;">O/C</span> <span class="btn-pill pill-amber" style="font-size:9pt;">BU/BD</span></li>
+                        <li>Writes to shared parameters:
+                            <span class="key">SM - OFFSET</span> (text),
+                            <span class="key">SM - SET</span> (text),
+                            <span class="key">SM - CALC TRANSITION LENGTH</span> (number)</li>
+                        <li>Handles rotated parts and vertical flow using connector world-space positions</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="slide-footer">
+            <span>EliteDraft Tutorial</span>
+            <span class="slide-number">10</span>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 11: SECTION — SPOOL MANAGER                            -->
+    <!-- ============================================================ -->
+    <div class="slide slide-section" style="border-left-color:var(--core);">
+        <div class="section-label">Section 03</div>
+        <h2>Annotation panel &mdash; Spool Manager</h2>
+        <div class="section-sub">Batch spool sheet generation with interactive layout editor and configuration presets</div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 12: SPOOL MANAGER — LEFT PANEL                         -->
+    <!-- ============================================================ -->
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>Spool Manager &mdash; Spool Browser</h2>
+            <span class="tab-label">Batch Spools</span>
+        </div>
+        <div class="slide-body">
+            <p style="color:var(--text-dim);margin-bottom:0.1in;font-size:11pt;">The Spool Manager is a 3-column dashboard dialog. The left panel is the <strong>Spool Browser</strong> showing all assemblies in the project.</p>
+            <table class="btn-table">
+                <tr><th style="width:160px;">Control</th><th>Description</th></tr>
+                <tr>
+                    <td><span class="btn-name">Search bar</span></td>
+                    <td>Filter the spool list by name. Type to search, results update instantly.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-pill pill-amber">All</span></td>
+                    <td>Select all visible assemblies in the list.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-pill pill-amber">None</span></td>
+                    <td>Deselect all assemblies.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-pill pill-amber">New</span></td>
+                    <td>Select only assemblies that have not been spooled yet (no existing spool sheet).</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-name">Stats row</span></td>
+                    <td>Shows <span style="color:var(--draft);font-weight:600;">Selected</span> count, Total count, and <span style="color:var(--coord);font-weight:600;">New</span> (unspooled) count.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-name">Spool list</span></td>
+                    <td>ListView with checkbox, Name, and Status columns. Already-spooled assemblies show "Spooled" in dimmed text. Multi-select supported.</td>
+                </tr>
+            </table>
+        </div>
+        <div class="slide-footer">
+            <span>EliteDraft Tutorial</span>
+            <span class="slide-number">12</span>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 13: SPOOL MANAGER — CENTER TABS                        -->
+    <!-- ============================================================ -->
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>Spool Manager &mdash; Configuration Tabs</h2>
+            <span class="tab-label">Batch Spools</span>
+        </div>
+        <div class="slide-body">
+            <p style="color:var(--text-dim);margin-bottom:0.1in;font-size:11pt;">The center column contains three configuration tabs that control what gets generated on each spool sheet.</p>
+            <div class="col-card" style="border-left:3px solid var(--draft);margin-bottom:0.15in;">
+                <h3 style="color:var(--draft);">General Settings tab</h3>
+                <ul class="col-amber">
+                    <li><strong>Title Block</strong> &mdash; ComboBox to select the sheet title block family</li>
+                    <li><strong>View Template</strong> &mdash; Template applied to all generated views</li>
+                    <li><strong>Schedule Template</strong> &mdash; Template for the BOM schedule</li>
+                    <li><strong>Tag Family</strong> &mdash; Tag family used for item number tags on the ISO view</li>
+                    <li><strong>Sheet Parameters</strong> &mdash; Sheet Function (editable), Sheet Number (from spool name), Area/Discipline (from part level), Weight/Welds (auto-calculated), Spool Note (set in right panel)</li>
+                    <li><strong>BOM Text Types</strong> &mdash; Title, Header, and Data text note types for the BOM table formatting</li>
+                    <li><strong>Spool Map</strong> &mdash; Map name applied to the sheet</li>
+                </ul>
+            </div>
+            <div class="two-col" style="gap:0.15in;">
+                <div class="col-card" style="border-left:3px solid var(--scan);">
+                    <h3 style="color:var(--scan);">Views &amp; Schedules tab</h3>
+                    <ul class="col-cyan">
+                        <li><strong>3D Ortho (ISO)</strong> &mdash; 3D orthographic view</li>
+                        <li><strong>Plan View</strong> &mdash; Top-down plan view</li>
+                        <li><strong>Front Elevation</strong> &mdash; Front section view</li>
+                        <li><strong>Side Elevation</strong> &mdash; Side section view</li>
+                        <li><strong>Bill of Materials</strong> &mdash; BOM schedule</li>
+                    </ul>
+                </div>
+                <div class="col-card" style="border-left:3px solid var(--core);">
+                    <h3 style="color:var(--core);">Sheet Layout tab</h3>
+                    <ul class="col-purple">
+                        <li><strong>Interactive canvas</strong> with title block linework</li>
+                        <li><strong>Draggable zones:</strong> ISO, PLAN, FRONT, SIDE, BOM</li>
+                        <li>Drag edges/corners to <strong>resize</strong> zones</li>
+                        <li>Mouse wheel to <strong>zoom</strong> (0.5x-4x)</li>
+                        <li>Middle-click drag to <strong>pan</strong></li>
+                        <li><strong>Zone properties</strong> panel: X, Y, W, H in inches</li>
+                        <li>Zone size controls the <strong>view scale</strong> on the sheet</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="slide-footer">
+            <span>EliteDraft Tutorial</span>
+            <span class="slide-number">13</span>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 14: SPOOL MANAGER — RIGHT PANEL                        -->
+    <!-- ============================================================ -->
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>Spool Manager &mdash; Inspector &amp; Actions</h2>
+            <span class="tab-label">Batch Spools</span>
+        </div>
+        <div class="slide-body">
+            <p style="color:var(--text-dim);margin-bottom:0.1in;font-size:11pt;">The right panel shows details about the currently selected assembly and provides generation controls.</p>
+            <table class="btn-table">
+                <tr><th style="width:200px;">Control</th><th>Description</th></tr>
+                <tr>
+                    <td><span class="btn-name">Selected Assembly</span></td>
+                    <td>Displays the name of the highlighted assembly (spool). Shows summary info for the currently focused item in the spool browser.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-name" style="color:var(--draft);">Spool Note</span></td>
+                    <td>Radio button group for the connection type written to the sheet: <span class="btn-pill pill-amber" style="font-size:9pt;">Welded</span> <span class="btn-pill pill-amber" style="font-size:9pt;">Threaded</span> <span class="btn-pill pill-amber" style="font-size:9pt;">Grooved</span></td>
+                </tr>
+                <tr>
+                    <td><span class="btn-name" style="color:var(--core);">Configuration Preset</span></td>
+                    <td>Editable ComboBox to save/load complete spool configurations as named JSON presets. Last-used preset auto-loads on dialog open. Presets stored in <span class="key">%LOCALAPPDATA%</span>.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-pill pill-amber">Save</span> / <span class="btn-pill pill-gray">Delete</span></td>
+                    <td>Save the current configuration as a named preset, or delete the selected preset.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-pill pill-gray">Open Views</span></td>
+                    <td>Checkbox: when enabled, opens the generated spool views after creation.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-pill pill-amber">Generate (N)</span></td>
+                    <td>Creates spool sheets for all selected assemblies. Shows the count of selected spools. Generates views, tags, schedules, and places them on sheets using the layout zones.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-pill pill-gray">Cancel</span></td>
+                    <td>Closes the Spool Manager without generating.</td>
+                </tr>
+            </table>
+        </div>
+        <div class="slide-footer">
+            <span>EliteDraft Tutorial</span>
+            <span class="slide-number">14</span>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 15: RENUMBER COMMAND                                    -->
+    <!-- ============================================================ -->
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>Renumber command</h2>
+            <span class="tab-label">Annotation</span>
+        </div>
+        <div class="slide-body">
+            <p style="color:var(--text-dim);margin-bottom:0.12in;font-size:11pt;">The Renumber button renumbers fabrication parts within selected assemblies (spools). It runs silently on the current selection.</p>
+            <div class="col-card" style="border-left:3px solid var(--scan);">
+                <h3 style="color:var(--scan);">How it works</h3>
+                <ul class="col-cyan">
+                    <li>Select one or more assemblies (spools) in the Revit model</li>
+                    <li>Click <strong>Renumber</strong> on the ribbon</li>
+                    <li>Parts are grouped by <strong>description</strong>, <strong>size</strong>, and <strong>centerline length</strong></li>
+                    <li>Like items receive the same item number; unique items get sequential numbers</li>
+                    <li>Also updates <strong>spool weight</strong> and <strong>weld inch calculations</strong> on the spool sheet</li>
+                    <li>Clears all existing item numbers first, then reassigns from scratch</li>
+                </ul>
+            </div>
+            <p style="margin-top:0.12in;font-size:10pt;color:var(--text-muted);">Tip: Run Renumber after modifying assembly contents (adding/removing parts) or after generating spool sheets to ensure item numbers and calculations are up to date.</p>
+        </div>
+        <div class="slide-footer">
+            <span>EliteDraft Tutorial</span>
+            <span class="slide-number">15</span>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 16: SECTION — VIEW PANEL                               -->
+    <!-- ============================================================ -->
+    <div class="slide slide-section" style="border-left-color:var(--coord);">
+        <div class="section-label">Section 04</div>
+        <h2>View panel</h2>
+        <div class="section-sub">Service-based isolation and hiding for fabrication parts</div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 17: VIEW — ISOLATE & HIDE                              -->
+    <!-- ============================================================ -->
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>Isolate Service &amp; Hide Service</h2>
+            <span class="tab-label">View</span>
+        </div>
+        <div class="slide-body">
+            <p style="color:var(--text-dim);margin-bottom:0.12in;font-size:11pt;">These two commands filter the active view based on the fabrication service name. They operate on the current selection or prompt for a pick if nothing is selected.</p>
+            <div class="two-col" style="gap:0.3in;">
+                <div class="col-card" style="border-left:3px solid var(--coord);">
+                    <h3 style="color:var(--coord);">Isolate Service</h3>
+                    <ul class="col-green">
+                        <li>If <strong>no elements selected</strong>: prompts you to pick a fabrication part, then isolates all parts with the same service name</li>
+                        <li>If <strong>elements are selected</strong>: reads service names from all selected parts and isolates every matching element</li>
+                        <li>Uses <strong>temporary isolation</strong> in the active view (reversible via Revit's "Reset Temporary Hide/Isolate")</li>
+                        <li>Great for focusing on a single trade's ductwork or piping</li>
+                    </ul>
+                </div>
+                <div class="col-card" style="border-left:3px solid var(--coord);">
+                    <h3 style="color:var(--coord);">Hide Service</h3>
+                    <ul class="col-green">
+                        <li>Inverse of Isolate: <strong>hides</strong> all fabrication parts matching the selected service name(s)</li>
+                        <li>Same selection behavior: pick one element or use current selection</li>
+                        <li>Uses <strong>temporary hide</strong> in the active view</li>
+                        <li>Useful for removing a noisy service to see other trades more clearly</li>
+                    </ul>
+                </div>
+            </div>
+            <p style="margin-top:0.12in;font-size:10pt;color:var(--text-muted);">Both commands read the <span class="key">FABRICATION_SERVICE_NAME</span> built-in parameter. They only affect fabrication parts (FabricationPart class) visible in the current view.</p>
+        </div>
+        <div class="slide-footer">
+            <span>EliteDraft Tutorial</span>
+            <span class="slide-number">17</span>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 18: END                                                -->
+    <!-- ============================================================ -->
+    <div class="slide slide-end">
+        <h2>EliteDraft</h2>
+        <div class="accent-bar"></div>
+        <div class="contact">
+            <strong>Hangers</strong> &bull; <strong>Annotation</strong> &bull; <strong>Spooling</strong> &mdash; streamlined MEP fabrication workflows<br>
+            Autodesk Revit 2022-2026 &bull; v1.0.12
+        </div>
+    </div>
+
+</body>
+</html>

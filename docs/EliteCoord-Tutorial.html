@@ -1,0 +1,1058 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EliteCoord Tutorial</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        /* ============================================================
+           COLOR PALETTE — matches EliteCoord Styles.xaml
+           ============================================================ */
+        :root {
+            --bg:           #0F0F12;
+            --surface:      #18181D;
+            --surface2:     #222229;
+            --border:       #2E2E38;
+            --border-light: #3D3D4A;
+            --text:         #E8E8ED;
+            --text-dim:     #9898A8;
+            --text-muted:   #5A5A6A;
+
+            /* Region accents */
+            --scan:   #5ED5DD;   /* Cyan */
+            --draft:  #F5B878;   /* Amber — draft/warning */
+            --coord:  #6EE7A8;   /* Green — primary accent */
+            --core:   #A78BFA;   /* Purple — core/special */
+
+            /* Action colors */
+            --success: #4CAF50;
+            --primary: #2196F3;
+            --warning: #FF9800;
+            --danger:  #F44336;
+        }
+
+        @page { size: letter; margin: 0; }
+        /* Back navigation bar */
+        .back-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 24px;
+            background: rgba(24, 24, 29, 0.92);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+        }
+        .back-nav a {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--coord);
+            text-decoration: none;
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            transition: opacity 0.2s;
+        }
+        .back-nav a:hover { opacity: 0.8; }
+        .back-nav a svg { width: 16px; height: 16px; }
+        .back-nav .nav-sep { color: var(--text-muted); font-size: 13px; }
+        .back-nav .nav-title { color: var(--text-dim); font-size: 13px; font-weight: 500; }
+        body { padding-top: 44px; }
+
+        @media print {
+            .back-nav { display: none !important; }
+            body { padding-top: 0 !important; }
+            * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; color-adjust: exact !important; }
+            html { background: var(--bg) !important; }
+            body { background: var(--bg) !important; max-width: none; margin: 0; padding: 0.4in 0.6in; }
+            .slide { box-shadow: none !important; }
+            .slide-title { padding: 0.3in 0; }
+            .slide-section { padding: 0.2in 0.4in; }
+            .slide-footer { display: none; }
+            /* Prevent splitting inside key blocks */
+            .col-card, .btn-table, .slide-section, .legend-row, .status-row, .shortcut-group { break-inside: avoid; page-break-inside: avoid; }
+            /* Keep section headers with their content */
+            .slide-header { break-after: avoid; page-break-after: avoid; }
+            /* Section dividers always start a new page */
+            .slide.slide-section { break-before: page; page-break-before: always; }
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html {
+            background: var(--bg);
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+            font-size: 12pt;
+            line-height: 1.5;
+            color: var(--text);
+            background: var(--bg);
+            max-width: 8.5in;
+            margin: 0 auto;
+            padding: 0.5in 0.7in;
+        }
+
+        .slide {
+            background: var(--bg);
+            margin-bottom: 0.15in;
+            padding: 0.1in 0;
+        }
+
+        /* ============================================================
+           TITLE SLIDE
+           ============================================================ */
+        .slide-title {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 0.4in 0.5in 0.3in;
+            background: var(--bg);
+            background-image:
+                linear-gradient(rgba(110,231,168,0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(110,231,168,0.03) 1px, transparent 1px);
+            background-size: 20px 20px;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .slide-title .tag {
+            font-family: 'Fira Code', Consolas, monospace;
+            font-size: 11pt;
+            font-weight: 500;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--coord);
+            margin-bottom: 0.15in;
+            border: 1px solid var(--border-light);
+            padding: 0.06in 0.2in;
+            border-radius: 3px;
+            background: var(--surface2);
+        }
+
+        .slide-title h1 {
+            font-size: 32pt;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 0.15in;
+            color: var(--text);
+        }
+
+        .slide-title .accent-bar {
+            width: 1in;
+            height: 3px;
+            background: var(--coord);
+            margin: 0.08in 0 0.12in;
+        }
+
+        .slide-title .subtitle {
+            font-size: 13pt;
+            color: var(--text-dim);
+            max-width: 7in;
+        }
+
+        .slide-title .version {
+            font-family: 'Fira Code', Consolas, monospace;
+            font-size: 10pt;
+            color: var(--text-muted);
+            margin-top: 0.15in;
+        }
+
+        /* ============================================================
+           SECTION DIVIDER
+           ============================================================ */
+        .slide-section {
+            display: flex;
+            flex-direction: column;
+            padding: 0.2in 0.4in;
+            background: var(--surface);
+            border-left: 6px solid var(--coord);
+            border-radius: 4px;
+        }
+
+        .slide-section .section-label {
+            font-family: 'Fira Code', Consolas, monospace;
+            font-size: 11pt;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.15in;
+        }
+
+        .slide-section h2 {
+            font-size: 24pt;
+            font-weight: 800;
+            color: var(--text);
+        }
+
+        .slide-section .section-sub {
+            font-size: 12pt;
+            color: var(--text-dim);
+            margin-top: 0.1in;
+        }
+
+        /* ============================================================
+           CONTENT SLIDE
+           ============================================================ */
+        .slide-content {
+            padding: 0.05in 0;
+        }
+
+        .slide-header {
+            margin-bottom: 0.12in;
+            padding-bottom: 0.06in;
+            border-bottom: 2px solid var(--border);
+            display: flex;
+            align-items: baseline;
+            gap: 0.15in;
+        }
+
+        .slide-header h2 {
+            font-size: 18pt;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .slide-header .tab-label {
+            font-family: 'Fira Code', Consolas, monospace;
+            font-size: 11pt;
+            color: var(--coord);
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            padding: 2px 10px;
+            border-radius: 3px;
+        }
+
+        .slide-body {
+            font-size: 12pt;
+        }
+
+        .slide-footer {
+            display: none;
+        }
+
+        .slide-number { color: var(--coord); font-weight: 600; }
+
+        /* ============================================================
+           BUTTON REFERENCE TABLE
+           ============================================================ */
+        .btn-table {
+            width: 100%;
+            border-collapse: collapse;
+            break-inside: avoid;
+        }
+
+        .btn-table th {
+            text-align: left;
+            font-family: 'Fira Code', Consolas, monospace;
+            font-size: 10pt;
+            color: var(--text-muted);
+            padding: 0.06in 0.12in;
+            border-bottom: 1px solid var(--border);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .btn-table td {
+            padding: 0.05in 0.1in;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+            font-size: 11pt;
+        }
+
+        .btn-table tr:last-child td { border-bottom: none; }
+
+        .btn-name {
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .btn-pill {
+            display: inline-block;
+            font-family: 'Fira Code', Consolas, monospace;
+            font-size: 10pt;
+            font-weight: 600;
+            padding: 2px 8px;
+            border-radius: 3px;
+            white-space: nowrap;
+        }
+
+        .pill-cyan   { background: rgba(94,213,221,0.15); color: var(--scan); border: 1px solid rgba(94,213,221,0.3); }
+        .pill-green  { background: rgba(110,231,168,0.15); color: var(--coord); border: 1px solid rgba(110,231,168,0.3); }
+        .pill-amber  { background: rgba(245,184,120,0.15); color: var(--draft); border: 1px solid rgba(245,184,120,0.3); }
+        .pill-purple { background: rgba(167,139,250,0.15); color: var(--core); border: 1px solid rgba(167,139,250,0.3); }
+        .pill-blue   { background: rgba(33,150,243,0.15); color: var(--primary); border: 1px solid rgba(33,150,243,0.3); }
+        .pill-red    { background: rgba(244,67,54,0.15); color: var(--danger); border: 1px solid rgba(244,67,54,0.3); }
+        .pill-gray   { background: var(--surface2); color: var(--text-dim); border: 1px solid var(--border); }
+
+        .key {
+            font-family: 'Fira Code', Consolas, monospace;
+            font-size: 10pt;
+            font-weight: 600;
+            background: var(--surface2);
+            color: var(--coord);
+            padding: 1px 6px;
+            border-radius: 3px;
+            border: 1px solid var(--border);
+        }
+
+        .desc { color: var(--text-dim); font-size: 10pt; }
+
+        /* ============================================================
+           TWO COLUMN
+           ============================================================ */
+        .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 0.15in; }
+
+        .col-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 0.15in;
+            break-inside: avoid;
+        }
+
+        .col-card h3 {
+            font-size: 13pt;
+            font-weight: 700;
+            margin-bottom: 0.1in;
+            padding-bottom: 0.05in;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .col-card ul { list-style: none; padding: 0; }
+        .col-card li {
+            font-size: 11pt;
+            padding: 0.03in 0;
+            padding-left: 0.25in;
+            position: relative;
+            color: var(--text-dim);
+        }
+
+        .col-card li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0.16in;
+            width: 0.08in;
+            height: 0.08in;
+            border-radius: 50%;
+        }
+
+        .col-cyan li::before  { background: var(--scan); }
+        .col-green li::before { background: var(--coord); }
+        .col-amber li::before { background: var(--draft); }
+        .col-purple li::before { background: var(--core); }
+
+        .col-card li strong { color: var(--text); }
+
+        /* ============================================================
+           KEYBOARD SHORTCUTS GRID
+           ============================================================ */
+        .shortcut-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.12in;
+        }
+
+        .shortcut-group h4 {
+            font-family: 'Fira Code', Consolas, monospace;
+            font-size: 11pt;
+            color: var(--coord);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.1in;
+        }
+
+        .shortcut-item {
+            display: flex;
+            gap: 0.1in;
+            align-items: baseline;
+            padding: 0.03in 0;
+        }
+
+        .shortcut-item .desc { font-size: 9pt; }
+
+        /* ============================================================
+           STATUS COLORS ROW
+           ============================================================ */
+        .status-row {
+            display: flex;
+            gap: 0.15in;
+            flex-wrap: wrap;
+        }
+
+        .status-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12pt;
+            padding: 4px 12px;
+            border-radius: 4px;
+            border: 2px solid;
+        }
+
+        .status-chip .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        /* ============================================================
+           WORST OFFENDER LEGEND
+           ============================================================ */
+        .legend-row {
+            display: flex;
+            gap: 0.25in;
+            align-items: center;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .legend-swatch {
+            width: 24px;
+            height: 24px;
+            border-radius: 4px;
+        }
+
+        /* ============================================================
+           END SLIDE
+           ============================================================ */
+        .slide-end {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 0.5in;
+            background: var(--surface);
+            background-image:
+                linear-gradient(rgba(110,231,168,0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(110,231,168,0.03) 1px, transparent 1px);
+            background-size: 20px 20px;
+            border-radius: 4px;
+        }
+
+        .slide-end h2 { font-size: 24pt; font-weight: 800; margin-bottom: 0.1in; }
+        .slide-end .accent-bar { width: 0.6in; height: 3px; background: var(--coord); margin-bottom: 0.2in; }
+        .slide-end .contact { font-size: 12pt; color: var(--text-dim); line-height: 1.8; }
+        .slide-end .contact strong { color: var(--coord); }
+    </style>
+</head>
+<body>
+
+    <nav class="back-nav">
+        <a href="../index.html">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+            EliteCAD Tools
+        </a>
+        <span class="nav-sep">/</span>
+        <span class="nav-title">EliteCoord Documentation</span>
+    </nav>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 1: TITLE                                               -->
+    <!-- ============================================================ -->
+    <div class="slide slide-title">
+        <div class="tag">Revit Add-in</div>
+        <h1>EliteCoord</h1>
+        <div class="accent-bar"></div>
+        <p class="subtitle">A tutorial walkthrough of every ribbon button, dialog, and workflow in the BIM coordination preparation plugin</p>
+        <p class="version">v1.0.4 / Tutorial &amp; Reference Guide</p>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 2: RIBBON OVERVIEW                                     -->
+    <!-- ============================================================ -->
+    <div class="slide slide-section">
+        <div class="section-label">Section 01</div>
+        <h2>Ribbon overview</h2>
+        <div class="section-sub">The "Elite Coord" tab with three panels: Prep, Views, and Clash</div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 3: RIBBON — PANEL CARDS                                -->
+    <!-- ============================================================ -->
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>Ribbon panels &amp; buttons</h2>
+            <span class="tab-label">Elite Coord</span>
+        </div>
+        <div class="slide-body">
+            <p style="color:var(--text-dim);margin-bottom:0.15in;font-size:11pt;">EliteCoord installs a dedicated "Elite Coord" tab in the Revit ribbon. It contains three panels, each grouping related tools for coordination workflows. Supports Revit 2022 through 2026.</p>
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0.2in;">
+                <div class="col-card" style="border-left:3px solid var(--coord);">
+                    <h3 style="color:var(--coord);">Prep panel</h3>
+                    <ul class="col-green">
+                        <li><strong>DWG Overrides</strong> &mdash; Configure DWG layer/color mapping rules</li>
+                        <li><strong>Apply Colors</strong> &mdash; Apply DWG color overrides to the active view</li>
+                        <li><strong>Material Mapping</strong> &mdash; Configure Navisworks material mappings</li>
+                        <li><strong>Apply Materials</strong> &mdash; Assign materials to fabrication parts</li>
+                    </ul>
+                </div>
+                <div class="col-card" style="border-left:3px solid var(--draft);">
+                    <h3 style="color:var(--draft);">Views panel</h3>
+                    <ul class="col-amber">
+                        <li><strong>Create Scopes</strong> &mdash; Create per-level 3D views with section boxes</li>
+                        <li><strong>Reset Scope</strong> &mdash; Reset section box from selected levels</li>
+                    </ul>
+                </div>
+                <div class="col-card" style="border-left:3px solid var(--core);">
+                    <h3 style="color:var(--core);">Clash panel</h3>
+                    <ul class="col-purple">
+                        <li><strong>Clash Viewer</strong> &mdash; Dockable pane for Navisworks XML clash visualization</li>
+                    </ul>
+                </div>
+            </div>
+            <p style="margin-top:0.15in;font-size:10pt;color:var(--text-muted);">Icons auto-swap between Light and Dark variants to match Revit's current UI theme. The add-in uses ricaun.Revit.UI for ribbon creation with automatic DPI scaling.</p>
+        </div>
+        <div class="slide-footer">
+            <span>EliteCoord Tutorial</span>
+            <span class="slide-number">3</span>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 4: SECTION — PREP PANEL: DWG OVERRIDES                 -->
+    <!-- ============================================================ -->
+    <div class="slide slide-section">
+        <div class="section-label">Section 02</div>
+        <h2>Prep panel &mdash; DWG Overrides</h2>
+        <div class="section-sub">Configure and apply color overrides to imported DWG layers for coordination clarity</div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 5: DWG COLOR PREFERENCES WINDOW                        -->
+    <!-- ============================================================ -->
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>DWG Color Preferences window</h2>
+            <span class="tab-label">Prep &gt; DWG Overrides</span>
+        </div>
+        <div class="slide-body">
+            <p style="color:var(--text-dim);margin-bottom:0.15in;font-size:11pt;">Opens a dark-themed modal window for defining rules that match imported DWG files by name and assign colors/visibility to their layers. Rules are evaluated top-to-bottom; first match wins.</p>
+            <table class="btn-table">
+                <tr><th style="width:160px;">Toolbar button</th><th>What it does</th></tr>
+                <tr>
+                    <td><span class="btn-pill pill-green">+ Add</span></td>
+                    <td>Adds a new blank rule row to the bottom of the list. Fill in Label, Abbrev, and Example File to define the rule.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-pill pill-gray">Remove</span></td>
+                    <td>Deletes the currently selected rule row from the list.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-pill pill-gray">Up / Down</span></td>
+                    <td>Reorders the selected rule. Priority is top-to-bottom: the first matching rule determines the color applied.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-pill pill-gray">Reset</span></td>
+                    <td>Restores the rule list to the built-in defaults. Useful if rules have been accidentally modified.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-pill pill-gray">Import / Export</span></td>
+                    <td>Import rules from a JSON file or export your current rules to share with other team members.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-pill pill-gray">Open Folder</span></td>
+                    <td>Opens the folder where the preferences JSON file is stored on disk.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-pill pill-green">Preview</span></td>
+                    <td>Tests the current rules against the Test Filename column. A green dot appears next to filenames that match the rule's regex pattern.</td>
+                </tr>
+            </table>
+        </div>
+        <div class="slide-footer">
+            <span>EliteCoord Tutorial</span>
+            <span class="slide-number">5</span>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 6: DWG PREFS — DATAGRID COLUMNS                        -->
+    <!-- ============================================================ -->
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>DWG Preferences DataGrid columns</h2>
+            <span class="tab-label">Prep &gt; DWG Overrides</span>
+        </div>
+        <div class="slide-body">
+            <table class="btn-table">
+                <tr><th style="width:160px;">Column</th><th>Details</th></tr>
+                <tr>
+                    <td><span class="btn-name">#</span></td>
+                    <td>Rule priority order (1 = highest). Controlled by the Up/Down toolbar buttons.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-name">Label</span></td>
+                    <td>Human-readable name for the rule (e.g., "Structural", "Plumbing", "Electrical"). Editable text field.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-name">Abbrev</span></td>
+                    <td>Short abbreviation used in naming (e.g., "STR", "PL", "EL"). Editable text field.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-name">Example File</span></td>
+                    <td>A sample DWG filename that this rule should match. Used to auto-generate the regex pattern. Editable text field.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-name">Color</span></td>
+                    <td>The override color applied to matching DWG layers. Click the color swatch to open a color picker dialog.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-name">Hide Layers</span></td>
+                    <td>Comma-separated substrings. Any DWG layer whose name contains one of these strings will be hidden in the view (e.g., "DEFPOINT, XREF").</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-name">Regex</span></td>
+                    <td>Read-only display of the auto-generated regex pattern derived from the Example File. Used internally for matching.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-name">Test Filename</span></td>
+                    <td>Enter any filename to test if it matches this rule. A green dot indicator appears when the regex matches. Useful for verifying rules.</td>
+                </tr>
+            </table>
+            <p style="margin-top:0.12in;font-size:10pt;color:var(--text-muted);">Footer: shows the preferences JSON file path on the left. <span class="btn-pill pill-gray" style="font-size:9pt;">CLOSE</span> and <span class="btn-pill pill-green" style="font-size:9pt;">SAVE CHANGES</span> buttons on the right.</p>
+        </div>
+        <div class="slide-footer">
+            <span>EliteCoord Tutorial</span>
+            <span class="slide-number">6</span>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 7: APPLY COLORS                                         -->
+    <!-- ============================================================ -->
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>Apply Colors button</h2>
+            <span class="tab-label">Prep &gt; Apply Colors</span>
+        </div>
+        <div class="slide-body">
+            <p style="color:var(--text-dim);margin-bottom:0.15in;font-size:11pt;">Applies the saved DWG Color Preferences to all imported DWG instances in the active view. If no preferences exist, the DWG Color Preferences window opens automatically.</p>
+            <div class="col-card" style="border-left:3px solid var(--coord);">
+                <h3 style="color:var(--coord);">How it works</h3>
+                <ul class="col-green">
+                    <li><strong>Collects all DWG imports</strong> in the active view using a filtered element collector</li>
+                    <li><strong>Sets each import to Foreground</strong> rendering (not background) for visibility</li>
+                    <li><strong>Matches each DWG filename</strong> against the priority-ordered rule list using regex patterns</li>
+                    <li><strong>Applies projection &amp; cut line color</strong> overrides to all visible layers of matching DWGs</li>
+                    <li><strong>Sets line weight to 3</strong> for both projection and cut lines for consistent appearance</li>
+                    <li><strong>Hides layers</strong> whose names contain any of the rule's "Hide Layers" substrings</li>
+                </ul>
+            </div>
+        </div>
+        <div class="slide-footer">
+            <span>EliteCoord Tutorial</span>
+            <span class="slide-number">7</span>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 8: SECTION — PREP PANEL: MATERIAL MAPPING               -->
+    <!-- ============================================================ -->
+    <div class="slide slide-section">
+        <div class="section-label">Section 03</div>
+        <h2>Prep panel &mdash; Material Mapping</h2>
+        <div class="section-sub">Map fabrication services to Navisworks materials for consistent color-coding in coordination models</div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 9: MATERIAL MANAGER — SERVICE MAPPINGS                   -->
+    <!-- ============================================================ -->
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>Material Manager &mdash; Service Mappings tab</h2>
+            <span class="tab-label">Prep &gt; Material Mapping</span>
+        </div>
+        <div class="slide-body">
+            <p style="color:var(--text-dim);margin-bottom:0.15in;font-size:11pt;">Opens a tabbed modal window. The first tab lists all fabrication services found in the project and maps them to Revit materials for Navisworks export.</p>
+            <table class="btn-table">
+                <tr><th style="width:160px;">Column</th><th>Details</th></tr>
+                <tr>
+                    <td><span class="btn-name">Service Name</span></td>
+                    <td>The full name of the fabrication service as defined in the Revit fabrication configuration (read-only).</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-name">Abbr</span></td>
+                    <td>The service abbreviation (e.g., "SM", "PL", "EL"). Used as the Revit material name for the mapping.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-name">Exists</span></td>
+                    <td>Green checkmark if the corresponding Revit material already exists in the project. Blank if it needs to be created.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-name">Service Color</span></td>
+                    <td>Color swatch and hex value showing the material's assigned color. Used for visual identification in Navisworks.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-name">Actions</span></td>
+                    <td><span class="btn-pill pill-gray" style="font-size:9pt;">Create</span> button appears when the material does not exist. <span style="color:var(--coord);font-size:10pt;">Update</span> link appears when it does exist, allowing color changes.</td>
+                </tr>
+            </table>
+        </div>
+        <div class="slide-footer">
+            <span>EliteCoord Tutorial</span>
+            <span class="slide-number">9</span>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 10: MATERIAL MANAGER — FILTER OVERRIDES                  -->
+    <!-- ============================================================ -->
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>Material Manager &mdash; Filter Overrides tab</h2>
+            <span class="tab-label">Prep &gt; Material Mapping</span>
+        </div>
+        <div class="slide-body">
+            <p style="color:var(--text-dim);margin-bottom:0.15in;font-size:11pt;">The second tab defines override rules based on Revit parameter filters. Filter overrides take priority over service-based mappings when both match.</p>
+            <table class="btn-table">
+                <tr><th style="width:160px;">Column</th><th>Details</th></tr>
+                <tr>
+                    <td><span class="btn-name">Revit Filter</span></td>
+                    <td>Dropdown listing all parameter filter elements in the project. Select which filter should trigger this override.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-name">Override</span></td>
+                    <td>Color picker button. Click to set the override color. The filter's name becomes the Revit material name.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-name">Order</span></td>
+                    <td>Up/Down arrow buttons to reorder filter priority. Top-of-list wins when a part matches multiple filters.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-name">Remove</span></td>
+                    <td>Red X button to delete this filter override rule from the list.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-pill pill-green">+ Add Global Rule</span></td>
+                    <td>Adds a new blank filter override row below the existing list.</td>
+                </tr>
+            </table>
+            <p style="margin-top:0.12in;font-size:10pt;color:var(--text-muted);">Footer: Import/Export icon buttons on the left. Current View / Entire Project radio buttons control scope. <span class="btn-pill pill-green" style="font-size:9pt;">APPLY MATERIALS</span> button assigns materials to fabrication parts based on both service mappings and filter overrides.</p>
+        </div>
+        <div class="slide-footer">
+            <span>EliteCoord Tutorial</span>
+            <span class="slide-number">10</span>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 11: APPLY MATERIALS                                      -->
+    <!-- ============================================================ -->
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>Apply Materials button</h2>
+            <span class="tab-label">Prep &gt; Apply Materials</span>
+        </div>
+        <div class="slide-body">
+            <p style="color:var(--text-dim);margin-bottom:0.15in;font-size:11pt;">Assigns Navisworks materials to fabrication parts based on saved settings. Can be run without opening the Material Manager window if settings have been saved previously.</p>
+            <div class="col-card" style="border-left:3px solid var(--coord);">
+                <h3 style="color:var(--coord);">Processing order</h3>
+                <ul class="col-green">
+                    <li><strong>Ensures "Navis Material" parameter</strong> is bound to fabrication categories (Ductwork, Pipework, Containment, Hangers). Creates the shared parameter if needed.</li>
+                    <li><strong>Creates or updates materials</strong> based on the saved service colors and filter rules. Materials use appearance assets with the configured color.</li>
+                    <li><strong>Collects fabrication parts</strong> from the current view or entire project, depending on the saved scope setting.</li>
+                    <li><strong>Checks filter overrides first</strong> (priority order: top of list wins). If a part passes a filter, it gets that filter's material.</li>
+                    <li><strong>Falls back to service mapping</strong> using the part's Fabrication Service Abbreviation parameter to look up the corresponding material.</li>
+                    <li><strong>Applies the material</strong> to the "Navis Material" parameter only if the value has changed, avoiding unnecessary modifications.</li>
+                </ul>
+            </div>
+        </div>
+        <div class="slide-footer">
+            <span>EliteCoord Tutorial</span>
+            <span class="slide-number">11</span>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 12: SECTION — VIEWS PANEL                                -->
+    <!-- ============================================================ -->
+    <div class="slide slide-section" style="border-left-color:var(--draft);">
+        <div class="section-label">Section 04</div>
+        <h2>Views panel</h2>
+        <div class="section-sub">Create scoped 3D views with per-level section boxes for Navisworks coordination</div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 13: CREATE SCOPES                                        -->
+    <!-- ============================================================ -->
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>Create Scopes</h2>
+            <span class="tab-label">Views</span>
+        </div>
+        <div class="slide-body">
+            <p style="color:var(--text-dim);margin-bottom:0.15in;font-size:11pt;">Creates one 3D isometric view per level, each named <span class="key">ECD_[LevelName]</span> with a section box clipping geometry between adjacent levels.</p>
+            <div class="two-col" style="gap:0.3in;">
+                <div class="col-card" style="border-left:3px solid var(--draft);">
+                    <h3 style="color:var(--draft);">Section box logic</h3>
+                    <ul class="col-amber">
+                        <li><strong>Z extents (intermediate):</strong> Level elevation +/- 1'-0" to next level elevation +/- 1'-0"</li>
+                        <li><strong>Z extents (lowest level):</strong> Extends down to model geometry minimum - 1'-0"</li>
+                        <li><strong>Z extents (highest level):</strong> Extends up to model geometry maximum + 1'-0"</li>
+                        <li><strong>XY extents:</strong> Fitted to geometry present in that level's Z range, with 5' padding</li>
+                        <li><strong>XY fallback:</strong> Uses full model extents if no elements overlap the Z range</li>
+                    </ul>
+                </div>
+                <div class="col-card" style="border-left:3px solid var(--coord);">
+                    <h3 style="color:var(--coord);">Pre-flight checks</h3>
+                    <ul class="col-green">
+                        <li><strong>Duplicate level names</strong> are detected and the command aborts with a warning</li>
+                        <li><strong>Existing ECD_ views</strong> that conflict are flagged; delete or rename before running</li>
+                        <li><strong>Link Selection Dialog</strong> prompts you to choose which Revit links to include in the extents calculation</li>
+                        <li><strong>4-second timeout</strong> on bounding box collection prevents UI hangs on large models</li>
+                        <li><strong>~45 curated categories</strong> (arch, structural, MEP, fabrication) avoid scanning internal Revit elements</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="slide-footer">
+            <span>EliteCoord Tutorial</span>
+            <span class="slide-number">13</span>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 14: RESET SCOPE                                          -->
+    <!-- ============================================================ -->
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>Reset Scope</h2>
+            <span class="tab-label">Views</span>
+        </div>
+        <div class="slide-body">
+            <p style="color:var(--text-dim);margin-bottom:0.15in;font-size:11pt;">Resets the section box of the active 3D view using selected levels to define the vertical extents. Works with 0, 1, or 2 selected levels.</p>
+            <table class="btn-table">
+                <tr><th style="width:180px;">Selection mode</th><th>Behavior</th></tr>
+                <tr>
+                    <td><span class="btn-pill pill-green">0 levels selected</span></td>
+                    <td>Prompts you to pick a level in the viewport. The section box clips from that level to the next level above it, using the same Z and XY logic as Create Scopes.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-pill pill-green">1 level selected</span></td>
+                    <td>Uses the selected level as the lower bound. The next level above it in the project becomes the upper bound. If the selected level is the highest, extends to the model geometry maximum.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-pill pill-green">2 levels selected</span></td>
+                    <td>Uses the lower-elevation level as the bottom and the higher-elevation level as the top. Section box clips between them +/- 1'-0". Rejects levels with identical elevations.</td>
+                </tr>
+            </table>
+            <p style="margin-top:0.12in;font-size:10pt;color:var(--text-muted);">Requirements: active view must be a non-template, non-perspective 3D view. Uses the same per-level XY fitting, curated categories, Link Selection Dialog, and 4-second timeout as Create Scopes.</p>
+        </div>
+        <div class="slide-footer">
+            <span>EliteCoord Tutorial</span>
+            <span class="slide-number">14</span>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 15: SECTION — CLASH PANEL                                -->
+    <!-- ============================================================ -->
+    <div class="slide slide-section" style="border-left-color:var(--core);">
+        <div class="section-label">Section 05</div>
+        <h2>Clash panel &mdash; Clash Viewer</h2>
+        <div class="section-sub">Import Navisworks XML clash reports and visualize them inside Revit with 3D markers</div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 16: CLASH VIEWER — OVERVIEW                              -->
+    <!-- ============================================================ -->
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>Clash Viewer dockable pane</h2>
+            <span class="tab-label">Clash</span>
+        </div>
+        <div class="slide-body">
+            <p style="color:var(--text-dim);margin-bottom:0.15in;font-size:11pt;">A dockable pane registered on Revit startup. Import Navisworks clash XML exports to view, filter, and locate clashes directly in the Revit viewport.</p>
+            <div class="two-col" style="gap:0.3in;">
+                <div>
+                    <table class="btn-table">
+                        <tr><th style="width:130px;">Control</th><th>Details</th></tr>
+                        <tr>
+                            <td><span class="btn-name">Search</span></td>
+                            <td>Text filter. Searches across Clash Name, Test Name, Item A, and Item B columns simultaneously.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="btn-name">Status filter</span></td>
+                            <td>Dropdown: All, New, Active, Resolved, NotAnIssue, NeedsInfo. Filters the DataGrid by review status.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="btn-name">Preview</span></td>
+                            <td>Image area below the grid. Displays the screenshot associated with the selected clash (resolved from the XML export folder).</td>
+                        </tr>
+                    </table>
+                </div>
+                <div>
+                    <div class="col-card">
+                        <h3 style="color:var(--text);">Review status colors</h3>
+                        <div style="display:flex;flex-direction:column;gap:8px;margin-top:0.1in;">
+                            <div class="status-chip" style="border-color:#ec4a41;background:rgba(236,74,65,0.15);color:#ec4a41;">
+                                <span class="dot" style="background:#ec4a41;"></span> New
+                            </div>
+                            <div class="status-chip" style="border-color:#faa21b;background:rgba(250,162,27,0.15);color:#faa21b;">
+                                <span class="dot" style="background:#faa21b;"></span> Active
+                            </div>
+                            <div class="status-chip" style="border-color:#0696d7;background:rgba(6,150,215,0.15);color:#0696d7;">
+                                <span class="dot" style="background:#0696d7;"></span> NeedsInfo
+                            </div>
+                            <div class="status-chip" style="border-color:#b7d78c;background:rgba(183,215,140,0.15);color:#b7d78c;">
+                                <span class="dot" style="background:#b7d78c;"></span> NotAnIssue
+                            </div>
+                            <div class="status-chip" style="border-color:#a76ef5;background:rgba(167,110,245,0.15);color:#a76ef5;">
+                                <span class="dot" style="background:#a76ef5;"></span> Resolved
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="slide-footer">
+            <span>EliteCoord Tutorial</span>
+            <span class="slide-number">16</span>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 17: CLASH VIEWER — DATAGRID & FOOTER                     -->
+    <!-- ============================================================ -->
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>Clash Viewer DataGrid &amp; footer controls</h2>
+            <span class="tab-label">Clash</span>
+        </div>
+        <div class="slide-body">
+            <p style="color:var(--text-dim);margin-bottom:0.12in;font-size:11pt;">The DataGrid shows all imported clashes with editable status. The footer provides controls for 3D visualization in Revit.</p>
+            <table class="btn-table">
+                <tr><th style="width:160px;">DataGrid column</th><th>Content</th></tr>
+                <tr><td><span class="btn-name">Test</span></td><td>The clash test name from the Navisworks export (e.g., "SM vs AR").</td></tr>
+                <tr><td><span class="btn-name">Clash</span></td><td>Individual clash or group name. Groups prefixed with "Group:" are auto-filtered when group data is present.</td></tr>
+                <tr><td><span class="btn-name">Item A</span></td><td>Source model/element path for the first clash item.</td></tr>
+                <tr><td><span class="btn-name">Item B</span></td><td>Source model/element path for the second clash item.</td></tr>
+                <tr><td><span class="btn-name">Review Status</span></td><td>Color-coded pill showing the current status. Double-click to edit via a dropdown. Status changes are auto-saved to a JSON sidecar file.</td></tr>
+            </table>
+            <table class="btn-table" style="margin-top:0.15in;">
+                <tr><th style="width:160px;">Footer control</th><th>What it does</th></tr>
+                <tr>
+                    <td><span class="btn-name">Box (ft)</span></td>
+                    <td>Section box half-size in feet. Controls how large the section box is when locating a clash in 3D.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-name">Marker (ft)</span></td>
+                    <td>Marker radius in feet. Controls the size of the 3D sphere marker placed at the clash point.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-pill pill-gray">Shared Coords</span></td>
+                    <td>Checkbox. When enabled, clash coordinates are transformed from shared to project coordinates. Required when Navisworks uses shared coordinates.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-pill pill-gray">Import XML</span></td>
+                    <td>Opens a file dialog to select a Navisworks Clash XML report. Parses all clashes and populates the DataGrid.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-pill pill-gray">Clear Markers</span></td>
+                    <td>Removes all 3D clash markers that have been placed in the model by previous Locate Clash operations.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-pill pill-green">Locate Clash</span></td>
+                    <td>Places a 3D sphere marker at the selected clash's coordinates, activates a section box around the point, and zooms the camera to the clash location.</td>
+                </tr>
+            </table>
+        </div>
+        <div class="slide-footer">
+            <span>EliteCoord Tutorial</span>
+            <span class="slide-number">17</span>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 18: SECTION — WORKFLOWS                                  -->
+    <!-- ============================================================ -->
+    <div class="slide slide-section">
+        <div class="section-label">Section 06</div>
+        <h2>Workflows</h2>
+        <div class="section-sub">End-to-end coordination workflows using EliteCoord's tools</div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 19: WORKFLOW SUMMARIES                                    -->
+    <!-- ============================================================ -->
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>Key coordination workflows</h2>
+        </div>
+        <div class="slide-body">
+            <div class="two-col" style="gap:0.2in;">
+                <div class="col-card" style="border-left:3px solid var(--coord);">
+                    <h3 style="color:var(--coord);">1. DWG import preparation</h3>
+                    <ul class="col-green">
+                        <li><strong>Open DWG Overrides</strong> and configure rules matching your project's DWG naming convention</li>
+                        <li><strong>Set colors per trade</strong> (e.g., red for structural, blue for mechanical) and define layers to hide</li>
+                        <li><strong>Use Preview</strong> to verify regex patterns match your filenames</li>
+                        <li><strong>Click Apply Colors</strong> in any view containing DWG imports to apply the overrides</li>
+                    </ul>
+                </div>
+                <div class="col-card" style="border-left:3px solid var(--draft);">
+                    <h3 style="color:var(--draft);">2. Scoped 3D view creation</h3>
+                    <ul class="col-amber">
+                        <li><strong>Click Create Scopes</strong> to auto-generate one 3D view per level</li>
+                        <li><strong>Select which Revit links</strong> to include in the section box extents calculation</li>
+                        <li><strong>Views are named ECD_[Level]</strong> with section boxes fitted to geometry at each level</li>
+                        <li><strong>Use Reset Scope</strong> to adjust any view's section box by selecting different levels</li>
+                    </ul>
+                </div>
+                <div class="col-card" style="border-left:3px solid var(--core);">
+                    <h3 style="color:var(--core);">3. Material mapping for Navisworks</h3>
+                    <ul class="col-purple">
+                        <li><strong>Open Material Mapping</strong> to see all fabrication services and their colors</li>
+                        <li><strong>Create missing materials</strong> or update existing ones to match your coordination color scheme</li>
+                        <li><strong>Add filter overrides</strong> for special cases (e.g., insulation, hangers) that need different colors</li>
+                        <li><strong>Click Apply Materials</strong> to assign the "Navis Material" parameter to all fabrication parts</li>
+                    </ul>
+                </div>
+                <div class="col-card" style="border-left:3px solid var(--scan);">
+                    <h3 style="color:var(--scan);">4. Clash visualization from XML</h3>
+                    <ul class="col-cyan">
+                        <li><strong>Export from Navisworks</strong> as XML clash report (not HTML) with clash points included</li>
+                        <li><strong>Open Clash Viewer</strong> and click Import XML to load the report</li>
+                        <li><strong>Filter by status or search</strong> to find specific clashes</li>
+                        <li><strong>Click Locate Clash</strong> to zoom to the clash point with a 3D marker and section box</li>
+                        <li><strong>Update review statuses</strong> directly in the grid; statuses persist in a JSON sidecar file</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="slide-footer">
+            <span>EliteCoord Tutorial</span>
+            <span class="slide-number">19</span>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 20: END                                                  -->
+    <!-- ============================================================ -->
+    <div class="slide slide-end">
+        <h2>EliteCoord</h2>
+        <div class="accent-bar"></div>
+        <div class="contact">
+            <strong>Prep</strong> &bull; <strong>Views</strong> &bull; <strong>Clash</strong> &mdash; BIM coordination tools inside Revit<br>
+            Revit 2022&ndash;2026 &bull; .NET 4.8 / .NET 8.0 &bull; v1.0.4
+        </div>
+    </div>
+
+</body>
+</html>

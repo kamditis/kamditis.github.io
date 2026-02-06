@@ -710,6 +710,45 @@
             box-shadow: none;
         }
 
+        /* Docs Button */
+        .docs-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            padding: 12px;
+            background: transparent;
+            color: var(--scan);
+            font-family: 'Space Mono', monospace;
+            font-size: 11px;
+            font-weight: 700;
+            text-decoration: none;
+            border: 1px solid var(--scan);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-bottom: 10px;
+        }
+
+        .docs-btn:hover {
+            background: var(--scan-dim);
+            transform: scale(1.02);
+            box-shadow: 0 4px 16px rgba(94, 213, 221, 0.2);
+        }
+
+        .docs-btn i {
+            width: 16px;
+            height: 16px;
+        }
+
+        [data-active-region="draft"] .docs-btn { color: var(--draft); border-color: var(--draft); }
+        [data-active-region="draft"] .docs-btn:hover { background: var(--draft-dim); box-shadow: 0 4px 16px rgba(245, 184, 120, 0.2); }
+        [data-active-region="coord"] .docs-btn { color: var(--coord); border-color: var(--coord); }
+        [data-active-region="coord"] .docs-btn:hover { background: var(--coord-dim); box-shadow: 0 4px 16px rgba(110, 231, 168, 0.2); }
+        [data-active-region="core"] .docs-btn { color: var(--core); border-color: var(--core); }
+        [data-active-region="core"] .docs-btn:hover { background: var(--core-dim); box-shadow: 0 4px 16px rgba(167, 139, 250, 0.2); }
+
         /* Requirements Section */
         .requirements-section {
             margin-top: 24px;
@@ -949,6 +988,10 @@
                         </div>
 
                         <div class="download-section">
+                            <a href="docs/EliteScan-Tutorial.html" target="_blank" class="docs-btn" id="docs-btn">
+                                <i data-lucide="book-open"></i>
+                                <span>Documentation</span>
+                            </a>
                             <p class="download-version" id="download-version">v1.2.3</p>
                             <a href="https://github.com/kamditis/kamditis.github.io/releases/download/EliteScan-latest/EliteScan-v1.2.3.zip" class="download-btn" id="download-btn">
                                 <i data-lucide="download"></i>
@@ -1086,6 +1129,7 @@
                 version: 'v1.2.4',
                 downloadUrl: 'https://github.com/kamditis/kamditis.github.io/releases/download/EliteScan-latest/EliteScan-v1.2.4.zip',
                 downloadFile: 'EliteScan-v1.2.4.zip',
+                docsUrl: 'docs/EliteScan-Tutorial.html',
                 description: 'Point cloud deviation analysis for Autodesk Revit.',
                 installation: [
                     'Download the ZIP file.',
@@ -1140,6 +1184,7 @@
                 version: 'v1.0.12',
                 downloadUrl: 'https://github.com/kamditis/kamditis.github.io/releases/download/EliteDraft-latest/EliteDraft-v1.0.12.zip',
                 downloadFile: 'EliteDraft-v1.0.12.zip',
+                docsUrl: 'docs/EliteDraft-Tutorial.html',
                 description: 'MEP fabrication drafting tools for Autodesk Revit.',
                 installation: [
                     'Download the ZIP file.',
@@ -1192,6 +1237,7 @@
                 version: 'v1.0.4',
                 downloadUrl: 'https://github.com/kamditis/kamditis.github.io/releases/download/EliteCoord-latest/EliteCoord-v1.0.4.zip',
                 downloadFile: 'EliteCoord-v1.0.4.zip',
+                docsUrl: 'docs/EliteCoord-Tutorial.html',
                 description: 'BIM coordination tools for Autodesk Revit.',
                 installation: [
                     'Download the ZIP file.',
@@ -1236,6 +1282,7 @@
                 version: 'v1.0.3',
                 downloadUrl: 'https://github.com/kamditis/kamditis.github.io/releases/download/EliteCore-latest/EliteCore-v1.0.3.zip',
                 downloadFile: 'EliteCore-v1.0.3.zip',
+                docsUrl: 'docs/EliteCore-Tutorial.html',
                 description: 'Project setup and shared utilities for Autodesk Revit.',
                 installation: [
                     'Download the ZIP file.',
@@ -1283,6 +1330,7 @@
         const requirementsList = document.getElementById('requirements-list');
         const changelogContent = document.getElementById('changelog-content');
         const changelogSection = document.getElementById('changelog-section');
+        const docsBtn = document.getElementById('docs-btn');
 
         // Functions
         function renderRibbon(regionId) {
@@ -1483,6 +1531,14 @@
                 downloadBtn.innerHTML = `<i data-lucide="clock"></i><span>Coming Soon</span>`;
                 downloadInfo.textContent = 'Release pending';
                 downloadVersion.textContent = '';
+            }
+
+            // Update docs button
+            if (region.docsUrl) {
+                docsBtn.href = region.docsUrl;
+                docsBtn.style.display = '';
+            } else {
+                docsBtn.style.display = 'none';
             }
 
             // Render ribbon
