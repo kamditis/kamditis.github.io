@@ -41,9 +41,11 @@ jobs:
           esac
 
       - name: Send Teams notification
+        env:
+          RELEASE_BODY: ${{ github.event.release.body }}
         run: |
           # Build the release notes - escape for JSON
-          BODY=$(echo '${{ github.event.release.body }}' | head -c 500 | jq -Rs .)
+          BODY=$(echo "$RELEASE_BODY" | head -c 500 | jq -Rs .)
 
           cat <<'CARD' > payload.json
           {
