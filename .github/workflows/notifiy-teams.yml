@@ -21,105 +21,119 @@ jobs:
     steps:
       - name: Parse release info
         id: info
+        env:
+          RELEASE_BODY: ${{ github.event.release.body }}
+          RELEASE_NAME: ${{ github.event.release.name }}
+          TAG: ${{ github.event.release.tag_name }}
         run: |
-          TAG="${{ github.event.release.tag_name }}"
           # Tags follow pattern: EliteScan-latest, EliteDraft-latest, etc.
           ADDIN_NAME=$(echo "$TAG" | sed 's/-latest//')
           echo "addin=$ADDIN_NAME" >> "$GITHUB_OUTPUT"
 
-          # Extract version from release name or body (e.g., "EliteScan v1.2.4")
-          VERSION=$(echo "${{ github.event.release.name }}" | grep -oP 'v[\d.]+' || echo "")
+          # Extract version from release name (e.g., "EliteScan v1.2.4")
+          VERSION=$(echo "$RELEASE_NAME" | grep -oP 'v[\d.]+' || echo "")
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
 
-          # Pick accent color based on add-in
-          case "$ADDIN_NAME" in
-            EliteScan)  echo "color=#5ED5DD" >> "$GITHUB_OUTPUT" ;;
-            EliteDraft) echo "color=#F5B878" >> "$GITHUB_OUTPUT" ;;
-            EliteCoord) echo "color=#6EE7A8" >> "$GITHUB_OUTPUT" ;;
-            EliteCore)  echo "color=#A78BFA" >> "$GITHUB_OUTPUT" ;;
-            *)          echo "color=#E8E8ED" >> "$GITHUB_OUTPUT" ;;
-          esac
+          # Extract just the bullet points from "What's New" section.
+          # Grabs lines starting with "- " between "What's New" and the next "###" heading.
+          # Falls back to all bullet lines if no "What's New" section exists.
+          NOTES=$(echo "$RELEASE_BODY" \
+            | sed -n "/What's New/,/^###/{/^- /p}" \
+            | sed 's/^- /• /' \
+            | head -20)
+          if [ -z "$NOTES" ]; then
+            NOTES=$(echo "$RELEASE_BODY" | grep '^- ' | sed 's/^- /• /' | head -20)
+          fi
+          if [ -z "$NOTES" ]; then
+            NOTES="See release notes for details."
+          fi
+
+          # Store multiline output safely
+          {
+            echo "notes<<NOTESEOF"
+            echo "$NOTES"
+            echo "NOTESEOF"
+          } >> "$GITHUB_OUTPUT"
 
       - name: Send Teams notification
         env:
-          RELEASE_BODY: ${{ github.event.release.body }}
+          ADDIN: ${{ steps.info.outputs.addin }}
+          VERSION: ${{ steps.info.outputs.version }}
+          NOTES: ${{ steps.info.outputs.notes }}
+          AUTHOR: ${{ github.actor }}
+          WEBHOOK_URL: ${{ secrets.TEAMS_WEBHOOK_URL }}
         run: |
-          # Build the release notes - escape for JSON
-          BODY=$(echo "$RELEASE_BODY" | head -c 500 | jq -Rs .)
-
-          cat <<'CARD' > payload.json
-          {
-            "type": "message",
-            "attachments": [
-              {
-                "contentType": "application/vnd.microsoft.card.adaptive",
-                "content": {
-                  "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
-                  "type": "AdaptiveCard",
-                  "version": "1.4",
-                  "body": [
-                    {
-                      "type": "Container",
-                      "style": "emphasis",
-                      "items": [
-                        {
-                          "type": "TextBlock",
-                          "size": "Large",
-                          "weight": "Bolder",
-                          "text": "🚀 ADDIN_PLACEHOLDER UPDATE_PLACEHOLDER",
-                          "wrap": true
-                        }
-                      ]
-                    },
-                    {
-                      "type": "TextBlock",
-                      "text": "A new version is available for download.",
-                      "wrap": true,
-                      "spacing": "Medium"
-                    },
-                    {
-                      "type": "FactSet",
-                      "facts": [
-                        { "title": "Add-in:", "value": "ADDIN_PLACEHOLDER" },
-                        { "title": "Version:", "value": "UPDATE_PLACEHOLDER" },
-                        { "title": "Released by:", "value": "AUTHOR_PLACEHOLDER" }
-                      ]
-                    },
-                    {
-                      "type": "TextBlock",
-                      "text": "**What's New:**",
-                      "wrap": true,
-                      "spacing": "Medium"
-                    },
-                    {
-                      "type": "TextBlock",
-                      "text": BODY_PLACEHOLDER,
-                      "wrap": true,
-                      "size": "Small"
-                    }
-                  ],
-                  "actions": [
-                    {
-                      "type": "Action.OpenUrl",
-                      "title": "⬇️ Go to Download Page",
-                      "url": "https://kamditis.github.io",
-                      "style": "positive"
-                    }
-                  ]
-                }
+          # Build the payload with jq (safe JSON encoding, no sed hacks)
+          jq -n \
+            --arg addin "$ADDIN" \
+            --arg version "$VERSION" \
+            --arg author "$AUTHOR" \
+            --arg notes "$NOTES" \
+          '{
+            type: "message",
+            attachments: [{
+              contentType: "application/vnd.microsoft.card.adaptive",
+              content: {
+                "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+                type: "AdaptiveCard",
+                version: "1.4",
+                body: [
+                  {
+                    type: "Container",
+                    style: "emphasis",
+                    items: [{
+                      type: "TextBlock",
+                      size: "Large",
+                      weight: "Bolder",
+                      text: ("🚀 " + $addin + " " + $version),
+                      wrap: true
+                    }]
+                  },
+                  {
+                    type: "TextBlock",
+                    text: "A new version is available for download.",
+                    wrap: true,
+                    spacing: "Medium"
+                  },
+                  {
+                    type: "FactSet",
+                    facts: [
+                      { title: "Add-in:", value: $addin },
+                      { title: "Version:", value: $version },
+                      { title: "Released by:", value: $author }
+                    ]
+                  },
+                  {
+                    type: "TextBlock",
+                    text: "**What'\''s New:**",
+                    wrap: true,
+                    spacing: "Medium"
+                  },
+                  {
+                    type: "TextBlock",
+                    text: $notes,
+                    wrap: true,
+                    size: "Small"
+                  }
+                ],
+                actions: [{
+                  type: "Action.OpenUrl",
+                  title: "⬇️ Go to Download Page",
+                  url: "https://kamditis.github.io",
+                  style: "positive"
+                }]
               }
-            ]
-          }
-          CARD
-
-          # Replace placeholders
-          sed -i "s|ADDIN_PLACEHOLDER|${{ steps.info.outputs.addin }}|g" payload.json
-          sed -i "s|UPDATE_PLACEHOLDER|${{ steps.info.outputs.version }}|g" payload.json
-          sed -i "s|AUTHOR_PLACEHOLDER|${{ github.actor }}|g" payload.json
-          sed -i "s|BODY_PLACEHOLDER|${BODY}|g" payload.json
+            }]
+          }' > payload.json
 
           # Send to Teams
-          curl -s -o /dev/null -w "%{http_code}" \
+          HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" \
             -H "Content-Type: application/json" \
             -d @payload.json \
-            "${{ secrets.TEAMS_WEBHOOK_URL }}"
+            "$WEBHOOK_URL")
+
+          echo "Teams webhook responded with HTTP $HTTP_CODE"
+          if [ "$HTTP_CODE" -lt 200 ] || [ "$HTTP_CODE" -ge 300 ]; then
+            echo "::error::Teams webhook failed with HTTP $HTTP_CODE"
+            exit 1
+          fi
