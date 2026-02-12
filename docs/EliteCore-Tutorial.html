@@ -467,8 +467,8 @@
         <div class="tag">Revit Add-in</div>
         <h1>EliteCore</h1>
         <div class="accent-bar"></div>
-        <p class="subtitle">A tutorial walkthrough of every ribbon button, dialog, and workflow in the core utilities plugin for project setup, auto-sync, and tab coloring</p>
-        <p class="version">v1.0.3 / Tutorial &amp; Reference Guide</p>
+        <p class="subtitle">A tutorial walkthrough of every ribbon button, dialog, and workflow in the core utilities plugin for project setup, auto-sync, tab coloring, and batch export</p>
+        <p class="version">v1.0.4 / Tutorial &amp; Reference Guide</p>
     </div>
 
     <!-- ============================================================ -->
@@ -477,7 +477,7 @@
     <div class="slide slide-section">
         <div class="section-label">Section 01</div>
         <h2>Ribbon overview</h2>
-        <div class="section-sub">The &ldquo;Elite Core&rdquo; tab with three panels: Project Setup, Auto Sync, and Tab Colors</div>
+        <div class="section-sub">The &ldquo;Elite Core&rdquo; tab with four panels: Project Setup, Auto Sync, Tab Colors, and Export</div>
     </div>
 
     <div class="slide slide-content">
@@ -486,8 +486,8 @@
             <span class="tab-label">Elite Core</span>
         </div>
         <div class="slide-body">
-            <p style="color:var(--text-dim);margin-bottom:0.15in;font-size:11pt;">EliteCore installs a dedicated &ldquo;Elite Core&rdquo; tab in the Revit ribbon. It contains three panels grouping core utilities for project setup, automatic syncing, and tab color customization. Supports Revit 2022 through 2026.</p>
-            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0.2in;">
+            <p style="color:var(--text-dim);margin-bottom:0.15in;font-size:11pt;">EliteCore installs a dedicated &ldquo;Elite Core&rdquo; tab in the Revit ribbon. It contains four panels grouping core utilities for project setup, automatic syncing, tab color customization, and batch export. Supports Revit 2022 through 2026.</p>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.2in;margin-bottom:0.15in;">
                 <div class="col-card" style="border-left:3px solid var(--core);">
                     <h3 style="color:var(--core);">Project Setup panel</h3>
                     <ul class="col-purple">
@@ -503,11 +503,19 @@
                         <li><strong>Sync Log</strong> &mdash; View sync history and statistics</li>
                     </ul>
                 </div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.2in;">
                 <div class="col-card" style="border-left:3px solid var(--draft);">
                     <h3 style="color:var(--draft);">Tab Colors panel</h3>
                     <ul class="col-amber">
                         <li><strong>Tab Color Settings</strong> &mdash; Configure document tab color scheme</li>
                         <li><strong>Toggle Colors</strong> &mdash; Enable or disable tab colors instantly</li>
+                    </ul>
+                </div>
+                <div class="col-card" style="border-left:3px solid var(--coord);">
+                    <h3 style="color:var(--coord);">Export panel</h3>
+                    <ul class="col-green">
+                        <li><strong>Batch Export</strong> &mdash; Export sheets and views to PDF, DWG, and NWC</li>
                     </ul>
                 </div>
             </div>
@@ -1195,10 +1203,223 @@
     </div>
 
     <!-- ============================================================ -->
-    <!-- SECTION 10: DEFAULT COLOR PALETTE                            -->
+    <!-- SECTION 10: BATCH EXPORT WIZARD                              -->
     <!-- ============================================================ -->
     <div class="slide slide-section">
         <div class="section-label">Section 10</div>
+        <h2>Export &mdash; Batch Export</h2>
+        <div class="section-sub">Export multiple sheets and views to PDF, DWG, and NWC in a single operation with reusable profiles</div>
+    </div>
+
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>Batch Export wizard</h2>
+            <span class="tab-label">Export &gt; Batch Export</span>
+        </div>
+        <div class="slide-body">
+            <p style="color:var(--text-dim);margin-bottom:0.15in;font-size:11pt;">A 3-step wizard for exporting sheets and views in bulk. Select what to export, configure format-specific settings, and choose your output folder. All settings are saved to reusable profiles.</p>
+
+            <table class="btn-table">
+                <tr>
+                    <th>Step</th>
+                    <th>Name</th>
+                    <th>What you do</th>
+                </tr>
+                <tr>
+                    <td class="btn-name"><span class="btn-pill pill-purple">1</span></td>
+                    <td class="btn-name">Select</td>
+                    <td class="desc">Choose sheets and/or views to export. Use search, view type filter, and View/Sheet Sets to manage selections. Set up custom file naming.</td>
+                </tr>
+                <tr>
+                    <td class="btn-name"><span class="btn-pill pill-purple">2</span></td>
+                    <td class="btn-name">Format</td>
+                    <td class="desc">Pick one or more formats (PDF, DWG, NWC) using checkbox-tabs. Configure settings for each format individually.</td>
+                </tr>
+                <tr>
+                    <td class="btn-name"><span class="btn-pill pill-purple">3</span></td>
+                    <td class="btn-name">Output</td>
+                    <td class="desc">Choose an output folder, review the export summary, and start the export.</td>
+                </tr>
+            </table>
+
+            <div style="margin-top:0.15in;">
+                <div class="col-card" style="border-left:3px solid var(--danger);">
+                    <h3 style="color:var(--danger);">Requirements</h3>
+                    <ul class="col-purple">
+                        <li><strong>Active Revit project</strong> &mdash; must have a project open (not a family document)</li>
+                        <li><strong>Sheets or views</strong> &mdash; at least one sheet or view must exist in the project</li>
+                        <li><strong>DWG Export Setup</strong> &mdash; a named DWG export setup must be configured in Revit (for DWG format only)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>Step 1: Select sheets &amp; views</h2>
+            <span class="tab-label">Batch Export &gt; Select</span>
+        </div>
+        <div class="slide-body">
+            <p style="color:var(--text-dim);margin-bottom:0.15in;font-size:11pt;">Toggle between Sheets and Views mode using the radio buttons. Check individual items or use Select All. Both modes maintain their own selections &mdash; you can export sheets and views together in a single operation.</p>
+
+            <table class="btn-table">
+                <tr>
+                    <th>Control</th>
+                    <th>Details</th>
+                </tr>
+                <tr>
+                    <td class="btn-name">Source toggle</td>
+                    <td><span class="btn-pill pill-purple">Sheets</span> <span class="btn-pill pill-purple">Views</span> &mdash; switch between sheet list and view list; selections are preserved in both</td>
+                </tr>
+                <tr>
+                    <td class="btn-name">Search</td>
+                    <td>Type to filter the list by name, number, or any visible column text</td>
+                </tr>
+                <tr>
+                    <td class="btn-name">View Type filter</td>
+                    <td>In Views mode, a dropdown in the Type column header filters by view type (3D View, Floor Plan, Detail, Elevation, etc.)</td>
+                </tr>
+                <tr>
+                    <td class="btn-name">File Name button</td>
+                    <td>Click &ldquo;File Name&rdquo; in the column header to open the naming editor popup</td>
+                </tr>
+                <tr>
+                    <td class="btn-name">Select Set</td>
+                    <td>Save and load named selection sets. Create, update, or delete sets from the dropdown.</td>
+                </tr>
+                <tr>
+                    <td class="btn-name">Status bar</td>
+                    <td>Shows selected/total counts for both modes: <span class="btn-pill pill-gray" style="font-size:9pt;">Sheets: 3/20 &bull; Views: 2/15</span></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>File naming editor</h2>
+            <span class="tab-label">Batch Export &gt; Select</span>
+        </div>
+        <div class="slide-body">
+            <p style="color:var(--text-dim);margin-bottom:0.15in;font-size:11pt;">Build custom file names from tokens. Tokens are displayed as chips and can be rearranged or removed. Separate naming patterns are saved for sheets and views.</p>
+
+            <table class="btn-table">
+                <tr>
+                    <th>Token Type</th>
+                    <th>Description</th>
+                    <th>Examples</th>
+                </tr>
+                <tr>
+                    <td class="btn-name"><span class="btn-pill pill-purple">Parameter</span></td>
+                    <td>A Revit sheet/view parameter value</td>
+                    <td class="desc">Sheet Number, Sheet Name, View Name, Current Revision</td>
+                </tr>
+                <tr>
+                    <td class="btn-name"><span class="btn-pill pill-cyan">Separator</span></td>
+                    <td>A fixed character between tokens</td>
+                    <td class="desc"><span class="key">-</span> <span class="key">_</span> <span class="key"> - </span> <span class="key">.</span></td>
+                </tr>
+                <tr>
+                    <td class="btn-name"><span class="btn-pill pill-amber">Variable</span></td>
+                    <td>A dynamic value resolved at export time</td>
+                    <td class="desc">Date, Project Name, Project Number</td>
+                </tr>
+                <tr>
+                    <td class="btn-name"><span class="btn-pill pill-green">Literal</span></td>
+                    <td>Custom text you type in directly</td>
+                    <td class="desc">Any prefix, suffix, or label text</td>
+                </tr>
+            </table>
+
+            <p style="margin-top:0.12in;font-size:10pt;color:var(--text-muted);">Example result: <span class="key">02_J25-188_M-001_REV0</span> from tokens: <span class="btn-pill pill-green" style="font-size:9pt;">02_</span> <span class="btn-pill pill-purple" style="font-size:9pt;">Project Number</span> <span class="btn-pill pill-cyan" style="font-size:9pt;">_</span> <span class="btn-pill pill-purple" style="font-size:9pt;">Sheet Number</span> <span class="btn-pill pill-cyan" style="font-size:9pt;">_</span> <span class="btn-pill pill-green" style="font-size:9pt;">REV</span> <span class="btn-pill pill-purple" style="font-size:9pt;">Current Revision</span></p>
+        </div>
+    </div>
+
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>Step 2: Format settings</h2>
+            <span class="tab-label">Batch Export &gt; Format</span>
+        </div>
+        <div class="slide-body">
+            <p style="color:var(--text-dim);margin-bottom:0.15in;font-size:11pt;">Check one or more format tabs to include them in the export. Click a tab to view and configure its settings. Each format has its own options panel.</p>
+
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0.15in;">
+                <div class="col-card" style="border-left:3px solid var(--core);">
+                    <h3 style="color:var(--core);">PDF options</h3>
+                    <ul class="col-purple">
+                        <li><strong>Color Depth</strong> &mdash; Color, Grayscale, or B&amp;W</li>
+                        <li><strong>Raster Quality</strong> &mdash; Low, Medium, High, or Max</li>
+                        <li><strong>Paper Placement</strong> &mdash; Center or Lower Left</li>
+                        <li><strong>Zoom</strong> &mdash; Fit to Page or custom percentage</li>
+                        <li><strong>Processing</strong> &mdash; Vector or Raster</li>
+                        <li><strong>Appearance</strong> &mdash; Hide ref planes, scope boxes, crop boundaries, unreferenced tags</li>
+                        <li><strong>Combined file</strong> &mdash; Export all sheets into one PDF</li>
+                        <li><strong>View links in blue</strong> &mdash; Hyperlinks appear in blue</li>
+                    </ul>
+                </div>
+                <div class="col-card" style="border-left:3px solid var(--draft);">
+                    <h3 style="color:var(--draft);">DWG options</h3>
+                    <ul class="col-amber">
+                        <li><strong>Export Setup</strong> &mdash; Select a named DWG export setup configured in Revit</li>
+                        <li><strong>External Refs</strong> &mdash; Export views as separate xref files</li>
+                        <li><strong>Clean .pcp files</strong> &mdash; Delete plot config files after export</li>
+                    </ul>
+                </div>
+                <div class="col-card" style="border-left:3px solid var(--scan);">
+                    <h3 style="color:var(--scan);">NWC options</h3>
+                    <ul class="col-cyan">
+                        <li><strong>Element Properties</strong> &mdash; Include element data</li>
+                        <li><strong>Export Links</strong> &mdash; Include linked models</li>
+                        <li><strong>Divide into Levels</strong> &mdash; Split by level</li>
+                        <li><strong>Export Parts</strong> &mdash; Include parts</li>
+                        <li><strong>Rooms</strong> &mdash; Export as attribute and/or geometry</li>
+                        <li><strong>Coordinates</strong> &mdash; Internal or Shared</li>
+                        <li><strong>Faceting</strong> &mdash; Geometry detail slider</li>
+                        <li><strong>Parameters</strong> &mdash; None, Elements, or All</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>Profiles &amp; sharing</h2>
+            <span class="tab-label">Batch Export</span>
+        </div>
+        <div class="slide-body">
+            <p style="color:var(--text-dim);margin-bottom:0.15in;font-size:11pt;">All export settings are saved to named profiles. Profiles are stored as individual JSON files that can be copied between machines or shared with team members.</p>
+
+            <div class="two-col">
+                <div class="col-card" style="border-left:3px solid var(--core);">
+                    <h3 style="color:var(--core);">Profile controls</h3>
+                    <ul class="col-purple">
+                        <li><strong>Profile dropdown</strong> &mdash; Switch between saved profiles</li>
+                        <li><strong>Save</strong> &mdash; Save current settings to the active profile</li>
+                        <li><strong>+ (New)</strong> &mdash; Opens the New Profile popup</li>
+                        <li><strong>Delete</strong> &mdash; Remove the active profile (cannot delete last profile)</li>
+                    </ul>
+                </div>
+                <div class="col-card" style="border-left:3px solid var(--coord);">
+                    <h3 style="color:var(--coord);">New Profile popup</h3>
+                    <ul class="col-green">
+                        <li><strong>Profile Name</strong> &mdash; Enter a name for the new profile</li>
+                        <li><strong>Create Blank</strong> &mdash; New profile cloned from current settings</li>
+                        <li><strong>Load from File</strong> &mdash; Import settings from a JSON file (e.g., a profile shared by a teammate)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <p style="margin-top:0.12in;font-size:10pt;color:var(--text-muted);">Profiles stored at: <span class="key">%LOCALAPPDATA%\EliteTools\Global\Core\BatchExportProfiles\</span></p>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 11: DEFAULT COLOR PALETTE                             -->
+    <!-- ============================================================ -->
+    <div class="slide slide-section">
+        <div class="section-label">Section 11</div>
         <h2>Default color palette</h2>
         <div class="section-sub">The 10 built-in colors used for order-based tab assignment</div>
     </div>
@@ -1261,10 +1482,10 @@
     </div>
 
     <!-- ============================================================ -->
-    <!-- SECTION 11: FILE STORAGE                                     -->
+    <!-- SECTION 12: FILE STORAGE                                     -->
     <!-- ============================================================ -->
     <div class="slide slide-section">
-        <div class="section-label">Section 11</div>
+        <div class="section-label">Section 12</div>
         <h2>File storage locations</h2>
         <div class="section-sub">Where EliteCore stores settings, logs, and shared parameter files</div>
     </div>
@@ -1297,6 +1518,10 @@
                     <td><span class="key">%LOCALAPPDATA%\EliteTools\Core\TabColorSettings.json</span></td>
                 </tr>
                 <tr>
+                    <td class="btn-name">Batch Export profiles</td>
+                    <td><span class="key">%LOCALAPPDATA%\EliteTools\Global\Core\BatchExportProfiles\{Name}.json</span></td>
+                </tr>
+                <tr>
                     <td class="btn-name">Shared parameters</td>
                     <td><span class="key">%LOCALAPPDATA%\EliteTools\SharedParameters\ECD_SharedParameters.txt</span></td>
                 </tr>
@@ -1311,10 +1536,10 @@
     </div>
 
     <!-- ============================================================ -->
-    <!-- SECTION 12: GETTING STARTED                                  -->
+    <!-- SECTION 13: GETTING STARTED                                  -->
     <!-- ============================================================ -->
     <div class="slide slide-section">
-        <div class="section-label">Section 12</div>
+        <div class="section-label">Section 13</div>
         <h2>Getting started</h2>
         <div class="section-sub">Recommended setup workflow for a new project</div>
     </div>
@@ -1360,6 +1585,11 @@
                     <td class="btn-name"><span class="btn-pill pill-purple">6</span></td>
                     <td class="btn-name">Customize Tab Colors</td>
                     <td class="desc">Click <span class="btn-pill pill-amber">Tab Color Settings</span> to choose a visual style. TopBar is recommended for subtlety, Dimmed family mode for clarity.</td>
+                </tr>
+                <tr>
+                    <td class="btn-name"><span class="btn-pill pill-purple">7</span></td>
+                    <td class="btn-name">Set up Batch Export</td>
+                    <td class="desc">Click <span class="btn-pill pill-green">Batch Export</span> to create your first export profile. Configure file naming, format settings, and output folder. Save as a profile for future use.</td>
                 </tr>
             </table>
         </div>
@@ -1413,8 +1643,8 @@
         <h2>EliteCore</h2>
         <div class="accent-bar"></div>
         <div class="contact">
-            <strong>Project Setup</strong> &bull; <strong>Auto Sync</strong> &bull; <strong>Tab Colors</strong> &mdash; Core utilities for Revit<br>
-            Revit 2022&ndash;2026 &bull; .NET 4.8 / .NET 8.0 &bull; v1.0.3
+            <strong>Project Setup</strong> &bull; <strong>Auto Sync</strong> &bull; <strong>Tab Colors</strong> &bull; <strong>Batch Export</strong> &mdash; Core utilities for Revit<br>
+            Revit 2022&ndash;2026 &bull; .NET 4.8 / .NET 8.0 &bull; v1.0.4
         </div>
     </div>
 

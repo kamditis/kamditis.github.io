@@ -1288,9 +1288,9 @@
                 color: '#A78BFA',
                 colorVar: 'var(--core)',
                 released: true,
-                version: 'v1.0.3',
-                downloadUrl: 'https://github.com/kamditis/kamditis.github.io/releases/download/EliteCore-latest/EliteCore-v1.0.3.zip',
-                downloadFile: 'EliteCore-v1.0.3.zip',
+                version: 'v1.0.4',
+                downloadUrl: 'https://github.com/kamditis/kamditis.github.io/releases/download/EliteCore-latest/EliteCore-v1.0.4.zip',
+                downloadFile: 'EliteCore-v1.0.4.zip',
                 docsUrl: 'docs/EliteCore-Tutorial.html',
                 description: 'Project setup and shared utilities for Autodesk Revit.',
                 installation: [
@@ -1307,7 +1307,7 @@
                         tools: [
                             { id: 'user_workset', label: 'User Workset', icon: 'user', fn: 'Create a personal workset named after you to keep your work organized and prevent accidental edits to others\' elements.', videoRef: '', changelog: 'v1.0.3: Ribbon icons now automatically match the Revit UI theme (light/dark).', requirements: ['Worksharing enabled in project'] },
                             { id: 'link_worksets', label: 'Link Worksets', icon: 'link', fn: 'Organize linked models (RVT, CAD, point clouds) onto dedicated worksets for easier visibility control and model management.', videoRef: '', changelog: '', requirements: ['Worksharing enabled in project', 'Linked models, CAD files, or point clouds in project'] },
-                            { id: 'setup_wizard', label: 'Setup Wizard', icon: 'wand', fn: 'Scan your project for shared parameters required by Elite add-ins and fix any that are missing or misconfigured with one click. The wizard checks all 28 parameters across EliteCoord, EliteDraft, and EliteScan, showing a color-coded status for each one.', videoRef: '', changelog: '', requirements: ['Active Revit project open'] },
+                            { id: 'setup_wizard', label: 'Setup Wizard', icon: 'wand', fn: 'Scan your project for shared parameters required by Elite add-ins and fix any that are missing or misconfigured with one click. The wizard checks all 28 parameters across EliteCoord, EliteDraft, and EliteScan, showing a color-coded status for each one.', videoRef: '', changelog: 'v1.0.4: New dedicated ribbon icon. Window maximize no longer covers the taskbar.', requirements: ['Active Revit project open'] },
                         ]
                     },
                     {
@@ -1320,14 +1320,14 @@
                     {
                         title: 'Tab Colors',
                         tools: [
-                            { id: 'tab_color_settings', label: 'Tab Color Settings', icon: 'palette', fn: 'Customize how your open document tabs are color-coded in Revit. Assign colors from a palette to help visually distinguish between multiple open projects and family editors at a glance.', videoRef: '', changelog: '', requirements: [] },
-                            { id: 'toggle_colors', label: 'Toggle Colors', icon: 'toggle-left', fn: 'Quickly turn tab coloring on or off without opening the settings dialog.', videoRef: '', changelog: '', requirements: [] },
+                            { id: 'tab_color_settings', label: 'Tab Color Settings', icon: 'palette', fn: 'Customize how your open document tabs are color-coded in Revit. Assign colors from a palette to help visually distinguish between multiple open projects and family editors at a glance.', videoRef: '', changelog: 'v1.0.4: New dedicated ribbon icon.', requirements: [] },
+                            { id: 'toggle_colors', label: 'Toggle Colors', icon: 'toggle-left', fn: 'Quickly turn tab coloring on or off without opening the settings dialog.', videoRef: '', changelog: 'v1.0.4: New dedicated ribbon icon.', requirements: [] },
                         ]
                     },
                     {
                         title: 'Export',
                         tools: [
-                            { id: 'batch_export', label: 'Batch Export', icon: 'file-output', fn: 'Export multiple sheets and views to PDF, DWG, and NWC in a single operation. Choose your formats, configure settings for each, and set up custom file naming using project parameters and tokens. Save your configurations as reusable profiles that can be shared between machines.', videoRef: '', changelog: '', requirements: ['Active Revit project open', 'Sheets or views present in the project', 'DWG Export Setup configured in Revit (for DWG export)'] },
+                            { id: 'batch_export', label: 'Batch Export', icon: 'file-output', fn: 'Export multiple sheets and views to PDF, DWG, and NWC in a single operation. Choose your formats, configure settings for each, and set up custom file naming using project parameters and tokens. Save your configurations as reusable profiles that can be shared between machines.', videoRef: '', changelog: 'v1.0.4: New feature — 3-step export wizard with PDF, DWG, and NWC support. Token-based file naming, reusable profiles, view type filtering, and View/Sheet Set management.', requirements: ['Active Revit project open', 'Sheets or views present in the project', 'DWG Export Setup configured in Revit (for DWG export)'] },
                         ]
                     }
                 ]
