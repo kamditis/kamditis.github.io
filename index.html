@@ -1056,6 +1056,10 @@
             { id: 'SyncLog', group: 'core', path: '<path d="M3 3H47L60 16V60H3V3Z" stroke="white" stroke-width="5" fill="none"/><path d="M47 3V16H60" stroke="white" stroke-width="5" fill="none"/><line x1="9" y1="15" x2="34" y2="15" stroke="#5A5A6A" stroke-width="5"/><circle cx="44" cy="44" r="16" fill="#18181D" stroke="currentColor" stroke-width="5"/><path d="M44 36V44L50.4 50.4" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>' },
             { id: 'UserWorkset', group: 'core', path: '<circle cx="32" cy="20" r="17" stroke="white" stroke-width="5" fill="none"/><path d="M4 59C4 41 18 41 32 41C46 41 60 41 60 59" stroke="white" stroke-width="5" fill="none"/><rect x="37" y="40" width="16" height="16" rx="2" fill="currentColor" stroke="currentColor" stroke-width="5"/>' },
             { id: 'LinkWorksets', group: 'core', path: '<rect x="3" y="20" width="30" height="20" rx="10" stroke="white" stroke-width="5" fill="none"/><rect x="30" y="20" width="30" height="20" rx="10" stroke="#5A5A6A" stroke-width="5" fill="none"/><rect x="37" y="40" width="16" height="16" rx="2" fill="currentColor" stroke="currentColor" stroke-width="5"/>' },
+            { id: 'SetupWizard', group: 'core', path: '<line x1="6" y1="58" x2="36" y2="28" stroke="currentColor" stroke-width="5" stroke-linecap="round"/><path d="M41 2L47 16L61 22L47 28L41 42L35 28L21 22L35 16Z" fill="white"/><path d="M56 4L57.8 8.2L62 10L57.8 11.8L56 16L54.2 11.8L50 10L54.2 8.2Z" fill="#5A5A6A"/><path d="M30 0L31.8 4.2L36 6L31.8 7.8L30 12L28.2 7.8L24 6L28.2 4.2Z" fill="#5A5A6A"/>' },
+            { id: 'TabColorSettings', group: 'core', path: '<rect x="4" y="7" width="16" height="12" fill="#5A5A6A"/><rect x="4" y="7" width="16" height="50" stroke="currentColor" stroke-width="5" fill="none"/><rect x="24" y="7" width="16" height="12" fill="#5A5A6A"/><rect x="24" y="7" width="16" height="50" stroke="currentColor" stroke-width="5" fill="none"/><rect x="44" y="7" width="16" height="12" fill="#5A5A6A"/><rect x="44" y="7" width="16" height="50" stroke="currentColor" stroke-width="5" fill="none"/><g transform="translate(34, 33) rotate(45) scale(2) translate(-16, -16)"><path d="M 14 28 L 14 14 Q 14 10 10 9 L 10 4 L 12 4 L 12 7 Q 16 9 20 7 L 20 4 L 22 4 L 22 9 Q 18 10 18 14 L 18 28 A 2 2 0 0 1 14 28 Z" fill="none" stroke="white" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/></g>' },
+            { id: 'ToggleColors', group: 'core', path: '<rect x="5" y="7" width="16" height="12" fill="currentColor"/><rect x="5" y="7" width="16" height="50" stroke="white" stroke-width="5" fill="none"/><rect x="24" y="7" width="16" height="12" fill="#5A5A6A"/><rect x="24" y="7" width="16" height="50" stroke="white" stroke-width="5" fill="none"/><rect x="43" y="7" width="16" height="12" fill="currentColor"/><rect x="43" y="7" width="16" height="50" stroke="white" stroke-width="5" fill="none"/>' },
+            { id: 'BatchExport', group: 'core', path: '<rect x="3" y="18" width="42" height="42" fill="#222" stroke="currentColor" stroke-width="5"/><rect x="10.5" y="10.5" width="42" height="42" fill="#222" stroke="#5A5A6A" stroke-width="5"/><rect x="18" y="3" width="42" height="42" fill="#222" stroke="white" stroke-width="5"/>' },
         ];
 
         // MAPPING: Links App Tool IDs to Custom Icon IDs
@@ -1102,7 +1106,11 @@
             'sync_settings': 'SyncSettings',
             'sync_log': 'SyncLog',
             'user_workset': 'UserWorkset',
-            'link_worksets': 'LinkWorksets'
+            'link_worksets': 'LinkWorksets',
+            'setup_wizard': 'SetupWizard',
+            'tab_color_settings': 'TabColorSettings',
+            'toggle_colors': 'ToggleColors',
+            'batch_export': 'BatchExport'
         };
 
         function createIconSVG(iconId, color) {
@@ -1299,13 +1307,27 @@
                         tools: [
                             { id: 'user_workset', label: 'User Workset', icon: 'user', fn: 'Create a personal workset named after you to keep your work organized and prevent accidental edits to others\' elements.', videoRef: '', changelog: 'v1.0.3: Ribbon icons now automatically match the Revit UI theme (light/dark).', requirements: ['Worksharing enabled in project'] },
                             { id: 'link_worksets', label: 'Link Worksets', icon: 'link', fn: 'Organize linked models (RVT, CAD, point clouds) onto dedicated worksets for easier visibility control and model management.', videoRef: '', changelog: '', requirements: ['Worksharing enabled in project', 'Linked models, CAD files, or point clouds in project'] },
+                            { id: 'setup_wizard', label: 'Setup Wizard', icon: 'wand', fn: 'Scan your project for shared parameters required by Elite add-ins and fix any that are missing or misconfigured with one click. The wizard checks all 28 parameters across EliteCoord, EliteDraft, and EliteScan, showing a color-coded status for each one.', videoRef: '', changelog: '', requirements: ['Active Revit project open'] },
                         ]
                     },
                     {
-                        title: 'AutoSync',
+                        title: 'Auto Sync',
                         tools: [
                             { id: 'sync_settings', label: 'AutoSync Settings', icon: 'settings', fn: 'Configure automatic synchronization intervals, notification preferences, and sync behavior. Set how often your model syncs to central and control what happens during each sync cycle.', videoRef: '', changelog: 'v1.0.2: Added Auto-Sync feature with interval sync, idle sync, and sync-on-save modes. Configurable relinquish options and pre-close reminders. Sync timer now starts fresh from document open to prevent immediate sync. Removed separate Sync Now button.', requirements: ['Worksharing enabled in project', 'Central model accessible on network or BIM 360/ACC'] },
                             { id: 'sync_log', label: 'Sync Log', icon: 'clock', fn: 'View a timestamped history of all automatic and manual sync operations. Track sync durations, conflicts encountered, and elements borrowed or relinquished during each cycle.', videoRef: '', changelog: 'v1.0.2: New feature — tracks all sync operations with timestamps, sync type (interval, idle, manual, on-save), duration, and success/failure status.', requirements: ['Worksharing enabled in project', 'At least one sync operation completed'] },
+                        ]
+                    },
+                    {
+                        title: 'Tab Colors',
+                        tools: [
+                            { id: 'tab_color_settings', label: 'Tab Color Settings', icon: 'palette', fn: 'Customize how your open document tabs are color-coded in Revit. Assign colors from a palette to help visually distinguish between multiple open projects and family editors at a glance.', videoRef: '', changelog: '', requirements: [] },
+                            { id: 'toggle_colors', label: 'Toggle Colors', icon: 'toggle-left', fn: 'Quickly turn tab coloring on or off without opening the settings dialog.', videoRef: '', changelog: '', requirements: [] },
+                        ]
+                    },
+                    {
+                        title: 'Export',
+                        tools: [
+                            { id: 'batch_export', label: 'Batch Export', icon: 'file-output', fn: 'Export multiple sheets and views to PDF, DWG, and NWC in a single operation. Choose your formats, configure settings for each, and set up custom file naming using project parameters and tokens. Save your configurations as reusable profiles that can be shared between machines.', videoRef: '', changelog: '', requirements: ['Active Revit project open', 'Sheets or views present in the project', 'DWG Export Setup configured in Revit (for DWG export)'] },
                         ]
                     }
                 ]
