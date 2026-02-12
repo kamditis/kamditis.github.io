@@ -728,7 +728,32 @@
                 </ul>
             </div>
 
-            <p style="margin-top:0.15in;font-size:10pt;color:var(--text-muted);">Shared parameter file: <span class="key">%LOCALAPPDATA%\EliteTools\SharedParameters\ECD_SharedParameters.txt</span></p>
+            <div class="col-card" style="border-left:3px solid var(--border);margin-top:0.15in;margin-bottom:0.15in;">
+                <h3>Status indicators</h3>
+                <p style="color:var(--text-dim);font-size:10pt;margin-bottom:0.1in;">Each parameter shows a colored dot indicating its current state in the open project.</p>
+                <div class="status-row">
+                    <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#6EE7A8;vertical-align:middle;"></span>
+                    <strong style="margin-left:6px;">Bound</strong> <span class="desc">&mdash; Parameter exists with correct type and categories</span>
+                </div>
+                <div class="status-row">
+                    <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#F87171;vertical-align:middle;"></span>
+                    <strong style="margin-left:6px;">Missing</strong> <span class="desc">&mdash; Parameter does not exist in the project</span>
+                </div>
+                <div class="status-row">
+                    <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#FFBB33;vertical-align:middle;"></span>
+                    <strong style="margin-left:6px;">Wrong Type</strong> <span class="desc">&mdash; Parameter exists but has the wrong data type (fix removes existing values)</span>
+                </div>
+                <div class="status-row">
+                    <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#FFDD57;vertical-align:middle;"></span>
+                    <strong style="margin-left:6px;">Missing Categories</strong> <span class="desc">&mdash; Parameter exists but is not bound to all required categories</span>
+                </div>
+                <div class="status-row">
+                    <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#5A5A6A;vertical-align:middle;"></span>
+                    <strong style="margin-left:6px;">Planned</strong> <span class="desc">&mdash; Not yet implemented; will be added in a future release</span>
+                </div>
+            </div>
+
+            <p style="font-size:10pt;color:var(--text-muted);">Shared parameter file: <span class="key">%LOCALAPPDATA%\EliteTools\SharedParameters\ECD_SharedParameters.txt</span></p>
         </div>
     </div>
 
