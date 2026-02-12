@@ -27,9 +27,9 @@ The site uses a tab-based UI with four "regions" defined in a `REGIONS` JavaScri
 | Region | Key | Color | Released |
 |--------|-----|-------|----------|
 | EliteScan | `scan` | `#5ED5DD` | Yes (v1.2.4) |
-| EliteDraft | `draft` | `#F5B878` | Yes (v1.0.12) |
+| EliteDraft | `draft` | `#F5B878` | Yes (v1.0.14) |
 | EliteCoord | `coord` | `#6EE7A8` | Yes (v1.0.4) |
-| EliteCore | `core` | `#A78BFA` | Yes (v1.0.3) |
+| EliteCore | `core` | `#A78BFA` | Yes (v1.0.8) |
 
 Each region has:
 - `released` (boolean) — controls whether download button shows or "Coming Soon"
@@ -71,7 +71,13 @@ https://github.com/kamditis/kamditis.github.io/releases/download/{tag}/{filename
 **Important:** When updating versions, the `downloadUrl` and `downloadFile` fields in the REGIONS JS object must be updated to match the new version number, since ZIP filenames include the version (e.g., `EliteScan-v1.2.2.zip`).
 
 ### Icons
-Custom SVG icons are defined inline in the `ICON_SVGS` object, mapped to tool IDs via `ICON_MAP`. Falls back to Lucide icons when no custom icon exists.
+Custom SVG icons are defined inline in the `customIcons` array (each with `id`, `group`, and `path`), mapped to tool IDs via `ICON_MAP`. Falls back to Lucide icons when no custom icon exists.
+
+### EliteCore Panels
+- **Project Setup**: User Workset, Link Worksets, Setup Wizard
+- **Auto Sync**: AutoSync Settings, Sync Log
+- **Tab Colors**: Tab Color Settings, Toggle Colors
+- **Export**: Batch Export
 
 ## Updating the Site
 
