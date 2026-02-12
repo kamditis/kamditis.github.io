@@ -1,5 +1,7 @@
 # .github/workflows/notify-teams.yml
 #
+# DISABLED — No one reads the Teams posts. Kept for reference.
+#
 # Sends a Microsoft Teams notification when a new release is published.
 # The message links to the EliteCAD Tools website (not GitHub).
 #
@@ -9,11 +11,12 @@
 #   2. In GitHub: Repo Settings > Secrets > Actions
 #      → New secret: TEAMS_WEBHOOK_URL = <paste the webhook URL>
 
-name: Notify Teams on Release
+name: Notify Teams on Release (DISABLED)
 
-on:
-  release:
-    types: [published]
+# on:
+#   release:
+#     types: [published]
+on: workflow_dispatch
 
 jobs:
   notify-teams:
