@@ -652,11 +652,11 @@
             <div class="two-col">
                 <div class="col-card" style="border-left:3px solid var(--core);">
                     <h3 style="color:var(--core);">Status indicators</h3>
-                    <ul class="col-purple">
-                        <li><strong style="color:var(--success);">Green dot</strong> &mdash; Parameter already bound in document</li>
-                        <li><strong style="color:var(--danger);">Red dot</strong> &mdash; Parameter missing from document</li>
-                        <li><strong style="color:var(--text-muted);">Gray dot</strong> &mdash; Planned (Phase 2, not yet implemented)</li>
-                    </ul>
+                    <div class="status-row"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#6EE7A8;vertical-align:middle;"></span> <strong style="color:#6EE7A8;margin-left:4px;">Bound</strong> <span class="desc">&mdash; Parameter exists with correct type and categories</span></div>
+                    <div class="status-row"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#F87171;vertical-align:middle;"></span> <strong style="color:#F87171;margin-left:4px;">Missing</strong> <span class="desc">&mdash; Parameter not found in the project</span></div>
+                    <div class="status-row"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#FFBB33;vertical-align:middle;"></span> <strong style="color:#FFBB33;margin-left:4px;">Wrong Type</strong> <span class="desc">&mdash; Exists but has the wrong data type</span></div>
+                    <div class="status-row"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#FFDD57;vertical-align:middle;"></span> <strong style="color:#FFDD57;margin-left:4px;">Missing Categories</strong> <span class="desc">&mdash; Exists but not bound to all required categories</span></div>
+                    <div class="status-row"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#5A5A6A;vertical-align:middle;"></span> <strong style="color:#5A5A6A;margin-left:4px;">Planned</strong> <span class="desc">&mdash; Not yet implemented</span></div>
                 </div>
                 <div class="col-card" style="border-left:3px solid var(--core);">
                     <h3 style="color:var(--core);">Dialog controls</h3>
