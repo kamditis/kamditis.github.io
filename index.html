@@ -1243,9 +1243,9 @@
                 color: '#6EE7A8',
                 colorVar: 'var(--coord)',
                 released: true,
-                version: 'v1.0.7',
-                downloadUrl: 'https://github.com/kamditis/kamditis.github.io/releases/download/EliteCoord-latest/EliteCoord-v1.0.7.zip',
-                downloadFile: 'EliteCoord-v1.0.7.zip',
+                version: 'v1.0.8',
+                downloadUrl: 'https://github.com/kamditis/kamditis.github.io/releases/download/EliteCoord-latest/EliteCoord-v1.0.8.zip',
+                downloadFile: 'EliteCoord-v1.0.8.zip',
                 docsUrl: 'docs/EliteCoord-Tutorial.html',
                 description: 'BIM coordination tools for Autodesk Revit.',
                 installation: [
@@ -1269,8 +1269,8 @@
                     {
                         title: 'Views',
                         tools: [
-                            { id: 'create_scopes', label: 'Create Scopes', icon: 'box', fn: 'Generate level-specific 3D views with section boxes for streamlined coordination reviews and clash resolution.', videoRef: '', changelog: '', requirements: ['Levels defined in model', '3D view family type exists', 'Model geometry in view for bounding box'] },
-                            { id: 'reset_scope', label: 'Reset Scope', icon: 'refresh-cw', fn: 'Quickly adjust your 3D view\'s section box to focus on specific levels, saving time during coordination.', videoRef: '', changelog: '', requirements: ['Active 3D view (non-perspective)', '0-2 levels selected (auto-detects upper bound)'] },
+                            { id: 'create_scopes', label: 'Create Scopes', icon: 'box', fn: 'Generate level-specific 3D views with section boxes for streamlined coordination reviews and clash resolution.', videoRef: '', changelog: 'v1.0.8: Fixed \"Could not determine model extents\" error when working with Revit links only (no host model geometry). Section boxes now fit more accurately to linked model geometry at each level.', requirements: ['Levels defined in model', '3D view family type exists'] },
+                            { id: 'reset_scope', label: 'Reset Scope', icon: 'refresh-cw', fn: 'Quickly adjust your 3D view\'s section box to focus on specific levels, saving time during coordination.', videoRef: '', changelog: 'v1.0.8: Fixed \"Could not determine model extents\" error when working with Revit links only (no host model geometry).', requirements: ['Active 3D view (non-perspective)', '0-2 levels selected (auto-detects upper bound)'] },
                         ]
                     },
                     {
