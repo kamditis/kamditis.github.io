@@ -992,12 +992,6 @@
                                 <i data-lucide="book-open"></i>
                                 <span>Documentation</span>
                             </a>
-                            <p class="download-version" id="download-version">v1.2.3</p>
-                            <a href="https://github.com/kamditis/kamditis.github.io/releases/download/EliteScan-latest/EliteScan-v1.2.3.zip" class="download-btn" id="download-btn">
-                                <i data-lucide="download"></i>
-                                <span>Download</span>
-                            </a>
-                            <p class="download-info" id="download-info">EliteScan-v1.2.3.zip</p>
                         </div>
                     </div>
 
@@ -1346,9 +1340,7 @@
         const breadcrumbRegion = document.getElementById('breadcrumb-region');
         const breadcrumbTool = document.getElementById('breadcrumb-tool');
         const sidebarAddin = document.getElementById('sidebar-addin');
-        const downloadBtn = document.getElementById('download-btn');
-        const downloadInfo = document.getElementById('download-info');
-        const downloadVersion = document.getElementById('download-version');
+        // Download elements removed - downloads no longer public
         const statusDot = document.querySelector('.status-dot');
         const requirementsList = document.getElementById('requirements-list');
         const changelogContent = document.getElementById('changelog-content');
@@ -1541,20 +1533,7 @@
             sidebarAddin.textContent = region.name;
             statusDot.style.background = region.colorVar;
 
-            // Update download
-            if (region.released) {
-                downloadBtn.href = region.downloadUrl;
-                downloadBtn.classList.remove('disabled');
-                downloadBtn.innerHTML = `<i data-lucide="download"></i><span>Download</span>`;
-                downloadInfo.textContent = region.downloadFile;
-                downloadVersion.textContent = region.version || '';
-            } else {
-                downloadBtn.removeAttribute('href');
-                downloadBtn.classList.add('disabled');
-                downloadBtn.innerHTML = `<i data-lucide="clock"></i><span>Coming Soon</span>`;
-                downloadInfo.textContent = 'Release pending';
-                downloadVersion.textContent = '';
-            }
+            // Download buttons removed - downloads no longer public
 
             // Update docs button
             if (region.docsUrl) {
