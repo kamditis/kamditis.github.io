@@ -470,7 +470,7 @@
         <h1>EliteCoord</h1>
         <div class="accent-bar"></div>
         <p class="subtitle">A tutorial walkthrough of every ribbon button, dialog, and workflow in the BIM coordination preparation plugin</p>
-        <p class="version">v1.0.9 / Tutorial &amp; Reference Guide</p>
+        <p class="version">v1.0.10 / Tutorial &amp; Reference Guide</p>
     </div>
 
     <!-- ============================================================ -->
@@ -836,7 +836,7 @@
             <span class="tab-label">Views</span>
         </div>
         <div class="slide-body">
-            <p style="color:var(--text-dim);margin-bottom:0.15in;font-size:11pt;">Resets the section box of the active 3D view using selected levels to define the vertical extents. Works with 0, 1, or 2 selected levels.</p>
+            <p style="color:var(--text-dim);margin-bottom:0.15in;font-size:11pt;">Resets the section box of the active 3D view using selected levels to define the vertical extents. Works with 0, 1, or 2 selected levels. An options dialog always appears before execution.</p>
             <table class="btn-table">
                 <tr><th style="width:180px;">Selection mode</th><th>Behavior</th></tr>
                 <tr>
@@ -850,6 +850,13 @@
                 <tr>
                     <td><span class="btn-pill pill-green">2 levels selected</span></td>
                     <td>Uses the lower-elevation level as the bottom and the higher-elevation level as the top. Section box clips between them +/- 1'-0". Rejects levels with identical elevations.</td>
+                </tr>
+            </table>
+            <table class="btn-table" style="margin-top:0.15in;">
+                <tr><th style="width:180px;">Dialog option</th><th>Behavior</th></tr>
+                <tr>
+                    <td><span class="btn-pill pill-purple">Only adjust Z</span></td>
+                    <td>When checked, only the section box height is updated based on the selected levels. The existing horizontal (XY) extents are preserved. Useful when you have manually positioned the XY scope or when no model geometry is loaded. Requires an active section box on the view.</td>
                 </tr>
             </table>
             <p style="margin-top:0.12in;font-size:10pt;color:var(--text-muted);">Requirements: active view must be a non-template, non-perspective 3D view. Uses the same per-level XY fitting, curated categories, Link Selection Dialog, and 4-second timeout as Create Scopes.</p>
@@ -1050,7 +1057,7 @@
         <div class="accent-bar"></div>
         <div class="contact">
             <strong>Prep</strong> &bull; <strong>Views</strong> &bull; <strong>Clash</strong> &mdash; BIM coordination tools inside Revit<br>
-            Revit 2022&ndash;2026 &bull; .NET 4.8 / .NET 8.0 &bull; v1.0.9
+            Revit 2022&ndash;2026 &bull; .NET 4.8 / .NET 8.0 &bull; v1.0.10
         </div>
     </div>
 
