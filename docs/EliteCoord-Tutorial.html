@@ -470,7 +470,7 @@
         <h1>EliteCoord</h1>
         <div class="accent-bar"></div>
         <p class="subtitle">A tutorial walkthrough of every ribbon button, dialog, and workflow in the BIM coordination preparation plugin</p>
-        <p class="version">v1.0.10 / Tutorial &amp; Reference Guide</p>
+        <p class="version">v1.0.11 / Tutorial &amp; Reference Guide</p>
     </div>
 
     <!-- ============================================================ -->
@@ -507,6 +507,7 @@
                     <ul class="col-amber">
                         <li><strong>Create Scopes</strong> &mdash; Create per-level 3D views with section boxes</li>
                         <li><strong>Reset Scope</strong> &mdash; Reset section box from selected levels</li>
+                        <li><strong>Find in 2D</strong> &mdash; Find plan views containing the selected element</li>
                     </ul>
                 </div>
                 <div class="col-card" style="border-left:3px solid var(--core);">
@@ -868,6 +869,42 @@
     </div>
 
     <!-- ============================================================ -->
+    <!-- SLIDE 14b: FIND IN 2D                                          -->
+    <!-- ============================================================ -->
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>Find in 2D</h2>
+            <span class="tab-label">Views &gt; Find in 2D</span>
+        </div>
+        <div class="slide-body">
+            <p style="color:var(--text-dim);margin-bottom:0.15in;font-size:11pt;">Select any model element in a 3D or 2D view, then click Find in 2D to see which Floor Plan and RCP views contain it. A tabbed dialog separates Floor Plans and RCPs, each showing confirmed visible views and reference level matches.</p>
+            <div class="two-col" style="gap:0.3in;">
+                <div class="col-card" style="border-left:3px solid var(--draft);">
+                    <h3 style="color:var(--draft);">Results dialog</h3>
+                    <ul class="col-amber">
+                        <li><strong>Floor Plans / RCP tabs</strong> separate results by view type</li>
+                        <li><strong>Visible In</strong> section lists views where the element is confirmed present (double-click to navigate and zoom)</li>
+                        <li><strong>Reference Level</strong> section lists views near the element's elevation where it is not confirmed visible (useful for investigating hidden elements)</li>
+                        <li><strong>Open views</strong> are tagged with "(Open)" in the list</li>
+                        <li><strong>Closed reference views</strong> are opened automatically when selected; the dialog re-appears so you can click again to zoom</li>
+                    </ul>
+                </div>
+                <div class="col-card" style="border-left:3px solid var(--danger);">
+                    <h3 style="color:var(--danger);">Requirements</h3>
+                    <ul>
+                        <li>A model element must be selected (walls, pipes, ducts, fittings, generic models, etc.)</li>
+                        <li>Datum elements (levels, grids, reference planes), annotations, and linked model elements are not supported</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="slide-footer">
+            <span>EliteCoord Tutorial</span>
+            <span class="slide-number">14b</span>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
     <!-- SLIDE 15: SECTION — CLASH PANEL                                -->
     <!-- ============================================================ -->
     <div class="slide slide-section" style="border-left-color:var(--core);">
@@ -975,8 +1012,16 @@
                     <td>Removes all 3D clash markers that have been placed in the model by previous Locate Clash operations.</td>
                 </tr>
                 <tr>
+                    <td><span class="btn-pill pill-gray">Match Navisworks View</span></td>
+                    <td>Checkbox (default ON). When enabled and viewpoint data exists in the XML, Locate Clash uses the Navisworks camera angle, projection type, and section box planes instead of the default isometric framing.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-pill pill-gray">Locate 2D</span></td>
+                    <td>Jumps to the clash location in your last active Floor Plan or RCP view. Zooms using the Navisworks XY section planes when available, or the Box setting as fallback. No dialog -- instant camera jump for fast 2D coordination.</td>
+                </tr>
+                <tr>
                     <td><span class="btn-pill pill-green">Locate Clash</span></td>
-                    <td>Places a 3D sphere marker at the selected clash's coordinates, activates a section box around the point, and zooms the camera to the clash location.</td>
+                    <td>Places a 3D sphere marker at the selected clash's coordinates, activates a section box around the point, and zooms the camera to the clash location. When "Match Navisworks View" is enabled, uses the exported camera orientation and projection type.</td>
                 </tr>
             </table>
         </div>
@@ -1057,7 +1102,7 @@
         <div class="accent-bar"></div>
         <div class="contact">
             <strong>Prep</strong> &bull; <strong>Views</strong> &bull; <strong>Clash</strong> &mdash; BIM coordination tools inside Revit<br>
-            Revit 2022&ndash;2026 &bull; .NET 4.8 / .NET 8.0 &bull; v1.0.10
+            Revit 2022&ndash;2026 &bull; .NET 4.8 / .NET 8.0 &bull; v1.0.11
         </div>
     </div>
 
