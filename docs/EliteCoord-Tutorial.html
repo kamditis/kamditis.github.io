@@ -470,7 +470,7 @@
         <h1>EliteCoord</h1>
         <div class="accent-bar"></div>
         <p class="subtitle">A tutorial walkthrough of every ribbon button, dialog, and workflow in the BIM coordination preparation plugin</p>
-        <p class="version">v1.0.11 / Tutorial &amp; Reference Guide</p>
+        <p class="version">v1.0.12 / Tutorial &amp; Reference Guide</p>
     </div>
 
     <!-- ============================================================ -->
@@ -980,7 +980,7 @@
             <span class="tab-label">Clash</span>
         </div>
         <div class="slide-body">
-            <p style="color:var(--text-dim);margin-bottom:0.12in;font-size:11pt;">The DataGrid shows all imported clashes with editable status. The footer provides controls for 3D visualization in Revit.</p>
+            <p style="color:var(--text-dim);margin-bottom:0.12in;font-size:11pt;">The DataGrid shows all imported clashes with editable status. The footer has two rows: settings on top, action buttons on the bottom.</p>
             <table class="btn-table">
                 <tr><th style="width:160px;">DataGrid column</th><th>Content</th></tr>
                 <tr><td><span class="btn-name">Test</span></td><td>The clash test name from the Navisworks export (e.g., "SM vs AR").</td></tr>
@@ -990,38 +990,45 @@
                 <tr><td><span class="btn-name">Review Status</span></td><td>Color-coded pill showing the current status. Double-click to edit via a dropdown. Status changes are auto-saved to a JSON sidecar file.</td></tr>
             </table>
             <table class="btn-table" style="margin-top:0.15in;">
-                <tr><th style="width:160px;">Footer control</th><th>What it does</th></tr>
+                <tr><th style="width:160px;">Settings row</th><th>What it does</th></tr>
                 <tr>
                     <td><span class="btn-name">Box (ft)</span></td>
                     <td>Section box half-size in feet. Controls how large the section box is when locating a clash in 3D.</td>
                 </tr>
                 <tr>
                     <td><span class="btn-name">Marker (ft)</span></td>
-                    <td>Marker radius in feet. Controls the size of the 3D sphere marker placed at the clash point.</td>
+                    <td>Marker radius in feet. Controls the size of the clash marker placed at the clash point.</td>
                 </tr>
                 <tr>
                     <td><span class="btn-pill pill-gray">Shared Coords</span></td>
                     <td>Checkbox. When enabled, clash coordinates are transformed from shared to project coordinates. Required when Navisworks uses shared coordinates.</td>
                 </tr>
                 <tr>
+                    <td><span class="btn-pill pill-gray">Match Navisworks View</span></td>
+                    <td>Checkbox (default ON). When enabled and viewpoint data exists in the XML, Locate Clash uses the Navisworks camera angle, projection type, and section box planes instead of the default isometric framing.</td>
+                </tr>
+            </table>
+            <table class="btn-table" style="margin-top:0.15in;">
+                <tr><th style="width:160px;">Actions row</th><th>What it does</th></tr>
+                <tr>
                     <td><span class="btn-pill pill-gray">Import XML</span></td>
                     <td>Opens a file dialog to select a Navisworks Clash XML report. Parses all clashes and populates the DataGrid.</td>
                 </tr>
                 <tr>
-                    <td><span class="btn-pill pill-gray">Clear Markers</span></td>
-                    <td>Removes all 3D clash markers that have been placed in the model by previous Locate Clash operations.</td>
+                    <td><span class="btn-pill pill-gray">Clear</span></td>
+                    <td>Resets the clash viewer &mdash; clears the clash list, preview image, and search/filter state. Releases file locks on screenshot images so they can be modified externally.</td>
                 </tr>
                 <tr>
-                    <td><span class="btn-pill pill-gray">Match Navisworks View</span></td>
-                    <td>Checkbox (default ON). When enabled and viewpoint data exists in the XML, Locate Clash uses the Navisworks camera angle, projection type, and section box planes instead of the default isometric framing.</td>
+                    <td><span class="btn-pill pill-gray">Clear Markers</span></td>
+                    <td>Removes all 3D clash markers that have been placed in the model by previous Locate Clash or Locate 2D operations.</td>
                 </tr>
                 <tr>
                     <td><span class="btn-pill pill-gray">Locate 2D</span></td>
-                    <td>Jumps to the clash location in your last active Floor Plan or RCP view. Zooms using the Navisworks XY section planes when available, or the Box setting as fallback. No dialog -- instant camera jump for fast 2D coordination.</td>
+                    <td>Jumps to the clash location in your last active Floor Plan or RCP view. Places a clash marker at the clash point (same as 3D) and selects it. Zooms using the Navisworks XY section planes when available, or the Box setting as fallback.</td>
                 </tr>
                 <tr>
                     <td><span class="btn-pill pill-green">Locate Clash</span></td>
-                    <td>Places a 3D sphere marker at the selected clash's coordinates, activates a section box around the point, and zooms the camera to the clash location. When "Match Navisworks View" is enabled, uses the exported camera orientation and projection type.</td>
+                    <td>Places a clash marker at the selected clash's coordinates, activates a section box around the point, and zooms the camera to the clash location. When "Match Navisworks View" is enabled, uses the exported camera orientation and projection type.</td>
                 </tr>
             </table>
         </div>
@@ -1102,7 +1109,7 @@
         <div class="accent-bar"></div>
         <div class="contact">
             <strong>Prep</strong> &bull; <strong>Views</strong> &bull; <strong>Clash</strong> &mdash; BIM coordination tools inside Revit<br>
-            Revit 2022&ndash;2026 &bull; .NET 4.8 / .NET 8.0 &bull; v1.0.11
+            Revit 2022&ndash;2026 &bull; .NET 4.8 / .NET 8.0 &bull; v1.0.12
         </div>
     </div>
 
