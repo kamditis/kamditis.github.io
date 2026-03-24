@@ -1237,9 +1237,9 @@
                 color: '#6EE7A8',
                 colorVar: 'var(--coord)',
                 released: true,
-                version: 'v1.0.12',
-                downloadUrl: 'https://github.com/kamditis/kamditis.github.io/releases/download/EliteCoord-latest/EliteCoord-v1.0.12.zip',
-                downloadFile: 'EliteCoord-v1.0.12.zip',
+                version: 'v1.0.13',
+                downloadUrl: 'https://github.com/kamditis/kamditis.github.io/releases/download/EliteCoord-latest/EliteCoord-v1.0.13.zip',
+                downloadFile: 'EliteCoord-v1.0.13.zip',
                 docsUrl: 'docs/EliteCoord-Tutorial.html',
                 description: 'BIM coordination tools for Autodesk Revit.',
                 installation: [
@@ -1263,8 +1263,8 @@
                     {
                         title: 'Views',
                         tools: [
-                            { id: 'create_scopes', label: 'Create Scopes', icon: 'box', fn: 'Generate level-specific 3D views with section boxes for streamlined coordination reviews and clash resolution.', videoRef: '', changelog: 'v1.0.8: Fixed \"Could not determine model extents\" error when working with Revit links only (no host model geometry). Section boxes now fit more accurately to linked model geometry at each level.', requirements: ['Levels defined in model', '3D view family type exists'] },
-                            { id: 'reset_scope', label: 'Reset Scope', icon: 'refresh-cw', fn: 'Quickly adjust your 3D view\'s section box to focus on specific levels, saving time during coordination.', videoRef: '', changelog: 'v1.0.10: New \"Only adjust Z\" option to update section box height while keeping your current XY extents.\nv1.0.8: Fixed \"Could not determine model extents\" error when working with Revit links only (no host model geometry).', requirements: ['Active 3D view (non-perspective)', '0-2 levels selected (auto-detects upper bound)'] },
+                            { id: 'create_scopes', label: 'Create Scopes', icon: 'box', fn: 'Generate level-specific 3D views with section boxes for streamlined coordination reviews and clash resolution.', videoRef: '', changelog: 'v1.0.13: Choose which levels define your section box boundaries, set a custom view prefix, pick a scope box for XY extents, and adjust Z offsets. Settings saved per project. | v1.0.8: Fixed \"Could not determine model extents\" error when working with Revit links only (no host model geometry). Section boxes now fit more accurately to linked model geometry at each level.', requirements: ['At least 2 levels defined in model', '3D view family type exists'] },
+                            { id: 'reset_scope', label: 'Reset Scope', icon: 'refresh-cw', fn: 'Quickly adjust your 3D view\'s section box to focus on specific levels, saving time during coordination.', videoRef: '', changelog: 'v1.0.13: Z offsets are now configurable and shared with Create Scopes settings. | v1.0.10: New \"Only adjust Z\" option to update section box height while keeping your current XY extents. | v1.0.8: Fixed \"Could not determine model extents\" error when working with Revit links only (no host model geometry).', requirements: ['Active 3D view (non-perspective)', '0-2 levels selected (auto-detects upper bound)'] },
                             { id: 'find_in_2d', label: 'Find in 2D', icon: 'search', fn: 'Select any element and find which Floor Plan and RCP views contain it. Quickly navigate between 3D and 2D views during coordination.', videoRef: '', changelog: 'v1.0.11: New command. Tabbed dialog showing Floor Plans and RCPs where the selected element is visible, with reference level fallback for investigation.', requirements: ['Element selected in any view'] },
                         ]
                     },

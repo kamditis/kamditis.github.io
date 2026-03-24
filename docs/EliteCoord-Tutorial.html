@@ -470,7 +470,7 @@
         <h1>EliteCoord</h1>
         <div class="accent-bar"></div>
         <p class="subtitle">A tutorial walkthrough of every ribbon button, dialog, and workflow in the BIM coordination preparation plugin</p>
-        <p class="version">v1.0.12 / Tutorial &amp; Reference Guide</p>
+        <p class="version">v1.0.13 / Tutorial &amp; Reference Guide</p>
     </div>
 
     <!-- ============================================================ -->
@@ -798,26 +798,47 @@
             <span class="tab-label">Views</span>
         </div>
         <div class="slide-body">
-            <p style="color:var(--text-dim);margin-bottom:0.15in;font-size:11pt;">Creates one 3D isometric view per level, each named <span class="key">ECD_[LevelName]</span> with a section box clipping geometry between adjacent levels.</p>
-            <div class="two-col" style="gap:0.3in;">
+            <p style="color:var(--text-dim);margin-bottom:0.15in;font-size:11pt;">Creates 3D isometric views with section boxes between the levels you select. A configuration dialog lets you choose levels, set a view prefix, pick a scope box, and adjust Z offsets. All settings are saved per project.</p>
+            <table class="btn-table">
+                <tr><th style="width:180px;">Dialog control</th><th>What it does</th></tr>
+                <tr>
+                    <td><span class="btn-name">View Prefix</span></td>
+                    <td>Text prefix for view names (default "ECD_"). A live preview shows the resulting view names as you type.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-name">Levels</span></td>
+                    <td>Check the levels that define your section box boundaries. 2 checked levels = 1 view, 3 = 2 views, etc. Views are named after the lower level of each span. Use Ctrl/Shift-click to highlight multiple rows, then toggle one checkbox to apply to all highlighted.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-pill pill-purple">Use scope box for XY extents</span></td>
+                    <td>When checked, select a scope box from the dropdown. All views use that scope box's footprint for XY extents instead of calculating from geometry. Ideal for multi-building models.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-name">Below / Above (ft)</span></td>
+                    <td>Z offset applied below each lower level and above each upper level (default 1.0 ft). Shared with Reset Scope.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-name">Linked Models</span></td>
+                    <td>Select which Revit links to include when calculating section box extents. Host model always included.</td>
+                </tr>
+            </table>
+            <div class="two-col" style="gap:0.3in;margin-top:0.15in;">
                 <div class="col-card" style="border-left:3px solid var(--draft);">
                     <h3 style="color:var(--draft);">Section box logic</h3>
                     <ul class="col-amber">
-                        <li><strong>Z extents (intermediate):</strong> Level elevation +/- 1'-0" to next level elevation +/- 1'-0"</li>
-                        <li><strong>Z extents (lowest level):</strong> Extends down to model geometry minimum - 1'-0"</li>
-                        <li><strong>Z extents (highest level):</strong> Extends up to model geometry maximum + 1'-0"</li>
-                        <li><strong>XY extents:</strong> Fitted to geometry present in that level's Z range, with 5' padding</li>
-                        <li><strong>XY fallback:</strong> Uses full model extents if no elements overlap the Z range</li>
+                        <li><strong>Z extents:</strong> Lower level - offset to upper level + offset (configurable)</li>
+                        <li><strong>Z extents (lowest span):</strong> Extends down to model geometry minimum if available</li>
+                        <li><strong>Z extents (highest span):</strong> Extends up to model geometry maximum if available</li>
+                        <li><strong>XY extents:</strong> Fitted to geometry in the Z range (5' padding), or scope box footprint if selected</li>
                     </ul>
                 </div>
                 <div class="col-card" style="border-left:3px solid var(--coord);">
                     <h3 style="color:var(--coord);">Pre-flight checks</h3>
                     <ul class="col-green">
-                        <li><strong>Duplicate level names</strong> are detected and the command aborts with a warning</li>
-                        <li><strong>Existing ECD_ views</strong> that conflict are flagged; delete or rename before running</li>
-                        <li><strong>Link Selection Dialog</strong> prompts you to choose which Revit links to include in the extents calculation</li>
-                        <li><strong>4-second timeout</strong> on bounding box collection prevents UI hangs on large models</li>
-                        <li><strong>~45 curated categories</strong> (arch, structural, MEP, fabrication) avoid scanning internal Revit elements</li>
+                        <li><strong>Minimum 2 levels</strong> required to define at least one span</li>
+                        <li><strong>Duplicate level names</strong> detected and command aborts with warning</li>
+                        <li><strong>Existing view conflicts</strong> using current prefix are flagged</li>
+                        <li><strong>4-second timeout</strong> on bounding box collection prevents UI hangs</li>
                     </ul>
                 </div>
             </div>
@@ -850,11 +871,15 @@
                 </tr>
                 <tr>
                     <td><span class="btn-pill pill-green">2 levels selected</span></td>
-                    <td>Uses the lower-elevation level as the bottom and the higher-elevation level as the top. Section box clips between them +/- 1'-0". Rejects levels with identical elevations.</td>
+                    <td>Uses the lower-elevation level as the bottom and the higher-elevation level as the top. Section box clips between them using configurable offsets. Rejects levels with identical elevations.</td>
                 </tr>
             </table>
             <table class="btn-table" style="margin-top:0.15in;">
                 <tr><th style="width:180px;">Dialog option</th><th>Behavior</th></tr>
+                <tr>
+                    <td><span class="btn-name">Below / Above (ft)</span></td>
+                    <td>Z offset applied below the lower level and above the upper level (default 1.0 ft). Shared with Create Scopes -- changing it in either command updates both.</td>
+                </tr>
                 <tr>
                     <td><span class="btn-pill pill-purple">Only adjust Z</span></td>
                     <td>When checked, only the section box height is updated based on the selected levels. The existing horizontal (XY) extents are preserved. Useful when you have manually positioned the XY scope or when no model geometry is loaded. Requires an active section box on the view.</td>
@@ -1068,9 +1093,9 @@
                 <div class="col-card" style="border-left:3px solid var(--draft);">
                     <h3 style="color:var(--draft);">2. Scoped 3D view creation</h3>
                     <ul class="col-amber">
-                        <li><strong>Click Create Scopes</strong> to auto-generate one 3D view per level</li>
-                        <li><strong>Select which Revit links</strong> to include in the section box extents calculation</li>
-                        <li><strong>Views are named ECD_[Level]</strong> with section boxes fitted to geometry at each level</li>
+                        <li><strong>Click Create Scopes</strong> and choose which levels define your section box boundaries</li>
+                        <li><strong>Set a view prefix</strong> and optionally pick a scope box for multi-building models</li>
+                        <li><strong>Adjust Z offsets</strong> and select which Revit links to include in extents</li>
                         <li><strong>Use Reset Scope</strong> to adjust any view's section box by selecting different levels</li>
                     </ul>
                 </div>
@@ -1109,7 +1134,7 @@
         <div class="accent-bar"></div>
         <div class="contact">
             <strong>Prep</strong> &bull; <strong>Views</strong> &bull; <strong>Clash</strong> &mdash; BIM coordination tools inside Revit<br>
-            Revit 2022&ndash;2026 &bull; .NET 4.8 / .NET 8.0 &bull; v1.0.12
+            Revit 2022&ndash;2026 &bull; .NET 4.8 / .NET 8.0 &bull; v1.0.13
         </div>
     </div>
 
