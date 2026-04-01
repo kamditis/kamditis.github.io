@@ -1,0 +1,1786 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Coordination Intelligence -- Coordinator Guide</title>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0c0e14;
+      --surface: #141720;
+      --surface-raised: #1a1e2b;
+      --surface-deep: #0a0c11;
+      --border: rgba(255, 255, 255, 0.06);
+      --border-strong: rgba(255, 255, 255, 0.12);
+      --text: #e2e4ea;
+      --text-dim: #8890a4;
+      --text-muted: #4e546a;
+      --font-body: 'Barlow', system-ui, sans-serif;
+      --font-mono: 'JetBrains Mono', 'Menlo', monospace;
+      --accent-a: #6EE7A8;
+      --accent-a-dim: rgba(110, 231, 168, 0.10);
+      --accent-blue: #3B82F6;
+      --accent-blue-dim: rgba(59, 130, 246, 0.10);
+
+      /* App theme colors (from actual CSS) */
+      --app-bg: #0F0F12;
+      --app-surface: #18181D;
+      --app-surface2: #222229;
+      --app-border: #2E2E38;
+      --app-border-light: #3D3D4A;
+      --app-text: #E8E8ED;
+      --app-text-dim: #C8C8D4;
+      --app-text-muted: #9898A8;
+      --app-accent: #6EE7A8;
+    }
+
+    @media (prefers-color-scheme: light) {
+      :root {
+        --bg: #f0f2f6;
+        --surface: #ffffff;
+        --surface-raised: #f7f8fb;
+        --surface-deep: #e8eaef;
+        --border: rgba(0, 0, 0, 0.07);
+        --border-strong: rgba(0, 0, 0, 0.14);
+        --text: #1a1d26;
+        --text-dim: #5a5e72;
+        --text-muted: #8b8fa3;
+        --accent-a: #059669;
+        --accent-a-dim: rgba(5, 150, 105, 0.08);
+        --accent-blue: #2563EB;
+        --accent-blue-dim: rgba(37, 99, 235, 0.08);
+      }
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; min-width: 0; }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+      font-size: 15px;
+    }
+
+    /* --- Layout --- */
+    .wrap { display: grid; grid-template-columns: 200px 1fr; gap: 0; max-width: 1360px; margin: 0 auto; }
+
+    .toc {
+      position: sticky; top: 0; align-self: start; height: 100vh; overflow-y: auto;
+      display: flex; flex-direction: column; gap: 0;
+      background: var(--surface-deep); border-right: 1px solid var(--border);
+      padding: 1.5rem 0; scrollbar-width: thin; scrollbar-color: var(--border-strong) transparent;
+    }
+    .toc-header { padding: 0.5rem 1.25rem 1.25rem; border-bottom: 1px solid var(--border); margin-bottom: 0.75rem; }
+    .toc-header h2 { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.15em; color: var(--text-muted); font-weight: 600; }
+    .toc-group { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--text-muted); padding: 0.75rem 1.25rem 0.3rem; font-weight: 600; }
+    .toc-link {
+      display: block; padding: 0.35rem 1.25rem; font-size: 0.8rem; color: var(--text-dim);
+      text-decoration: none; border-left: 2px solid transparent;
+      transition: color 0.15s, border-color 0.15s, background 0.15s;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .toc-link:hover { color: var(--text); background: var(--accent-a-dim); }
+    .toc-link.active { color: var(--accent-a); border-left-color: var(--accent-a); background: var(--accent-a-dim); font-weight: 600; }
+
+    .main { padding: 2.5rem 3rem; max-width: 960px; }
+
+    /* --- Hero --- */
+    .hero { margin-bottom: 3rem; padding-bottom: 2rem; border-bottom: 1px solid var(--border); }
+    .hero h1 { font-size: 2.2rem; font-weight: 800; letter-spacing: -0.03em; line-height: 1.15; margin-bottom: 0.5rem; }
+    .hero .tagline { font-size: 1.05rem; color: var(--text-dim); max-width: 650px; }
+
+    /* --- Sections --- */
+    section { margin-bottom: 3rem; scroll-margin-top: 1rem; }
+    section > h2 { font-size: 1.4rem; font-weight: 700; letter-spacing: -0.01em; margin-bottom: 0.4rem; padding-bottom: 0.6rem; border-bottom: 2px solid var(--border-strong); }
+    section > .section-desc { color: var(--text-dim); font-size: 0.9rem; margin-bottom: 1.5rem; }
+    h3 { font-size: 1.05rem; font-weight: 700; margin: 1.75rem 0 0.5rem; }
+    h4 { font-size: 0.9rem; font-weight: 600; margin: 1rem 0 0.3rem; }
+    p { margin-bottom: 0.75rem; }
+
+    /* --- App Mockups --- */
+    .mockup {
+      background: var(--app-bg);
+      border: 1px solid var(--app-border);
+      border-radius: 8px;
+      overflow: hidden;
+      margin: 1rem 0 1.5rem;
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      font-size: 14px;
+      color: var(--app-text);
+    }
+    .mockup * { font-family: inherit; }
+
+    /* Mockup header */
+    .mock-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 8px 16px; background: var(--app-surface); border-bottom: 1px solid var(--app-border); gap: 12px;
+    }
+    .mock-header-left { display: flex; align-items: center; gap: 10px; }
+    .mock-logo { background: var(--app-accent); color: var(--app-bg); font-weight: 700; font-size: 13px; padding: 4px 8px; border-radius: 4px; }
+    .mock-title { font-weight: 600; font-size: 15px; }
+    .mock-header-right { display: flex; align-items: center; gap: 6px; }
+    .mock-label { font-size: 12px; color: var(--app-text-muted); }
+    .mock-path-input {
+      background: var(--app-surface2); border: 1px solid var(--app-border); color: var(--app-text);
+      padding: 4px 10px; border-radius: 4px; font-family: 'Consolas', monospace; font-size: 12px; width: 260px;
+    }
+    .mock-btn {
+      background: var(--app-surface2); color: var(--app-text); border: 1px solid var(--app-border);
+      padding: 4px 10px; border-radius: 4px; font-size: 12px; cursor: default;
+    }
+    .mock-btn-accent { background: var(--app-accent); color: var(--app-bg); border-color: var(--app-accent); font-weight: 600; }
+    .mock-btn-primary { background: #2563EB; color: white; border-color: #2563EB; font-weight: 600; }
+    .mock-btn-lg { padding: 10px 28px; font-size: 15px; }
+
+    /* Mockup body (sidebar + content) */
+    .mock-body { display: flex; min-height: 320px; }
+    .mock-sidebar {
+      width: 160px; background: var(--app-surface); border-right: 1px solid var(--app-border);
+      padding: 10px 0; flex-shrink: 0;
+    }
+    .mock-nav {
+      display: flex; align-items: center; gap: 8px; padding: 9px 14px;
+      color: var(--app-text-dim); font-size: 13px; border-left: 3px solid transparent;
+    }
+    .mock-nav.active { background: var(--app-surface2); color: var(--app-accent); border-left-color: var(--app-accent); font-weight: 600; }
+    .mock-nav-icon { font-size: 14px; width: 18px; text-align: center; }
+    .mock-content { flex: 1; padding: 20px 28px; overflow: hidden; }
+    .mock-page-title { font-size: 18px; font-weight: 700; color: var(--app-accent); margin-bottom: 4px; }
+    .mock-page-desc { font-size: 12px; color: var(--app-text-muted); margin-bottom: 16px; }
+
+    /* Mockup cards */
+    .mock-card {
+      background: var(--app-surface); border: 1px solid var(--app-border); border-radius: 6px;
+      padding: 14px 18px; margin-bottom: 12px;
+    }
+    .mock-card-title { font-size: 13px; font-weight: 600; margin-bottom: 10px; }
+    .mock-form-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+    .mock-form-label { min-width: 160px; font-size: 12px; color: var(--app-text-dim); }
+    .mock-form-input {
+      background: var(--app-surface2); border: 1px solid var(--app-border); color: var(--app-text);
+      padding: 5px 10px; border-radius: 4px; font-family: 'Consolas', monospace; font-size: 11px; flex: 1; max-width: 340px;
+    }
+    .mock-form-input.placeholder { color: var(--app-text-muted); }
+    .mock-btn-xs { padding: 2px 8px; font-size: 11px; }
+    .mock-btn-sm { padding: 3px 8px; font-size: 11px; }
+
+    /* Mockup status bar */
+    .mock-statusbar {
+      background: var(--app-surface); border-top: 1px solid var(--app-border); padding: 0;
+    }
+    .mock-statusbar-header {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 3px 12px; font-size: 11px; color: var(--app-text-muted); border-bottom: 1px solid var(--app-border);
+    }
+    .mock-status-log {
+      padding: 5px 12px; font-family: 'Consolas', monospace; font-size: 10px;
+      color: var(--app-text-dim); line-height: 1.6; max-height: 80px; overflow: hidden;
+    }
+
+    /* Mockup file matching */
+    .mock-fm { display: flex; min-height: 280px; gap: 0; }
+    .mock-fm-left { width: 48%; border-right: 1px solid var(--app-border); overflow: hidden; padding: 8px 0; }
+    .mock-fm-right { flex: 1; padding: 10px 14px; overflow: hidden; }
+    .mock-fm-header { font-size: 12px; font-weight: 700; color: var(--app-accent); padding: 8px 10px 4px 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .mock-fm-row {
+      display: flex; align-items: center; gap: 8px; padding: 5px 10px;
+      background: var(--app-surface2); border-radius: 4px; margin: 0 6px 3px 6px; font-size: 12px;
+    }
+    .mock-fm-row.selected { border-left: 3px solid var(--app-accent); padding-left: 7px; background: var(--app-border); }
+    .mock-fm-trade { min-width: 130px; color: var(--app-text); }
+    .mock-fm-status { flex: 1; font-family: 'Consolas', monospace; font-size: 11px; text-align: right; }
+    .mock-fm-status.ok { color: var(--app-accent); }
+    .mock-fm-status.warn { color: #F59E0B; }
+    .mock-fm-status.err { color: #DC2626; }
+    .mock-fm-detail-title { font-size: 13px; font-weight: 600; color: var(--app-accent); margin-bottom: 6px; }
+    .mock-fm-grid { display: grid; grid-template-columns: 50px 1fr; gap: 0; font-size: 11px; }
+    .mock-fm-grid .hdr { padding: 5px 6px; font-weight: 500; color: var(--app-text-muted); font-size: 10px; text-transform: uppercase; border-bottom: 1px solid var(--app-border); }
+    .mock-fm-grid .cell { padding: 3px 6px; border-bottom: 1px solid var(--app-border); color: var(--app-text-dim); }
+    .mock-fm-select {
+      background: var(--app-surface2); border: 1px solid var(--app-border); color: var(--app-text-dim);
+      padding: 2px 6px; border-radius: 3px; font-size: 10px; font-family: 'Consolas', monospace; width: 100%;
+    }
+
+    /* Mockup level rows */
+    .mock-level-row {
+      display: flex; align-items: center; gap: 10px; padding: 5px 0; border-bottom: 1px solid rgba(255,255,255,0.03);
+    }
+    .mock-level-name { min-width: 50px; font-weight: 600; font-size: 13px; }
+    .mock-level-select {
+      background: var(--app-surface2); border: 1px solid var(--app-border); color: var(--app-text-dim);
+      padding: 4px 8px; border-radius: 4px; font-size: 12px; min-width: 110px;
+    }
+    .mock-level-select.active { color: var(--app-accent); }
+    .mock-level-select.paused { color: #F59E0B; }
+
+    /* Mockup toggle */
+    .mock-toggle { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--app-text-dim); }
+    .mock-toggle-track { width: 36px; height: 20px; background: var(--app-accent); border-radius: 10px; position: relative; }
+    .mock-toggle-track.off { background: var(--app-border); }
+    .mock-toggle-knob {
+      width: 16px; height: 16px; border-radius: 50%; position: absolute; top: 2px;
+      background: var(--app-bg);
+    }
+    .mock-toggle-track .mock-toggle-knob { left: 18px; }
+    .mock-toggle-track.off .mock-toggle-knob { left: 2px; background: var(--app-text-muted); }
+
+    /* --- Annotation overlays --- */
+    .annotation {
+      position: relative;
+    }
+    .anno-num {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 22px; height: 22px; border-radius: 50%; font-size: 0.7rem; font-weight: 700;
+      background: var(--accent-a); color: var(--bg); flex-shrink: 0;
+    }
+    .anno-callout {
+      display: flex; align-items: flex-start; gap: 0.6rem;
+      background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--accent-a);
+      border-radius: 0 8px 8px 0; padding: 0.7rem 1rem; margin-bottom: 0.5rem;
+      font-size: 0.84rem;
+    }
+    .anno-callout p { margin: 0; color: var(--text-dim); }
+    .anno-callout strong { color: var(--text); }
+
+    /* --- Step indicators --- */
+    .step-marker {
+      display: flex; align-items: center; gap: 0.75rem; margin: 2rem 0 0.75rem;
+    }
+    .step-num {
+      display: flex; align-items: center; justify-content: center;
+      width: 32px; height: 32px; border-radius: 50%; font-size: 0.85rem; font-weight: 700;
+      background: var(--accent-a-dim); color: var(--accent-a); border: 2px solid var(--accent-a);
+      flex-shrink: 0;
+    }
+    .step-label { font-size: 1.05rem; font-weight: 700; }
+
+    /* --- Callouts --- */
+    .callout {
+      background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--accent-a);
+      border-radius: 0 10px 10px 0; padding: 1rem 1.25rem; margin: 1rem 0 1.5rem;
+    }
+    .callout.tip { border-left-color: #10B981; }
+    .callout.warn { border-left-color: #F59E0B; }
+    .callout.important { border-left-color: #DC2626; }
+    .callout-title { font-weight: 700; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.3rem; }
+    .callout.tip .callout-title { color: #10B981; }
+    .callout.warn .callout-title { color: #F59E0B; }
+    .callout.important .callout-title { color: #DC2626; }
+    .callout p { font-size: 0.85rem; color: var(--text-dim); margin: 0; }
+
+    /* --- Pipeline flow --- */
+    .pipeline-flow {
+      display: flex; align-items: center; gap: 0; margin: 1rem 0 1.5rem; flex-wrap: wrap;
+    }
+    .pipe-step {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+      padding: 0.7rem 1rem; text-align: center; flex: 1; min-width: 120px;
+      opacity: 0; animation: fadeUp 0.35s ease forwards; animation-delay: calc(var(--i, 0) * 70ms);
+    }
+    .pipe-step .pipe-label { font-family: var(--font-mono); font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); }
+    .pipe-step .pipe-name { font-size: 0.9rem; font-weight: 600; margin-top: 0.1rem; }
+    .pipe-arrow { color: var(--text-muted); font-size: 0.9rem; padding: 0 0.3rem; flex-shrink: 0; }
+
+    /* --- Animations --- */
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    @media (prefers-reduced-motion: reduce) { .pipe-step, .anno-callout { opacity: 1; animation: none; } }
+
+    /* --- Responsive --- */
+    @media (max-width: 999px) {
+      .wrap { grid-template-columns: 1fr; }
+      .toc { position: sticky; top: 0; z-index: 200; flex-direction: row; overflow-x: auto; overflow-y: hidden; height: auto; border-right: none; border-bottom: 1px solid var(--border); padding: 0; scrollbar-width: none; }
+      .toc::-webkit-scrollbar { display: none; }
+      .toc-header, .toc-group { display: none; }
+      .toc-link { border-left: none; border-bottom: 2px solid transparent; border-radius: 0; padding: 0.7rem 0.75rem; flex-shrink: 0; }
+      .toc-link.active { border-left-color: transparent; border-bottom-color: var(--accent-a); }
+      .main { padding: 1.5rem; }
+      .hero h1 { font-size: 1.6rem; }
+      .mockup { font-size: 12px; }
+      .mock-body { flex-direction: column; }
+      .mock-sidebar { width: 100%; flex-direction: row; overflow-x: auto; padding: 4px 0; }
+      .mock-nav { padding: 6px 10px; white-space: nowrap; }
+      .mock-fm { flex-direction: column; }
+      .mock-fm-left { width: 100%; border-right: none; border-bottom: 1px solid var(--app-border); }
+      .pipeline-flow { flex-direction: column; }
+      .pipe-arrow { transform: rotate(90deg); }
+    }
+  </style>
+</head>
+<body>
+
+<div class="wrap">
+  <nav class="toc" aria-label="Table of contents">
+    <div class="toc-header"><h2>Coordinator Guide</h2></div>
+    <a href="#overview" class="toc-link active">Overview</a>
+    <div class="toc-group">Getting Started</div>
+    <a href="#launch" class="toc-link">Launch &amp; Home</a>
+    <a href="#home" class="toc-link">Home Page</a>
+    <div class="toc-group">Project Setup</div>
+    <a href="#sources" class="toc-link">Sources</a>
+    <a href="#levels" class="toc-link">Levels</a>
+    <a href="#trades" class="toc-link">Trades</a>
+    <a href="#deliverables" class="toc-link">Deliverables</a>
+    <a href="#submittals" class="toc-link">Submittals</a>
+    <a href="#issues" class="toc-link">Issues</a>
+    <a href="#design-team" class="toc-link">Design Team</a>
+    <a href="#file-matching" class="toc-link">File Matching</a>
+    <a href="#actions" class="toc-link">Actions</a>
+    <div class="toc-group">Weekly Workflow</div>
+    <a href="#weekly" class="toc-link">Before the Meeting</a>
+    <a href="#pipeline" class="toc-link">Run Pipeline</a>
+    <a href="#output" class="toc-link">Output Files</a>
+    <a href="#post-meeting" class="toc-link">After the Meeting</a>
+  </nav>
+
+  <div class="main">
+
+    <div class="hero">
+      <h1>Coordinator Guide</h1>
+      <p class="tagline">Setting up and running the Coordination Intelligence dashboard builder -- from first config to weekly pipeline runs.</p>
+    </div>
+
+    <!-- ===== OVERVIEW ===== -->
+    <section id="overview">
+      <h2>What This Tool Does</h2>
+      <p class="section-desc">Coordination Intelligence scans your project files, derives the coordination status of every trade on every level, and generates reports you can share with the GC and trades.</p>
+
+      <h3>The Pipeline</h3>
+      <div class="pipeline-flow">
+        <div class="pipe-step" style="--i:0; border-left: 3px solid var(--accent-a);">
+          <div class="pipe-label">Step 1</div>
+          <div class="pipe-name">Scan</div>
+        </div>
+        <div class="pipe-arrow">&#8594;</div>
+        <div class="pipe-step" style="--i:1; border-left: 3px solid var(--accent-blue);">
+          <div class="pipe-label">Step 2</div>
+          <div class="pipe-name">Derive State</div>
+        </div>
+        <div class="pipe-arrow">&#8594;</div>
+        <div class="pipe-step" style="--i:2; border-left: 3px solid #8B5CF6;">
+          <div class="pipe-label">Step 3</div>
+          <div class="pipe-name">Generate Reports</div>
+        </div>
+      </div>
+
+      <p><strong>Scan</strong> reads your file system (NWC models, overlay DWGs, composites, NWD clash files, signoff PDFs) plus external data (issue Excel, submittal CSV). No interpretation -- just raw facts.</p>
+      <p><strong>Derive State</strong> turns raw facts into named states (Missing, Uploaded, Fresh, Clashed, Clear) by cross-referencing file dates, issue counts, and submittal statuses. Saves the result as <code>project-state.json</code>.</p>
+      <p><strong>Generate Reports</strong> reads the state and produces an Excel workbook (for distribution) and an interactive HTML dashboard (for meetings and review).</p>
+
+      <div class="callout tip">
+        <div class="callout-title">Two-phase workflow</div>
+        <p><strong>Initial setup</strong> (once per project): Configure paths, levels, trades, file matching templates, and submittal rules. Takes 30-60 minutes.</p>
+        <p><strong>Weekly run</strong> (before each coordination meeting): Open config, verify level statuses, run pipeline. Takes about 5 minutes.</p>
+      </div>
+    </section>
+
+    <!-- ===== LAUNCH ===== -->
+    <section id="launch">
+      <h2>Launch &amp; Home Page</h2>
+      <p class="section-desc">The app runs as a desktop window. Launch it from the Start Menu, Desktop shortcut, or the executable directly.</p>
+
+      <p>When the app opens, you land on the <strong>Home page</strong> -- a multi-project dashboard showing all your projects at a glance. This is where you add, open, and manage projects.</p>
+
+      <div class="callout tip">
+        <div class="callout-title">Config files</div>
+        <p>Each project is a single JSON config file (e.g., <code>E82.json</code>) that stores all settings: paths, levels, trades, file templates, submittal rules. It does NOT store scan results or state -- those are regenerated each pipeline run. You can copy a config and modify it for a similar project.</p>
+      </div>
+
+      <div class="callout tip">
+        <div class="callout-title">Updates</div>
+        <p>The app checks for updates automatically on startup. If a newer version is available on the shared OneDrive, you'll be prompted to install it.</p>
+      </div>
+    </section>
+
+    <!-- ===== HOME PAGE ===== -->
+    <section id="home">
+      <h2>Home Page</h2>
+      <p class="section-desc">The first thing you see when the app opens. A multi-project dashboard for managing all your coordination projects.</p>
+
+      <!-- Mockup: Home page — faithful reproduction of templates/home.html -->
+      <div class="mockup" style="font-family: 'Barlow', 'Segoe UI', sans-serif;">
+        <!-- Header -->
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:0 16px;height:46px;background:var(--app-surface);border-bottom:1px solid var(--app-border);">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span class="mock-logo">CI</span>
+            <span style="font-size:13px;font-weight:600;">Coordination Intelligence</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span class="mock-btn mock-btn-xs" style="border-style:solid;color:var(--app-text-muted);">&#8693; Organize</span>
+            <span class="mock-btn mock-btn-xs">&#8635; Refresh All</span>
+            <span style="display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:4px;font-size:10px;color:var(--app-text-muted);cursor:pointer;">
+              <span style="width:7px;height:7px;border-radius:50%;background:#6EE7A8;flex-shrink:0;"></span> Autodesk
+            </span>
+          </div>
+        </div>
+        <!-- Body: sidebar + content -->
+        <div style="display:flex;min-height:380px;">
+          <!-- Sidebar -->
+          <div style="width:180px;background:var(--app-surface);border-right:1px solid var(--app-border);display:flex;flex-direction:column;">
+            <div style="padding:10px 12px 5px;font-family:'JetBrains Mono',monospace;font-size:9px;text-transform:uppercase;letter-spacing:0.08em;color:#5A5A6A;">Filter</div>
+            <div style="flex:1;padding:0 5px;">
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 9px;border-radius:5px;font-size:11px;font-weight:600;background:var(--app-surface2);color:var(--app-accent);margin-bottom:1px;">
+                All <span style="font-family:'JetBrains Mono',monospace;font-size:8px;background:rgba(110,231,168,0.08);color:var(--app-accent);padding:1px 5px;border-radius:3px;">3</span>
+              </div>
+              <div style="height:1px;background:var(--app-border);margin:5px 9px;"></div>
+              <div style="padding:6px 9px;font-size:11px;color:#C8C8D4;margin-bottom:1px;border-radius:5px;">Monday</div>
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 9px;font-size:11px;color:#C8C8D4;margin-bottom:1px;border-radius:5px;">
+                <span style="display:flex;align-items:center;gap:4px;"><span style="width:5px;height:5px;border-radius:50%;background:#F59E0B;"></span>Tuesday</span>
+                <span style="font-family:'JetBrains Mono',monospace;font-size:8px;background:var(--app-bg);color:#5A5A6A;padding:1px 5px;border-radius:3px;">1</span>
+              </div>
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 9px;font-size:11px;color:#C8C8D4;margin-bottom:1px;border-radius:5px;">
+                Wednesday
+                <span style="font-family:'JetBrains Mono',monospace;font-size:8px;background:var(--app-bg);color:#5A5A6A;padding:1px 5px;border-radius:3px;">1</span>
+              </div>
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 9px;font-size:11px;color:#C8C8D4;margin-bottom:1px;border-radius:5px;">
+                Thursday
+                <span style="font-family:'JetBrains Mono',monospace;font-size:8px;background:var(--app-bg);color:#5A5A6A;padding:1px 5px;border-radius:3px;">1</span>
+              </div>
+              <div style="padding:6px 9px;font-size:11px;color:#C8C8D4;border-radius:5px;">Friday</div>
+            </div>
+            <div style="padding:8px;border-top:1px solid var(--app-border);display:flex;flex-direction:column;gap:4px;">
+              <span class="mock-btn mock-btn-sm mock-btn-accent" style="text-align:center;justify-content:center;font-size:10px;">+ Add Existing</span>
+              <span class="mock-btn mock-btn-sm" style="text-align:center;justify-content:center;font-size:10px;">+ Create New</span>
+            </div>
+          </div>
+          <!-- Content area -->
+          <div style="flex:1;padding:14px 18px;overflow:hidden;background:var(--app-bg);">
+            <div style="font-size:13px;font-weight:600;color:#9898A8;margin-bottom:1px;"><span style="color:var(--app-text);font-weight:700;">All Projects</span></div>
+            <div style="font-size:10px;color:#5A5A6A;margin-bottom:12px;">3 projects</div>
+            <!-- Card grid (2-col) -->
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:start;">
+              <!-- Card 1: E82 -->
+              <div style="background:var(--app-surface);border:1px solid var(--app-border);border-radius:8px;overflow:hidden;">
+                <!-- panel-top -->
+                <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px;">
+                  <div style="display:flex;align-items:center;gap:6px;">
+                    <span style="font-size:14px;font-weight:800;letter-spacing:-0.01em;">E82</span>
+                  </div>
+                  <div style="display:flex;gap:3px;">
+                    <span style="width:22px;height:22px;display:grid;place-items:center;border-radius:5px;border:1px solid var(--app-border);background:var(--app-surface2);cursor:pointer;" title="Link Autodesk">
+                      <svg viewBox="0 0 24 24" style="width:11px;height:11px;stroke:#6EE7A8;fill:none;stroke-width:2;"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
+                    </span>
+                    <span style="width:22px;height:22px;display:grid;place-items:center;border-radius:5px;border:1px solid var(--app-border);background:var(--app-surface2);cursor:pointer;" title="Meeting schedule">
+                      <svg viewBox="0 0 24 24" style="width:11px;height:11px;stroke:var(--app-text-muted);fill:none;stroke-width:2;"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                    </span>
+                    <span style="width:22px;height:22px;display:grid;place-items:center;border-radius:5px;border:1px solid var(--app-border);background:var(--app-surface2);cursor:pointer;" title="Generate report">
+                      <svg viewBox="0 0 24 24" style="width:11px;height:11px;stroke:var(--app-text-muted);fill:none;stroke-width:2;"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                    </span>
+                  </div>
+                </div>
+                <!-- folder-tabs -->
+                <div style="display:flex;align-items:flex-end;padding:0 12px;background:var(--app-bg);border-top:1px solid var(--app-border);gap:2px;padding-top:4px;">
+                  <div style="padding:5px 10px 5px;font-size:10px;font-weight:600;color:var(--app-text);background:var(--app-surface);border:1px solid var(--app-border);border-bottom:none;border-radius:5px 5px 0 0;position:relative;top:1px;display:flex;align-items:center;gap:5px;">
+                    Mar 26
+                    <span style="font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:600;padding:1px 4px;border-radius:3px;background:rgba(245,158,11,0.08);color:#F59E0B;">4</span>
+                  </div>
+                  <div style="padding:5px 10px 5px;font-size:10px;color:#9898A8;background:var(--app-surface2);border:1px solid var(--app-border);border-bottom:none;border-radius:5px 5px 0 0;position:relative;top:1px;display:flex;align-items:center;gap:5px;">
+                    Mar 19
+                    <span style="font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:600;padding:1px 4px;border-radius:3px;background:rgba(110,231,168,0.08);color:#6EE7A8;">0</span>
+                  </div>
+                </div>
+                <!-- trade-body -->
+                <div style="border-top:1px solid var(--app-border);">
+                  <!-- Trade row: Sheet Metal -->
+                  <div style="display:grid;grid-template-columns:100px 1fr;border-bottom:1px solid rgba(46,46,56,0.3);">
+                    <div style="padding:5px 5px 5px 12px;font-size:11px;font-weight:500;color:#C8C8D4;display:flex;align-items:center;gap:4px;">
+                      <span style="width:6px;height:6px;border-radius:50%;background:#F59E0B;flex-shrink:0;"></span> Sheet Metal
+                    </div>
+                    <div style="padding:4px 10px;display:flex;flex-wrap:wrap;align-items:center;gap:2px;">
+                      <span style="font-family:'JetBrains Mono',monospace;font-size:9.5px;height:22px;padding:0 5px;border-radius:5px;display:inline-flex;align-items:center;background:rgba(245,158,11,0.08);color:#F59E0B;border:1px solid rgba(245,158,11,0.2);">L05</span>
+                      <span style="font-family:'JetBrains Mono',monospace;font-size:9.5px;height:22px;padding:0 5px;border-radius:5px;display:inline-flex;align-items:center;background:rgba(110,231,168,0.08);color:#6EE7A8;border:1px solid rgba(110,231,168,0.15);">L06</span>
+                      <span style="font-family:'JetBrains Mono',monospace;font-size:9.5px;height:22px;padding:0 5px;border-radius:5px;display:inline-flex;align-items:center;background:rgba(110,231,168,0.08);color:#6EE7A8;border:1px solid rgba(110,231,168,0.15);">L07</span>
+                    </div>
+                  </div>
+                  <!-- Trade row: Plumbing -->
+                  <div style="display:grid;grid-template-columns:100px 1fr;border-bottom:1px solid rgba(46,46,56,0.3);">
+                    <div style="padding:5px 5px 5px 12px;font-size:11px;font-weight:500;color:#C8C8D4;display:flex;align-items:center;gap:4px;">
+                      <span style="width:6px;height:6px;border-radius:50%;background:var(--app-border);flex-shrink:0;"></span> Plumbing
+                    </div>
+                    <div style="padding:4px 10px;font-family:'JetBrains Mono',monospace;font-size:8px;color:#5A5A6A;display:flex;align-items:center;">all clashed</div>
+                  </div>
+                  <!-- Trade row: Electrical -->
+                  <div style="display:grid;grid-template-columns:100px 1fr;">
+                    <div style="padding:5px 5px 5px 12px;font-size:11px;font-weight:500;color:#C8C8D4;display:flex;align-items:center;gap:4px;">
+                      <span style="width:6px;height:6px;border-radius:50%;background:#EF4444;flex-shrink:0;"></span> Electrical
+                    </div>
+                    <div style="padding:4px 10px;display:flex;flex-wrap:wrap;align-items:center;gap:2px;">
+                      <span style="font-family:'JetBrains Mono',monospace;font-size:9.5px;height:22px;padding:0 5px;border-radius:5px;display:inline-flex;align-items:center;background:rgba(239,68,68,0.08);color:#EF4444;border:1px solid rgba(239,68,68,0.2);">L03</span>
+                      <span style="font-family:'JetBrains Mono',monospace;font-size:9.5px;height:22px;padding:0 5px;border-radius:5px;display:inline-flex;align-items:center;background:rgba(59,130,246,0.08);color:#3B82F6;border:1px solid rgba(59,130,246,0.15);">L04</span>
+                    </div>
+                  </div>
+                </div>
+                <!-- Legend -->
+                <div style="display:flex;gap:12px;padding:5px 12px;border-top:1px solid rgba(46,46,56,0.3);font-family:'JetBrains Mono',monospace;font-size:8px;color:#5A5A6A;">
+                  <span style="display:flex;align-items:center;gap:3px;"><span style="width:8px;height:8px;border-radius:3px;background:rgba(110,231,168,0.3);"></span>fresh</span>
+                  <span style="display:flex;align-items:center;gap:3px;"><span style="width:8px;height:8px;border-radius:3px;background:rgba(59,130,246,0.3);"></span>ready</span>
+                  <span style="display:flex;align-items:center;gap:3px;"><span style="width:8px;height:8px;border-radius:3px;background:rgba(245,158,11,0.3);"></span>warm</span>
+                  <span style="display:flex;align-items:center;gap:3px;"><span style="width:8px;height:8px;border-radius:3px;background:rgba(239,68,68,0.3);"></span>urgent</span>
+                </div>
+                <!-- Panel footer -->
+                <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 12px;border-top:1px solid var(--app-border);background:rgba(0,0,0,0.08);">
+                  <div style="display:flex;gap:4px;">
+                    <span class="mock-btn" style="padding:2px 6px;font-size:9px;">Open</span>
+                    <span class="mock-btn" style="padding:2px 6px;font-size:9px;">Edit Config</span>
+                  </div>
+                  <span style="font-family:'JetBrains Mono',monospace;font-size:8px;color:#5A5A6A;">Tuesday</span>
+                </div>
+              </div>
+              <!-- Card 2: NJT -->
+              <div style="background:var(--app-surface);border:1px solid var(--app-border);border-radius:8px;overflow:hidden;">
+                <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px;">
+                  <span style="font-size:14px;font-weight:800;">NJT</span>
+                  <div style="display:flex;gap:3px;">
+                    <span style="width:22px;height:22px;display:grid;place-items:center;border-radius:5px;border:1px solid var(--app-border);background:var(--app-surface2);">
+                      <svg viewBox="0 0 24 24" style="width:11px;height:11px;stroke:#5A5A6A;fill:none;stroke-width:2;"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
+                    </span>
+                    <span style="width:22px;height:22px;display:grid;place-items:center;border-radius:5px;border:1px solid var(--app-border);background:var(--app-surface2);">
+                      <svg viewBox="0 0 24 24" style="width:11px;height:11px;stroke:var(--app-text-muted);fill:none;stroke-width:2;"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                    </span>
+                    <span style="width:22px;height:22px;display:grid;place-items:center;border-radius:5px;border:1px solid var(--app-border);background:var(--app-surface2);">
+                      <svg viewBox="0 0 24 24" style="width:11px;height:11px;stroke:var(--app-text-muted);fill:none;stroke-width:2;"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                    </span>
+                  </div>
+                </div>
+                <div style="padding:6px 12px;font-size:9px;color:#5A5A6A;border-top:1px solid var(--app-border);background:var(--app-bg);">No meeting schedule configured</div>
+                <div style="display:flex;align-items:center;gap:4px;padding:7px 12px;font-size:10px;color:#6EE7A8;border-top:1px solid var(--app-border);">
+                  <span style="width:5px;height:5px;border-radius:50%;background:#6EE7A8;"></span> All models clashed
+                </div>
+                <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 12px;border-top:1px solid var(--app-border);background:rgba(0,0,0,0.08);">
+                  <div style="display:flex;gap:4px;">
+                    <span class="mock-btn" style="padding:2px 6px;font-size:9px;">Open</span>
+                    <span class="mock-btn" style="padding:2px 6px;font-size:9px;">Edit Config</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <h3>Severity Badges</h3>
+      <p>Each project card shows which trades have unclashed uploads, color-coded by how long they've been waiting:</p>
+      <ul style="list-style: none; padding: 0; margin: 0.5rem 0 1rem;">
+        <li style="position: relative; padding-left: 1.2em; margin-bottom: 0.4rem;"><span style="position: absolute; left: 0; color: var(--text-muted);">&bull;</span><span style="color: #6EE7A8; font-weight: 600;">Fresh</span> (0-2 days) -- recently uploaded, normal</li>
+        <li style="position: relative; padding-left: 1.2em; margin-bottom: 0.4rem;"><span style="position: absolute; left: 0; color: var(--text-muted);">&bull;</span><span style="color: #3B82F6; font-weight: 600;">Ready</span> (3-4 days) -- ready for clashing</li>
+        <li style="position: relative; padding-left: 1.2em; margin-bottom: 0.4rem;"><span style="position: absolute; left: 0; color: var(--text-muted);">&bull;</span><span style="color: #F59E0B; font-weight: 600;">Warm</span> (5+ days) -- getting stale, should be clashed soon</li>
+        <li style="position: relative; padding-left: 1.2em;"><span style="position: absolute; left: 0; color: var(--text-muted);">&bull;</span><span style="color: #EF4444; font-weight: 600;">Urgent</span> -- meeting day and still unclashed</li>
+      </ul>
+
+      <h3>Day Filter</h3>
+      <p>The left sidebar filters projects by their coordination meeting day. Click a day to see only projects with meetings on that day. The badge counts show how many projects are on each day.</p>
+
+      <h3>Adding Projects</h3>
+      <p><strong>Add Existing</strong> opens a file picker to load an existing JSON config file. <strong>Create New</strong> starts a blank config. Once a project is in the list, click it to open its config and enter the setup pages (Sources through Actions).</p>
+
+      <h3>APS Integration</h3>
+      <p>The <strong>APS pill</strong> in the header shows your Autodesk Platform Services connection status. Click it to authenticate. Once connected, you can:</p>
+      <ul style="list-style: none; padding: 0; margin: 0.5rem 0 1rem;">
+        <li style="position: relative; padding-left: 1.2em; margin-bottom: 0.3rem;"><span style="position: absolute; left: 0; color: var(--text-muted);">&bull;</span><strong>Link</strong> a CI project to its ACC/BIM360 project</li>
+        <li style="position: relative; padding-left: 1.2em; margin-bottom: 0.3rem;"><span style="position: absolute; left: 0; color: var(--text-muted);">&bull;</span><strong>Pull coordination issues</strong> directly from the API (instead of Excel exports)</li>
+        <li style="position: relative; padding-left: 1.2em;"><span style="position: absolute; left: 0; color: var(--text-muted);">&bull;</span><strong>Pull design issues</strong> separately from the API</li>
+      </ul>
+
+      <h3>Meeting Schedule</h3>
+      <p>Each project can have a meeting schedule configured -- which day(s) of the week the coordination meeting happens. This controls the day filter on the Home page and triggers "Urgent" severity coloring when uploads are waiting on meeting day.</p>
+
+      <h3>Organize Mode</h3>
+      <p>Click <strong>Organize</strong> in the header to reorder or remove projects from the list. Cards get dashed borders and drag handles. Click the X on any card to remove it (this doesn't delete the config file, just removes it from the Home page). Click <strong>Done</strong> when finished.</p>
+
+      <h3>Card Action Buttons</h3>
+      <p>Each project card has three icon buttons in the top-right corner:</p>
+      <ul style="list-style: none; padding: 0; margin: 0.5rem 0 1rem;">
+        <li style="position: relative; padding-left: 1.2em; margin-bottom: 0.4rem;"><span style="position: absolute; left: 0; color: var(--text-muted);">&bull;</span><strong>Link icon</strong> (chain) -- Link/unlink this project to an Autodesk ACC/BIM360 project, pull issues, refresh metadata</li>
+        <li style="position: relative; padding-left: 1.2em; margin-bottom: 0.4rem;"><span style="position: absolute; left: 0; color: var(--text-muted);">&bull;</span><strong>Calendar icon</strong> -- Configure the meeting schedule for this project</li>
+        <li style="position: relative; padding-left: 1.2em;"><span style="position: absolute; left: 0; color: var(--text-muted);">&bull;</span><strong>Document icon</strong> -- Generate a report (run the pipeline) for this project without opening it</li>
+      </ul>
+      <p>The link icon is <span style="color: #6EE7A8;">green</span> when linked to Autodesk and <span style="color: #5A5A6A;">gray</span> when unlinked.</p>
+
+      <h3>APS Authentication Flow</h3>
+      <p>Click the <strong>Autodesk</strong> pill in the header bar to open the authentication modal.</p>
+
+      <!-- APS Auth Modal mockup -->
+      <div class="mockup" style="font-family: 'Barlow', 'Segoe UI', sans-serif;">
+        <div style="background:rgba(0,0,0,0.65);padding:30px;display:flex;justify-content:center;">
+          <div style="background:var(--app-surface);border:1px solid var(--app-border);border-radius:10px;padding:20px 24px;width:350px;position:relative;">
+            <div style="position:absolute;top:12px;right:12px;color:#5A5A6A;font-size:14px;cursor:pointer;">&times;</div>
+            <div style="font-size:13px;font-weight:600;margin-bottom:12px;">Autodesk Platform Services</div>
+            <div style="margin-bottom:10px;">
+              <div style="font-size:11px;color:#9898A8;margin-bottom:3px;">Client ID</div>
+              <div style="background:var(--app-surface2);border:1px solid var(--app-border);border-radius:4px;padding:5px 8px;font-size:11px;color:var(--app-text);">a1b2c3d4e5f6...</div>
+            </div>
+            <div style="margin-bottom:10px;">
+              <div style="font-size:11px;color:#9898A8;margin-bottom:3px;">Client Secret</div>
+              <div style="background:var(--app-surface2);border:1px solid var(--app-border);border-radius:4px;padding:5px 8px;font-size:11px;color:#5A5A6A;">&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;</div>
+            </div>
+            <div style="margin-bottom:10px;"><span class="mock-btn mock-btn-sm mock-btn-accent">Save Credentials</span></div>
+            <div style="border-top:1px solid var(--app-border);margin:10px 0;"></div>
+            <div style="font-size:11px;color:#6EE7A8;margin-bottom:8px;">Connected</div>
+            <div style="display:flex;gap:6px;">
+              <span class="mock-btn mock-btn-sm mock-btn-accent">Connect to Autodesk</span>
+              <span class="mock-btn mock-btn-sm" style="border-color:#7f1d1d;color:#f87171;">Disconnect</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step-marker"><span class="step-num">1</span><span class="step-label">Enter your APS Client ID and Secret</span></div>
+      <p>These come from your Autodesk Platform Services app registration. Click <strong>Save Credentials</strong>.</p>
+
+      <div class="step-marker"><span class="step-num">2</span><span class="step-label">Click "Connect to Autodesk"</span></div>
+      <p>A browser window opens for OAuth authentication. Sign in with your Autodesk account. When the callback succeeds, the status changes to "Connected" and the APS pill in the header turns green.</p>
+
+      <h3>Linking a Project &amp; Pulling Issues</h3>
+      <p>Click the <strong>link icon</strong> (chain) on a project card to open the Link Autodesk Project modal.</p>
+
+      <!-- Link Modal mockup -->
+      <div class="mockup" style="font-family: 'Barlow', 'Segoe UI', sans-serif;">
+        <div style="background:rgba(0,0,0,0.65);padding:30px;display:flex;justify-content:center;">
+          <div style="background:var(--app-surface);border:1px solid var(--app-border);border-radius:10px;padding:20px 24px;width:400px;position:relative;">
+            <div style="position:absolute;top:12px;right:12px;color:#5A5A6A;font-size:14px;cursor:pointer;">&times;</div>
+            <div style="font-size:13px;font-weight:600;margin-bottom:2px;">Link Autodesk Project</div>
+            <div style="font-size:11px;color:#9898A8;margin-bottom:12px;">E82</div>
+            <div style="margin-bottom:10px;">
+              <div style="font-size:11px;color:#9898A8;margin-bottom:3px;">Hub</div>
+              <div style="background:var(--app-surface2);border:1px solid var(--app-border);border-radius:4px;padding:5px 8px;font-size:11px;color:var(--app-text);">Elite CAD Designs</div>
+            </div>
+            <div style="margin-bottom:10px;">
+              <div style="font-size:11px;color:#9898A8;margin-bottom:3px;">Project</div>
+              <div style="background:var(--app-surface2);border:1px solid var(--app-border);border-radius:4px;padding:5px 8px;font-size:11px;color:var(--app-text);">E82 - Hudson Yards Tower</div>
+            </div>
+            <div style="font-size:11px;color:#6EE7A8;margin-bottom:4px;">Linked</div>
+            <div style="font-size:10px;color:#9898A8;margin-bottom:10px;">Last refreshed: 2026-03-28 14:30 <span style="color:#38bdf8;margin-left:6px;"></span></div>
+            <div style="display:flex;gap:6px;">
+              <span class="mock-btn mock-btn-sm mock-btn-accent">Link Project</span>
+              <span class="mock-btn mock-btn-sm" style="border-color:#7f1d1d;color:#f87171;">Unlink</span>
+              <span class="mock-btn mock-btn-sm">Refresh Metadata</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step-marker"><span class="step-num">1</span><span class="step-label">Select the Hub and Project</span></div>
+      <p>The Hub dropdown lists your Autodesk hubs. Select one, then pick the matching ACC/BIM360 project from the Project dropdown.</p>
+
+      <div class="step-marker"><span class="step-num">2</span><span class="step-label">Click "Link Project"</span></div>
+      <p>This connects the CI config to the Autodesk project. The link icon on the card turns green.</p>
+
+      <div class="step-marker"><span class="step-num">3</span><span class="step-label">Refresh Metadata</span></div>
+      <p>Click <strong>Refresh Metadata</strong> to pull issue types, subtypes, statuses, locations, and users from the API. This data is needed for the API issue filter panels on the Issues and Design Team pages. Progress is shown in real time. You should refresh after first linking, and occasionally afterward if types/locations change in ACC.</p>
+
+      <div class="step-marker"><span class="step-num">4</span><span class="step-label">Pull Issues from the card</span></div>
+      <p>Once linked, the project card footer shows <strong>Pull Coord</strong> and <strong>Pull Design</strong> buttons. Click either to pull coordination or design issues directly from the Autodesk API. A panel opens showing progress and results. This replaces the need for Excel exports on the Sources page.</p>
+
+      <div class="callout tip">
+        <div class="callout-title">Pull vs Scan</div>
+        <p><strong>Pull</strong> (on the Home page) downloads issue data from the Autodesk API into local storage. <strong>Scan</strong> (on the Issues/Design Team pages) parses whatever data is available -- either the pulled API data or an Excel file, depending on your Sources config. Pull first, then scan (or run the pipeline, which scans automatically).</p>
+      </div>
+
+      <h3>Generating Reports from Home</h3>
+      <p>Click the <strong>document icon</strong> on a project card to open the Generate Report modal. This runs the full pipeline for that project without needing to open the project and navigate to the Actions page.</p>
+
+      <!-- Report Modal mockup -->
+      <div class="mockup" style="font-family: 'Barlow', 'Segoe UI', sans-serif;">
+        <div style="background:rgba(0,0,0,0.65);padding:30px;display:flex;justify-content:center;">
+          <div style="background:var(--app-surface);border:1px solid var(--app-border);border-radius:10px;padding:20px 24px;width:400px;position:relative;">
+            <div style="position:absolute;top:12px;right:12px;color:#5A5A6A;font-size:14px;cursor:pointer;">&times;</div>
+            <div style="font-size:13px;font-weight:600;margin-bottom:2px;">Generate Report</div>
+            <div style="font-size:11px;color:#9898A8;margin-bottom:12px;">E82</div>
+            <div style="margin-bottom:10px;">
+              <div style="font-size:11px;color:#9898A8;margin-bottom:3px;">Compare To</div>
+              <div style="background:var(--app-surface2);border:1px solid var(--app-border);border-radius:5px;padding:6px 10px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--app-text);">2026-03-22 14:30</div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:5px;margin-bottom:10px;font-size:11px;color:#C8C8D4;">
+              <label style="display:flex;align-items:center;gap:6px;">
+                <span style="width:13px;height:13px;border:1.5px solid var(--app-border);border-radius:3px;background:var(--app-surface2);display:inline-flex;"></span>
+                Generate Backgrounds (DXF floor plans for spatial clash view)
+              </label>
+              <label style="display:flex;align-items:center;gap:6px;">
+                <span style="width:13px;height:13px;border:1.5px solid var(--app-border);border-radius:3px;background:var(--app-surface2);display:inline-flex;"></span>
+                Rescan Design Baseline (re-parse clash export XML)
+              </label>
+            </div>
+            <div style="display:flex;gap:6px;">
+              <span class="mock-btn mock-btn-sm mock-btn-accent">Generate</span>
+              <span class="mock-btn mock-btn-sm">Cancel</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <p>The modal gives you the same options as the Actions page:</p>
+      <ul style="list-style: none; padding: 0; margin: 0.5rem 0 1rem;">
+        <li style="position: relative; padding-left: 1.2em; margin-bottom: 0.3rem;"><span style="position: absolute; left: 0; color: var(--text-muted);">&bull;</span><strong>Compare To</strong> -- select a previous snapshot for week-over-week change tracking</li>
+        <li style="position: relative; padding-left: 1.2em; margin-bottom: 0.3rem;"><span style="position: absolute; left: 0; color: var(--text-muted);">&bull;</span><strong>Generate Backgrounds</strong> -- DXF floor plan to SVG conversion for spatial clash view</li>
+        <li style="position: relative; padding-left: 1.2em; margin-bottom: 0.3rem;"><span style="position: absolute; left: 0; color: var(--text-muted);">&bull;</span><strong>Rescan Design Baseline</strong> -- re-parse Navisworks design clash XML</li>
+        <li style="position: relative; padding-left: 1.2em;"><span style="position: absolute; left: 0; color: var(--text-muted);">&bull;</span><strong>Compare baseline against</strong> -- appears when Rescan is checked, for baseline delta tracking</li>
+      </ul>
+      <p>Click <strong>Generate</strong> to run the pipeline. The Excel and Dashboard files are created in the project's output directory. The card refreshes with updated staleness data when the pipeline completes.</p>
+    </section>
+
+    <!-- ===== SOURCES ===== -->
+    <section id="sources">
+      <h2>Sources</h2>
+      <p class="section-desc">The first page to configure. Tell the tool where your project files live.</p>
+
+      <div class="mockup">
+        <div class="mock-header">
+          <div class="mock-header-left"><span class="mock-logo">CI</span><span class="mock-title">Coordination Intelligence</span></div>
+          <div class="mock-header-right">
+            <span class="mock-label">Config:</span>
+            <span class="mock-path-input">C:\Users\...\E82.json</span>
+            <span class="mock-btn mock-btn-accent">Open</span>
+            <span class="mock-btn">Save</span>
+            <span class="mock-btn">Save As</span>
+          </div>
+        </div>
+        <div class="mock-body">
+          <div class="mock-sidebar">
+            <div class="mock-nav active"><span class="mock-nav-icon">&#128193;</span> Sources</div>
+            <div class="mock-nav"><span class="mock-nav-icon">&#127959;</span> Levels</div>
+            <div class="mock-nav"><span class="mock-nav-icon">&#128295;</span> Trades</div>
+            <div class="mock-nav"><span class="mock-nav-icon">&#128220;</span> Deliverables</div>
+            <div class="mock-nav"><span class="mock-nav-icon">&#128203;</span> Submittals</div>
+            <div class="mock-nav"><span class="mock-nav-icon">&#9888;</span> Issues</div>
+            <div class="mock-nav"><span class="mock-nav-icon">&#128209;</span> Design Team</div>
+            <div class="mock-nav"><span class="mock-nav-icon">&#128196;</span> File Matching</div>
+            <div class="mock-nav"><span class="mock-nav-icon">&#9654;</span> Actions</div>
+            <div style="border-top: 1px solid var(--app-border); margin: 4px 10px;"></div>
+            <div class="mock-nav"><span class="mock-nav-icon">&#127968;</span> All Projects</div>
+          </div>
+          <div class="mock-content">
+            <div class="mock-page-title">Sources</div>
+            <div class="mock-page-desc">Configure project paths and data sources</div>
+            <div class="mock-card">
+              <div class="mock-card-title">Project Root</div>
+              <div class="mock-form-row">
+                <span class="mock-form-label">Project Files Root:</span>
+                <span class="mock-form-input">C:\Users\...\Project Files</span>
+                <span class="mock-btn mock-btn-xs">Browse</span>
+              </div>
+              <div class="mock-form-row">
+                <span class="mock-form-label">Project Code:</span>
+                <span class="mock-form-input" style="max-width: 80px;">E82</span>
+              </div>
+              <div class="mock-form-row">
+                <span class="mock-form-label">Output Directory:</span>
+                <span class="mock-form-input">C:\Users\...\Output</span>
+                <span class="mock-btn mock-btn-xs">Browse</span>
+              </div>
+            </div>
+            <div class="mock-card">
+              <div class="mock-card-title">Folder Paths</div>
+              <div class="mock-form-row">
+                <span class="mock-form-label">NWC Models:</span>
+                <span class="mock-form-input" style="font-size: 10px;">...\01_Coordination Models(NWC ONLY)</span>
+                <span class="mock-btn mock-btn-xs">Browse</span>
+              </div>
+              <div class="mock-form-row">
+                <span class="mock-form-label">Overlay Drawings:</span>
+                <span class="mock-form-input" style="font-size: 10px;">...\00_Overlay Drawings(PDF+CAD)</span>
+                <span class="mock-btn mock-btn-xs">Browse</span>
+              </div>
+              <div class="mock-form-row">
+                <span class="mock-form-label">Weekly Model (NWD):</span>
+                <span class="mock-form-input" style="font-size: 10px;">...\04_Weekly Model</span>
+                <span class="mock-btn mock-btn-xs">Browse</span>
+              </div>
+              <div style="text-align: right; margin-top: 6px;">
+                <span class="mock-btn mock-btn-xs mock-btn-accent">Auto-Derive from Project Root</span>
+              </div>
+            </div>
+            <div class="mock-card">
+              <div class="mock-card-title">Design Models</div>
+              <div class="mock-form-row">
+                <span class="mock-form-label">Design Revit Folder:</span>
+                <span class="mock-form-input" style="font-size: 10px;">...\Design Team\Revit</span>
+                <span class="mock-btn mock-btn-xs">Browse</span>
+              </div>
+            </div>
+            <div class="mock-card">
+              <div class="mock-card-title">File Sources</div>
+              <div class="mock-form-row">
+                <span class="mock-form-label">Issue Source:</span>
+                <span class="mock-form-input" style="max-width: 120px; font-size: 11px;">Excel File &#9662;</span>
+              </div>
+              <div class="mock-form-row">
+                <span class="mock-form-label">BIM360 Issue Report:</span>
+                <span class="mock-form-input placeholder" style="color: var(--app-text-muted); font-size: 10px;">.xlsx file path</span>
+                <span class="mock-btn mock-btn-xs">Browse</span>
+              </div>
+              <div class="mock-form-row">
+                <span class="mock-form-label">Design Issue Source:</span>
+                <span class="mock-form-input" style="max-width: 120px; font-size: 11px;">Autodesk API &#9662;</span>
+              </div>
+              <div class="mock-form-row">
+                <span class="mock-form-label">Submittal Log:</span>
+                <span class="mock-form-input placeholder" style="color: var(--app-text-muted); font-size: 10px;">.csv file path</span>
+                <span class="mock-btn mock-btn-xs">Browse</span>
+              </div>
+              <div class="mock-form-row">
+                <span class="mock-form-label">RFI CSV:</span>
+                <span class="mock-form-input placeholder" style="color: var(--app-text-muted); font-size: 10px;">.csv file path</span>
+                <span class="mock-btn mock-btn-xs">Browse</span>
+              </div>
+              <div class="mock-form-row">
+                <span class="mock-form-label">Design Clash Export:</span>
+                <span class="mock-form-input placeholder" style="color: var(--app-text-muted); font-size: 10px;">.xml file path</span>
+                <span class="mock-btn mock-btn-xs">Browse</span>
+              </div>
+              <div class="mock-form-row">
+                <span class="mock-form-label">Snapshot Directory:</span>
+                <span class="mock-form-input placeholder" style="color: var(--app-text-muted); font-size: 10px;">folder path</span>
+                <span class="mock-btn mock-btn-xs">Browse</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step-marker"><span class="step-num">1</span><span class="step-label">Set the Project Files Root</span></div>
+      <p>Browse to your ACC-synced project folder. This is the top-level directory that contains the coordination model folders, overlay folders, and weekly model folder.</p>
+
+      <div class="step-marker"><span class="step-num">2</span><span class="step-label">Click "Auto-Derive from Project Root"</span></div>
+      <p>The tool scans the root folder and fills in standard subfolder paths automatically (NWC models, overlays, composites, weekly model, signoff). If your project uses non-standard folder names, override any path manually with Browse.</p>
+
+      <div class="step-marker"><span class="step-num">3</span><span class="step-label">Set the Design Revit Folder</span></div>
+      <p>If your project has design team Revit models (Architectural, Structural, etc.), browse to the folder containing them. Configure the individual design trades on the Trades page.</p>
+
+      <div class="step-marker"><span class="step-num">4</span><span class="step-label">Point to external data files</span></div>
+      <p>For each data source, choose the type (Excel File or Autodesk API) and browse to the file:</p>
+      <ul style="list-style: none; padding: 0; margin: 0.5rem 0 1rem;">
+        <li style="position: relative; padding-left: 1.2em; margin-bottom: 0.3rem;"><span style="position: absolute; left: 0; color: var(--text-muted);">&bull;</span><strong>Issue Source</strong> -- BIM360/ACC issue export (.xlsx) or Autodesk API</li>
+        <li style="position: relative; padding-left: 1.2em; margin-bottom: 0.3rem;"><span style="position: absolute; left: 0; color: var(--text-muted);">&bull;</span><strong>Design Issue Source</strong> -- Same choice, for design-side issues (separate from coordination issues)</li>
+        <li style="position: relative; padding-left: 1.2em; margin-bottom: 0.3rem;"><span style="position: absolute; left: 0; color: var(--text-muted);">&bull;</span><strong>Submittal Log</strong> -- Procore/ACC CSV export</li>
+        <li style="position: relative; padding-left: 1.2em; margin-bottom: 0.3rem;"><span style="position: absolute; left: 0; color: var(--text-muted);">&bull;</span><strong>RFI CSV</strong> -- Procore RFI export (optional)</li>
+        <li style="position: relative; padding-left: 1.2em; margin-bottom: 0.3rem;"><span style="position: absolute; left: 0; color: var(--text-muted);">&bull;</span><strong>Design Clash Export</strong> -- Navisworks clash XML (optional)</li>
+        <li style="position: relative; padding-left: 1.2em;"><span style="position: absolute; left: 0; color: var(--text-muted);">&bull;</span><strong>Snapshot Directory</strong> -- Folder for historical baseline comparisons</li>
+      </ul>
+
+      <div class="step-marker"><span class="step-num">5</span><span class="step-label">Set project code and output directory</span></div>
+      <p>The project code (e.g., "E82") is used in output filenames. The output directory is where the Excel and dashboard HTML are saved.</p>
+
+      <div class="callout tip">
+        <div class="callout-title">Auto-backup</div>
+        <p>Every time you save, the tool creates a <code>.bak</code> backup of the previous config file. You can always recover from an accidental overwrite.</p>
+      </div>
+    </section>
+
+    <!-- ===== LEVELS ===== -->
+    <section id="levels">
+      <h2>Levels</h2>
+      <p class="section-desc">Define every building level and set its coordination status.</p>
+
+      <div class="mockup">
+        <div class="mock-header">
+          <div class="mock-header-left"><span class="mock-logo">CI</span><span class="mock-title">Coordination Intelligence</span></div>
+          <div class="mock-header-right"><span class="mock-label">Config:</span><span class="mock-path-input">C:\Users\...\E82.json</span></div>
+        </div>
+        <div class="mock-body" style="min-height: 300px;">
+          <div class="mock-sidebar">
+            <div class="mock-nav"><span class="mock-nav-icon">&#128193;</span> Sources</div>
+            <div class="mock-nav active"><span class="mock-nav-icon">&#127959;</span> Levels</div>
+            <div class="mock-nav"><span class="mock-nav-icon">&#128295;</span> Trades</div>
+            <div class="mock-nav"><span class="mock-nav-icon">&#128220;</span> Deliverables</div>
+            <div class="mock-nav"><span class="mock-nav-icon">&#128203;</span> Submittals</div>
+            <div class="mock-nav"><span class="mock-nav-icon">&#9888;</span> Issues</div>
+            <div class="mock-nav"><span class="mock-nav-icon">&#128209;</span> Design Team</div>
+            <div class="mock-nav"><span class="mock-nav-icon">&#128196;</span> File Matching</div>
+            <div class="mock-nav"><span class="mock-nav-icon">&#9654;</span> Actions</div>
+            <div style="border-top: 1px solid var(--app-border); margin: 4px 10px;"></div>
+            <div class="mock-nav"><span class="mock-nav-icon">&#127968;</span> All Projects</div>
+          </div>
+          <div class="mock-content">
+            <div class="mock-page-title">Levels</div>
+            <div class="mock-page-desc">Define building levels and their coordination status</div>
+            <div class="mock-card">
+              <div class="mock-card-title">Quick Add</div>
+              <div class="mock-form-row">
+                <span class="mock-form-input" style="max-width: 300px;">L00-L37, LR1, LR2</span>
+                <span class="mock-btn mock-btn-accent mock-btn-sm">Parse &amp; Add</span>
+              </div>
+              <div style="font-size: 10px; color: var(--app-text-muted); margin-top: 4px;">Parsed: 40 levels (L00, L01, L02 ... L37, LR1, LR2)</div>
+            </div>
+            <div class="mock-card">
+              <div class="mock-card-title">Level Configuration</div>
+              <div style="margin-bottom: 8px;">
+                <span class="mock-btn mock-btn-xs">All Active</span>
+                <span class="mock-btn mock-btn-xs">All Not Started</span>
+              </div>
+              <div class="mock-level-row">
+                <span class="mock-level-name">L00</span>
+                <span class="mock-level-select" style="color: #06B6D4;">Complete</span>
+              </div>
+              <div class="mock-level-row">
+                <span class="mock-level-name">L01</span>
+                <span class="mock-level-select active">Active</span>
+              </div>
+              <div class="mock-level-row">
+                <span class="mock-level-name">L02</span>
+                <span class="mock-level-select active">Active</span>
+              </div>
+              <div class="mock-level-row">
+                <span class="mock-level-name">L03</span>
+                <span class="mock-level-select paused">Paused</span>
+                <span class="mock-level-select" style="font-size: 11px; min-width: 180px; color: var(--app-text-muted);">Waiting on RFI Response</span>
+                <span class="mock-btn mock-btn-xs" style="margin-left: auto;">Locks (2)</span>
+              </div>
+              <!-- Lock panel expanded for L03 -->
+              <div style="margin-left: 58px; margin-bottom: 6px; padding: 6px 10px; background: var(--app-surface2); border: 1px solid var(--app-border); border-radius: 4px; font-size: 11px;">
+                <div style="display: flex; gap: 14px; flex-wrap: wrap;">
+                  <label style="display:flex;align-items:center;gap:4px;color:var(--app-text-dim);">
+                    <span style="width:12px;height:12px;border:1.5px solid var(--app-accent);border-radius:2px;background:var(--app-accent);display:inline-flex;align-items:center;justify-content:center;font-size:9px;color:var(--app-bg);">&#10003;</span>
+                    Sheet Metal <span style="color:var(--app-text-muted);font-size:10px;">03/15/26</span>
+                  </label>
+                  <label style="display:flex;align-items:center;gap:4px;color:var(--app-text-dim);">
+                    <span style="width:12px;height:12px;border:1.5px solid var(--app-accent);border-radius:2px;background:var(--app-accent);display:inline-flex;align-items:center;justify-content:center;font-size:9px;color:var(--app-bg);">&#10003;</span>
+                    Plumbing <span style="color:var(--app-text-muted);font-size:10px;">03/18/26</span>
+                  </label>
+                  <label style="display:flex;align-items:center;gap:4px;color:var(--app-text-dim);">
+                    <span style="width:12px;height:12px;border:1.5px solid var(--app-border);border-radius:2px;background:var(--app-surface);"></span>
+                    Electrical
+                  </label>
+                  <label style="display:flex;align-items:center;gap:4px;color:var(--app-text-dim);">
+                    <span style="width:12px;height:12px;border:1.5px solid var(--app-border);border-radius:2px;background:var(--app-surface);"></span>
+                    Fire Protection
+                  </label>
+                </div>
+              </div>
+              <div class="mock-level-row">
+                <span class="mock-level-name">L04</span>
+                <span class="mock-level-select" style="color: var(--app-text-muted);">Not Started</span>
+                <span class="mock-btn mock-btn-xs" style="margin-left: auto;">Locks</span>
+              </div>
+              <div style="font-size: 11px; color: var(--app-text-muted); margin-top: 8px; text-align: center;">... 35 more levels ...</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <p><strong>Quick Add</strong> accepts ranges like <code>L00-L37</code> and comma-separated codes like <code>LR1, LR2</code>. For non-standard codes (like <code>P1-01, P1-RF, MEZZ</code>), type them in directly.</p>
+      <p>Set each level's status using the dropdown. The status controls how the dashboard treats the level:</p>
+
+      <ul style="list-style: none; padding: 0; margin: 0.5rem 0 1rem;">
+        <li style="position: relative; padding-left: 1.2em; margin-bottom: 0.4rem;"><span style="position: absolute; left: 0; color: var(--text-muted);">&bull;</span><strong>Active</strong> -- currently coordinating, states derived fresh each run</li>
+        <li style="position: relative; padding-left: 1.2em; margin-bottom: 0.4rem;"><span style="position: absolute; left: 0; color: var(--text-muted);">&bull;</span><strong>Paused</strong> -- on hold (select a reason). State is frozen at pause time; drift tracked</li>
+        <li style="position: relative; padding-left: 1.2em; margin-bottom: 0.4rem;"><span style="position: absolute; left: 0; color: var(--text-muted);">&bull;</span><strong>Complete</strong> -- coordination done, level approved for installation</li>
+        <li style="position: relative; padding-left: 1.2em;"><span style="position: absolute; left: 0; color: var(--text-muted);">&bull;</span><strong>Not Started</strong> -- coordination hasn't begun yet</li>
+      </ul>
+
+      <h3>Trade Locks</h3>
+      <p>Each level has a <strong>Locks</strong> button that expands a panel with a checkbox per trade. Check a trade to lock it on that level -- this records a timestamp and means the trade's model is finalized and shouldn't change. If a locked trade's NWC is modified after the lock date, it will be flagged in the dashboard.</p>
+
+      <div class="callout tip">
+        <div class="callout-title">When to lock</div>
+        <p>Lock a trade when its model on that level has been reviewed, all clashes resolved, and the team agrees it's final. This is typically decided during a coordination meeting.</p>
+      </div>
+    </section>
+
+    <!-- ===== TRADES ===== -->
+    <section id="trades">
+      <h2>Trades</h2>
+      <p class="section-desc">Define the MEP trades being coordinated and optional settings.</p>
+
+      <div class="mockup">
+        <div class="mock-header">
+          <div class="mock-header-left"><span class="mock-logo">CI</span><span class="mock-title">Coordination Intelligence</span></div>
+          <div class="mock-header-right"><span class="mock-label">Config:</span><span class="mock-path-input">C:\Users\...\E82.json</span></div>
+        </div>
+        <div class="mock-body" style="min-height: 260px;">
+          <div class="mock-sidebar">
+            <div class="mock-nav"><span class="mock-nav-icon">&#128193;</span> Sources</div>
+            <div class="mock-nav"><span class="mock-nav-icon">&#127959;</span> Levels</div>
+            <div class="mock-nav active"><span class="mock-nav-icon">&#128295;</span> Trades</div>
+            <div class="mock-nav"><span class="mock-nav-icon">&#128220;</span> Deliverables</div>
+            <div class="mock-nav"><span class="mock-nav-icon">&#128203;</span> Submittals</div>
+            <div class="mock-nav"><span class="mock-nav-icon">&#9888;</span> Issues</div>
+            <div class="mock-nav"><span class="mock-nav-icon">&#128209;</span> Design Team</div>
+            <div class="mock-nav"><span class="mock-nav-icon">&#128196;</span> File Matching</div>
+            <div class="mock-nav"><span class="mock-nav-icon">&#9654;</span> Actions</div>
+            <div style="border-top: 1px solid var(--app-border); margin: 4px 10px;"></div>
+            <div class="mock-nav"><span class="mock-nav-icon">&#127968;</span> All Projects</div>
+          </div>
+          <div class="mock-content">
+            <div class="mock-page-title">Trades</div>
+            <div class="mock-page-desc">Configure MEP trades and trade-specific settings</div>
+            <div style="display: flex; gap: 12px;">
+              <div class="mock-card" style="flex: 1;">
+                <div class="mock-card-title">Trade List</div>
+                <div style="background: var(--app-surface2); border: 1px solid var(--app-border); border-radius: 4px; padding: 8px 10px; font-family: 'Consolas', monospace; font-size: 11px; color: var(--app-text-dim); line-height: 1.8; min-height: 140px;">
+                  Sheet Metal<br>Plumbing<br>Electrical<br>Fire Protection<br>HVAC Controls
+                </div>
+                <div style="margin-top: 8px;"><span class="mock-btn mock-btn-sm mock-btn-accent">Default MEP Preset</span></div>
+              </div>
+              <div class="mock-card" style="flex: 1;">
+                <div class="mock-card-title">Trade Colors</div>
+                <div style="display: flex; flex-wrap: wrap; gap: 6px 12px; font-size: 11px; margin-bottom: 12px;">
+                  <div style="display:flex;align-items:center;gap:4px;"><span style="width:20px;height:14px;border-radius:2px;background:#3B82F6;border:1px solid rgba(255,255,255,0.1);"></span> Sheet Metal</div>
+                  <div style="display:flex;align-items:center;gap:4px;"><span style="width:20px;height:14px;border-radius:2px;background:#10B981;border:1px solid rgba(255,255,255,0.1);"></span> Plumbing</div>
+                  <div style="display:flex;align-items:center;gap:4px;"><span style="width:20px;height:14px;border-radius:2px;background:#F59E0B;border:1px solid rgba(255,255,255,0.1);"></span> Electrical</div>
+                  <div style="display:flex;align-items:center;gap:4px;"><span style="width:20px;height:14px;border-radius:2px;background:#EF4444;border:1px solid rgba(255,255,255,0.1);"></span> Fire Prot.</div>
+                </div>
+                <div class="mock-card-title">Plumbing Split</div>
+                <div class="mock-toggle" style="margin-bottom: 12px;">
+                  <div class="mock-toggle-track"><div class="mock-toggle-knob"></div></div>
+                  Split Plumbing into Gravity / Pressure for Shop Matrix
+                </div>
+                <div class="mock-card-title">Sub-Models</div>
+                <div style="font-size: 11px; color: var(--app-text-dim);">
+                  <div style="font-weight: 600; color: var(--app-text); margin-bottom: 2px;">Electrical</div>
+                  <div style="padding-left: 12px; margin-bottom: 2px;">EL &mdash; Electrical (main)</div>
+                  <div style="padding-left: 12px; margin-bottom: 2px;">LT &mdash; Lighting <span class="mock-btn" style="padding: 1px 5px; font-size: 9px;">Del</span></div>
+                </div>
+              </div>
+            </div>
+            <!-- Design Models card -->
+            <div class="mock-card" style="margin-top: 0;">
+              <div class="mock-card-title">Design Models</div>
+              <div style="font-size: 11px; color: var(--app-text-muted); margin-bottom: 8px;">Configure design team sources. These appear in File Matching alongside MEP trades.</div>
+              <div style="font-size: 11px;">
+                <div style="display: grid; grid-template-columns: 40px 100px 50px 140px 30px; gap: 2px 6px; align-items: center;">
+                  <span style="color: var(--app-text-muted); text-transform: uppercase; font-size: 9px; font-weight: 500;">Abbr</span>
+                  <span style="color: var(--app-text-muted); text-transform: uppercase; font-size: 9px; font-weight: 500;">Name</span>
+                  <span style="color: var(--app-text-muted); text-transform: uppercase; font-size: 9px; font-weight: 500;">Group</span>
+                  <span style="color: var(--app-text-muted); text-transform: uppercase; font-size: 9px; font-weight: 500;">Revit File</span>
+                  <span></span>
+                  <span style="font-weight: 600; color: var(--app-text-dim);">AR</span>
+                  <span style="color: var(--app-text-dim);">Architectural</span>
+                  <span style="color: var(--app-text-dim);">AR</span>
+                  <span style="color: var(--app-text-dim); font-family: 'Consolas', monospace; font-size: 10px;">E82-AR.rvt</span>
+                  <span class="mock-btn" style="padding: 1px 5px; font-size: 9px; color: #DC2626;">x</span>
+                  <span style="font-weight: 600; color: var(--app-text-dim);">ST</span>
+                  <span style="color: var(--app-text-dim);">Structural</span>
+                  <span style="color: var(--app-text-dim);">ST</span>
+                  <span style="color: var(--app-text-dim); font-family: 'Consolas', monospace; font-size: 10px;">E82-ST.rvt</span>
+                  <span class="mock-btn" style="padding: 1px 5px; font-size: 9px; color: #DC2626;">x</span>
+                  <span style="font-weight: 600; color: var(--app-text-dim);">IN</span>
+                  <span style="color: var(--app-text-dim);">Interior</span>
+                  <span style="color: var(--app-text-dim);">AR</span>
+                  <span style="color: var(--app-text-dim); font-family: 'Consolas', monospace; font-size: 10px;">E82-IN.rvt</span>
+                  <span class="mock-btn" style="padding: 1px 5px; font-size: 9px; color: #DC2626;">x</span>
+                </div>
+                <div style="margin-top: 6px;"><span class="mock-btn mock-btn-xs">+ Add Design Model</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <p>Type one trade per line, or click <strong>Default MEP Preset</strong> to populate the standard list (Sheet Metal, Plumbing, Electrical, Fire Protection, HVAC Controls).</p>
+      <p><strong>Trade Colors</strong>: Assign a color to each trade. These colors are used in the clash dot visualization on the spatial view and throughout the dashboard.</p>
+      <p><strong>Plumbing Split</strong>: When enabled, the submittal scanner separates "Plumbing" into "Gravity Plumbing" and "Pressure Plumbing" based on title keywords. Models and overlays still use the base "Plumbing" folder on disk.</p>
+      <p><strong>Sub-Models</strong>: If a trade has multiple NWC files per level (e.g., Electrical has a main model + a Lighting model), add sub-model keys here. The file matching page will show separate template/dropdown rows for each.</p>
+
+      <h3>Design Models</h3>
+      <p>Configure design team sources -- Architectural, Structural, MEP Consultant, Interior, etc. Each entry has:</p>
+      <ul style="list-style: none; padding: 0; margin: 0.5rem 0 1rem;">
+        <li style="position: relative; padding-left: 1.2em; margin-bottom: 0.3rem;"><span style="position: absolute; left: 0; color: var(--text-muted);">&bull;</span><strong>Name</strong> -- display name (e.g., "Architectural")</li>
+        <li style="position: relative; padding-left: 1.2em; margin-bottom: 0.3rem;"><span style="position: absolute; left: 0; color: var(--text-muted);">&bull;</span><strong>Abbreviation</strong> -- short code (e.g., "AR")</li>
+        <li style="position: relative; padding-left: 1.2em; margin-bottom: 0.3rem;"><span style="position: absolute; left: 0; color: var(--text-muted);">&bull;</span><strong>NWC Group</strong> -- which NWC folder/prefix these models produce. Multiple Revit sources can feed one group (e.g., Architectural + Interior both produce AR NWCs)</li>
+        <li style="position: relative; padding-left: 1.2em;"><span style="position: absolute; left: 0; color: var(--text-muted);">&bull;</span><strong>Revit Filename</strong> -- the source Revit file on disk</li>
+      </ul>
+      <p>Design models appear in File Matching alongside MEP trades, with their own Revit Models and NWC Models scan rows.</p>
+    </section>
+
+    <!-- ===== DELIVERABLES ===== -->
+    <section id="deliverables">
+      <h2>Deliverables</h2>
+      <p class="section-desc">Enable/disable scoring categories and mark trade+level combinations as N/A.</p>
+
+      <div class="mockup">
+        <div class="mock-header">
+          <div class="mock-header-left"><span class="mock-logo">CI</span><span class="mock-title">Coordination Intelligence</span></div>
+          <div class="mock-header-right"><span class="mock-label">Config:</span><span class="mock-path-input">C:\Users\...\E82.json</span></div>
+        </div>
+        <div class="mock-body" style="min-height: 240px;">
+          <div class="mock-sidebar">
+            <div class="mock-nav"><span class="mock-nav-icon">&#128193;</span> Sources</div>
+            <div class="mock-nav"><span class="mock-nav-icon">&#127959;</span> Levels</div>
+            <div class="mock-nav"><span class="mock-nav-icon">&#128295;</span> Trades</div>
+            <div class="mock-nav active"><span class="mock-nav-icon">&#128220;</span> Deliverables</div>
+            <div class="mock-nav"><span class="mock-nav-icon">&#128203;</span> Submittals</div>
+            <div class="mock-nav"><span class="mock-nav-icon">&#9888;</span> Issues</div>
+            <div class="mock-nav"><span class="mock-nav-icon">&#128209;</span> Design Team</div>
+            <div class="mock-nav"><span class="mock-nav-icon">&#128196;</span> File Matching</div>
+            <div class="mock-nav"><span class="mock-nav-icon">&#9654;</span> Actions</div>
+            <div style="border-top: 1px solid var(--app-border); margin: 4px 10px;"></div>
+            <div class="mock-nav"><span class="mock-nav-icon">&#127968;</span> All Projects</div>
+          </div>
+          <div class="mock-content">
+            <div class="mock-page-title">Deliverables</div>
+            <div class="mock-card">
+              <div class="mock-card-title">N/A Assignments</div>
+              <div style="display: flex; gap: 0; border-bottom: 1px solid var(--app-border); margin-bottom: 10px;">
+                <span style="padding: 6px 14px; font-size: 12px; color: var(--app-accent); border-bottom: 2px solid var(--app-accent); font-weight: 600;">Sheet Metal</span>
+                <span style="padding: 6px 14px; font-size: 12px; color: var(--app-text-muted);">Plumbing</span>
+                <span style="padding: 6px 14px; font-size: 12px; color: var(--app-text-muted);">Electrical</span>
+                <span style="padding: 6px 14px; font-size: 12px; color: var(--app-text-muted);">Fire Prot.</span>
+                <span style="padding: 6px 14px; font-size: 12px; color: var(--app-text-muted);">Composites</span>
+              </div>
+              <div style="font-size: 11px;">
+                <div style="display: grid; grid-template-columns: 120px 1fr; gap: 4px 10px; align-items: center;">
+                  <span style="color: var(--app-text-muted); text-transform: uppercase; font-size: 10px; font-weight: 500;">Category</span>
+                  <span style="color: var(--app-text-muted); text-transform: uppercase; font-size: 10px; font-weight: 500;">N/A Levels</span>
+                  <span style="color: var(--app-text-dim);">Model</span>
+                  <span class="mock-form-input" style="max-width: 200px; font-size: 10px; padding: 3px 6px;">LR1, LR2</span>
+                  <span style="color: var(--app-text-dim);">Penetrations</span>
+                  <span class="mock-form-input" style="max-width: 200px; font-size: 10px; padding: 3px 6px; color: var(--app-text-muted);">None</span>
+                  <span style="color: var(--app-text-dim);">Pads</span>
+                  <span class="mock-form-input" style="max-width: 200px; font-size: 10px; padding: 3px 6px;">L00, L01, LR1, LR2</span>
+                  <span style="color: var(--app-text-dim);">Ceiling Layout</span>
+                  <span class="mock-form-input" style="max-width: 200px; font-size: 10px; padding: 3px 6px; color: var(--app-text-muted);">None</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <p>The tabbed interface lets you set N/A per trade. Click the level selector to open a checklist of all levels. Mark a trade+category+level as N/A when that deliverable doesn't apply -- for example, sheet metal may not have models on roof levels, or fire protection may not have pads on certain floors.</p>
+
+      <div class="callout warn">
+        <div class="callout-title">N/A affects the dashboard</div>
+        <p>Levels marked N/A show as gray in the dashboard and are excluded from progress calculations. If you skip this step, the dashboard will show "Missing" for trades that genuinely have no work on certain levels, which creates false red flags.</p>
+      </div>
+    </section>
+
+    <!-- ===== SUBMITTALS ===== -->
+    <section id="submittals">
+      <h2>Submittals</h2>
+      <p class="section-desc">Configure how the tool parses your submittal CSV export.</p>
+
+      <div class="mockup">
+        <div class="mock-header">
+          <div class="mock-header-left"><span class="mock-logo">CI</span><span class="mock-title">Coordination Intelligence</span></div>
+          <div class="mock-header-right"><span class="mock-label">Config:</span><span class="mock-path-input">C:\Users\...\E82.json</span></div>
+        </div>
+        <div class="mock-body" style="min-height: 380px;">
+          <div class="mock-sidebar">
+            <div class="mock-nav"><span class="mock-nav-icon">&#128193;</span> Sources</div>
+            <div class="mock-nav"><span class="mock-nav-icon">&#127959;</span> Levels</div>
+            <div class="mock-nav"><span class="mock-nav-icon">&#128295;</span> Trades</div>
+            <div class="mock-nav"><span class="mock-nav-icon">&#128220;</span> Deliverables</div>
+            <div class="mock-nav active"><span class="mock-nav-icon">&#128203;</span> Submittals</div>
+            <div class="mock-nav"><span class="mock-nav-icon">&#9888;</span> Issues</div>
+            <div class="mock-nav"><span class="mock-nav-icon">&#128209;</span> Design Team</div>
+            <div class="mock-nav"><span class="mock-nav-icon">&#128196;</span> File Matching</div>
+            <div class="mock-nav"><span class="mock-nav-icon">&#9654;</span> Actions</div>
+            <div style="border-top: 1px solid var(--app-border); margin: 4px 10px;"></div>
+            <div class="mock-nav"><span class="mock-nav-icon">&#127968;</span> All Projects</div>
+          </div>
+          <div class="mock-content">
+            <div class="mock-page-title">Submittals</div>
+            <div class="mock-page-desc">Configure how the submittal log CSV maps to coordination categories.</div>
+            <div class="mock-card">
+              <div class="mock-card-title">CSV Scan</div>
+              <div style="font-size: 11px; color: var(--app-text-muted); margin-bottom: 6px;">Scan the submittal CSV to discover spec sections, statuses, and auto-populate mappings.</div>
+              <div style="display: flex; gap: 8px; align-items: center;">
+                <span class="mock-btn mock-btn-sm mock-btn-accent">Scan CSV</span>
+                <span style="font-size: 11px; color: var(--app-text-dim);">247 rows, 6 spec sections, 5 statuses</span>
+              </div>
+            </div>
+            <div class="mock-card">
+              <div class="mock-card-title">Spec Section Mapping</div>
+              <div style="font-size: 11px; color: var(--app-text-muted); margin-bottom: 8px;">Map spec number prefixes to categories and trades.</div>
+              <div style="font-size: 11px;">
+                <div style="display: grid; grid-template-columns: 60px 1fr 40px 80px 110px 90px 30px; gap: 2px 6px; align-items: center;">
+                  <span style="color: var(--app-text-muted); text-transform: uppercase; font-size: 9px; font-weight: 500;">Prefix</span>
+                  <span style="color: var(--app-text-muted); text-transform: uppercase; font-size: 9px; font-weight: 500;">Full Spec</span>
+                  <span style="color: var(--app-text-muted); text-transform: uppercase; font-size: 9px; font-weight: 500; text-align: center;">#</span>
+                  <span style="color: var(--app-text-muted); text-transform: uppercase; font-size: 9px; font-weight: 500;">Category</span>
+                  <span style="color: var(--app-text-muted); text-transform: uppercase; font-size: 9px; font-weight: 500;">Trade</span>
+                  <span style="color: var(--app-text-muted); text-transform: uppercase; font-size: 9px; font-weight: 500;">Title Filter</span>
+                  <span></span>
+
+                  <span class="mock-form-input" style="padding: 2px 4px; font-size: 10px; max-width: none;">013</span>
+                  <span style="color: var(--app-text-muted); font-size: 10px;">013000 - General</span>
+                  <span style="color: var(--app-text-dim); text-align: center;">12</span>
+                  <span class="mock-form-input" style="padding: 2px 4px; font-size: 10px; max-width: none;">Composites</span>
+                  <span></span><span></span>
+                  <span class="mock-btn" style="padding: 1px 5px; font-size: 9px;">x</span>
+
+                  <span class="mock-form-input" style="padding: 2px 4px; font-size: 10px; max-width: none;">210</span>
+                  <span style="color: var(--app-text-muted); font-size: 10px;">210000 - Fire Supp.</span>
+                  <span style="color: var(--app-text-dim); text-align: center;">34</span>
+                  <span class="mock-form-input" style="padding: 2px 4px; font-size: 10px; max-width: none;">Shop</span>
+                  <span class="mock-form-input" style="padding: 2px 4px; font-size: 10px; max-width: none;">Fire Protection</span>
+                  <span class="mock-form-input" style="padding: 2px 4px; font-size: 10px; max-width: none;">overhead</span>
+                  <span class="mock-btn" style="padding: 1px 5px; font-size: 9px;">x</span>
+
+                  <span class="mock-form-input" style="padding: 2px 4px; font-size: 10px; max-width: none;">220</span>
+                  <span style="color: var(--app-text-muted); font-size: 10px;">220000 - Plumbing</span>
+                  <span style="color: var(--app-text-dim); text-align: center;">45</span>
+                  <span class="mock-form-input" style="padding: 2px 4px; font-size: 10px; max-width: none;">Shop</span>
+                  <span class="mock-form-input" style="padding: 2px 4px; font-size: 10px; max-width: none;">Plumbing</span>
+                  <span class="mock-form-input" style="padding: 2px 4px; font-size: 10px; max-width: none;">overhead</span>
+                  <span class="mock-btn" style="padding: 1px 5px; font-size: 9px;">x</span>
+
+                  <span class="mock-form-input" style="padding: 2px 4px; font-size: 10px; max-width: none;">230</span>
+                  <span style="color: var(--app-text-muted); font-size: 10px;">230000 - HVAC</span>
+                  <span style="color: var(--app-text-dim); text-align: center;">58</span>
+                  <span class="mock-form-input" style="padding: 2px 4px; font-size: 10px; max-width: none;">Shop</span>
+                  <span class="mock-form-input" style="padding: 2px 4px; font-size: 10px; max-width: none;">Sheet Metal</span>
+                  <span class="mock-form-input" style="padding: 2px 4px; font-size: 10px; max-width: none;">overhead</span>
+                  <span class="mock-btn" style="padding: 1px 5px; font-size: 9px;">x</span>
+                </div>
+                <div style="margin-top: 6px;"><span class="mock-btn mock-btn-xs">+ Add Mapping</span></div>
+              </div>
+            </div>
+            <div class="mock-card">
+              <div class="mock-card-title">Completed Status Rules</div>
+              <div style="font-size: 11px; color: var(--app-text-muted); margin-bottom: 6px;">Which statuses mean coordination is done?</div>
+              <div style="display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 12px;">
+                <div class="mock-toggle"><div class="mock-toggle-track off"><div class="mock-toggle-knob"></div></div> Approved</div>
+                <div class="mock-toggle"><div class="mock-toggle-track"><div class="mock-toggle-knob"></div></div> Closed</div>
+                <div class="mock-toggle"><div class="mock-toggle-track"><div class="mock-toggle-knob"></div></div> For Record Only</div>
+                <div class="mock-toggle"><div class="mock-toggle-track off"><div class="mock-toggle-knob"></div></div> Open</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <p>The Submittals page has several cards. The most important workflow is:</p>
+
+      <div class="step-marker"><span class="step-num">1</span><span class="step-label">Scan the CSV first</span></div>
+      <p>Click <strong>Scan CSV</strong> to preview your submittal data. The tool discovers all spec sections, statuses, and column headers in your CSV. This populates the mapping tables below.</p>
+
+      <div class="step-marker"><span class="step-num">2</span><span class="step-label">Map spec sections to trades</span></div>
+      <p>The <strong>Spec Section Mapping</strong> table lets you assign each spec prefix to a category (shop, composites, or ignore) and a trade. For example, spec 230000 = Sheet Metal (shop), spec 220000 = Plumbing (shop).</p>
+
+      <div class="step-marker"><span class="step-num">3</span><span class="step-label">Set completed status rules</span></div>
+      <p>Check which submittal statuses count as "coordination complete" (typically Approved, Closed, For Record Only). This affects how the dashboard determines overlay workflow states.</p>
+
+      <div class="step-marker"><span class="step-num">4</span><span class="step-label">Configure subtrade keywords (if using Plumbing split)</span></div>
+      <p>If you enabled Plumbing Split on the Trades page, add keyword rules here. The tool searches submittal titles for keywords like "gravity" or "pressure" to route them to the correct subtrade.</p>
+    </section>
+
+    <!-- ===== ISSUES ===== -->
+    <section id="issues">
+      <h2>Issues</h2>
+      <p class="section-desc">Verify how BIM360/ACC issue data is parsed -- trade pair resolution, level mapping, and assignee mappings.</p>
+
+      <div class="mockup">
+        <div class="mock-header">
+          <div class="mock-header-left"><span class="mock-logo">CI</span><span class="mock-title">Coordination Intelligence</span></div>
+          <div class="mock-header-right"><span class="mock-label">Config:</span><span class="mock-path-input">C:\Users\...\E82.json</span></div>
+        </div>
+        <div class="mock-body" style="min-height: 280px;">
+          <div class="mock-sidebar">
+            <div class="mock-nav"><span class="mock-nav-icon">&#128193;</span> Sources</div>
+            <div class="mock-nav"><span class="mock-nav-icon">&#127959;</span> Levels</div>
+            <div class="mock-nav"><span class="mock-nav-icon">&#128295;</span> Trades</div>
+            <div class="mock-nav"><span class="mock-nav-icon">&#128220;</span> Deliverables</div>
+            <div class="mock-nav"><span class="mock-nav-icon">&#128203;</span> Submittals</div>
+            <div class="mock-nav active"><span class="mock-nav-icon">&#9888;</span> Issues</div>
+            <div class="mock-nav"><span class="mock-nav-icon">&#128209;</span> Design Team</div>
+            <div class="mock-nav"><span class="mock-nav-icon">&#128196;</span> File Matching</div>
+            <div class="mock-nav"><span class="mock-nav-icon">&#9654;</span> Actions</div>
+            <div style="border-top: 1px solid var(--app-border); margin: 4px 10px;"></div>
+            <div class="mock-nav"><span class="mock-nav-icon">&#127968;</span> All Projects</div>
+          </div>
+          <div class="mock-content">
+            <div class="mock-page-title">Issues</div>
+            <div class="mock-page-desc">Verify BIM360/ACC issue parsing: trade pair resolution, level mapping, and parse warnings.</div>
+            <!-- API Filters (shown when source = API) -->
+            <div class="mock-card" style="margin-bottom: 10px; border-left: 3px solid #3B82F6;">
+              <div style="font-weight: 600; font-size: 12px; color: #3B82F6; margin-bottom: 6px;">API Issue Filters</div>
+              <div style="display: flex; gap: 20px; font-size: 11px;">
+                <div>
+                  <div style="color: var(--app-text-muted); font-size: 10px; margin-bottom: 3px;">Type / Subtype</div>
+                  <div style="display:flex;flex-direction:column;gap:2px;">
+                    <label style="display:flex;align-items:center;gap:4px;color:var(--app-text-dim);"><span style="width:11px;height:11px;border:1.5px solid var(--app-accent);border-radius:2px;background:var(--app-accent);display:inline-flex;align-items:center;justify-content:center;font-size:8px;color:var(--app-bg);">&#10003;</span> Clash</label>
+                    <label style="display:flex;align-items:center;gap:4px;color:var(--app-text-dim);padding-left:14px;"><span style="width:11px;height:11px;border:1.5px solid var(--app-accent);border-radius:2px;background:var(--app-accent);display:inline-flex;align-items:center;justify-content:center;font-size:8px;color:var(--app-bg);">&#10003;</span> MEP Coordination</label>
+                    <label style="display:flex;align-items:center;gap:4px;color:var(--app-text-dim);padding-left:14px;"><span style="width:11px;height:11px;border:1.5px solid var(--app-border);border-radius:2px;background:var(--app-surface);"></span> Design Coordination</label>
+                  </div>
+                </div>
+                <div>
+                  <div style="color: var(--app-text-muted); font-size: 10px; margin-bottom: 3px;">Status</div>
+                  <div style="display:flex;flex-direction:column;gap:2px;">
+                    <label style="display:flex;align-items:center;gap:4px;color:var(--app-text-dim);"><span style="width:11px;height:11px;border:1.5px solid var(--app-accent);border-radius:2px;background:var(--app-accent);display:inline-flex;align-items:center;justify-content:center;font-size:8px;color:var(--app-bg);">&#10003;</span> Open</label>
+                    <label style="display:flex;align-items:center;gap:4px;color:var(--app-text-dim);"><span style="width:11px;height:11px;border:1.5px solid var(--app-accent);border-radius:2px;background:var(--app-accent);display:inline-flex;align-items:center;justify-content:center;font-size:8px;color:var(--app-bg);">&#10003;</span> In Dispute</label>
+                    <label style="display:flex;align-items:center;gap:4px;color:var(--app-text-dim);"><span style="width:11px;height:11px;border:1.5px solid var(--app-border);border-radius:2px;background:var(--app-surface);"></span> Closed</label>
+                  </div>
+                </div>
+              </div>
+              <div style="margin-top: 6px;"><span class="mock-btn mock-btn-xs" style="background:#2563EB;color:white;border-color:#2563EB;">Save Filters</span></div>
+            </div>
+            <div class="mock-card" style="margin-bottom: 10px;">
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <span class="mock-btn mock-btn-sm mock-btn-accent">Scan Issues</span>
+                <span style="font-size: 11px; color: var(--app-text-dim);">247 issues parsed, 189 open, 12 warnings</span>
+              </div>
+            </div>
+            <div class="mock-card" style="margin-bottom: 10px;">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-weight: 600; font-size: 13px;">Assignee Mappings</span>
+                <span class="mock-btn mock-btn-xs">Show / Hide</span>
+              </div>
+            </div>
+            <div class="mock-card" style="margin-bottom: 10px;">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-weight: 600; font-size: 13px;">Trade Abbreviation Overrides</span>
+                <span class="mock-btn mock-btn-xs">Show / Hide</span>
+              </div>
+            </div>
+            <!-- Stats bar -->
+            <div style="display: flex; gap: 14px; font-size: 11px; color: var(--app-text-dim); padding: 6px 0; border-bottom: 1px solid var(--app-border); margin-bottom: 8px;">
+              <div>Total: <strong style="color: var(--app-text);">247</strong></div>
+              <div>Open: <strong style="color: #F59E0B;">189</strong></div>
+              <div>In Dispute: <strong style="color: #DC2626;">12</strong></div>
+              <div>No Level: <strong style="color: #DC2626;">3</strong></div>
+              <div>Unknown Trade: <strong style="color: #F59E0B;">2</strong></div>
+            </div>
+            <!-- Filter bar -->
+            <div style="display: flex; gap: 6px; align-items: center; margin-bottom: 8px; flex-wrap: wrap;">
+              <span class="mock-form-input" style="max-width:80px;padding:3px 6px;font-size:10px;">Level &#9662;</span>
+              <span class="mock-form-input" style="max-width:90px;padding:3px 6px;font-size:10px;">Trade &#9662;</span>
+              <span class="mock-form-input" style="max-width:90px;padding:3px 6px;font-size:10px;">Subtype &#9662;</span>
+              <span class="mock-form-input" style="max-width:80px;padding:3px 6px;font-size:10px;">Status &#9662;</span>
+              <span class="mock-form-input" style="max-width:100px;padding:3px 6px;font-size:10px;">Assigned To &#9662;</span>
+              <label style="display:flex;align-items:center;gap:3px;font-size:10px;color:var(--app-text-muted);">
+                <span style="width:10px;height:10px;border:1.5px solid var(--app-border);border-radius:2px;background:var(--app-surface);"></span>
+                Warnings only
+              </label>
+              <span style="font-size:10px;color:var(--app-text-muted);margin-left:auto;">247 of 247</span>
+            </div>
+            <!-- Issue table preview -->
+            <div style="font-size: 10px; border: 1px solid var(--app-border); border-radius: 4px; overflow: hidden;">
+              <div style="display:grid;grid-template-columns:50px 1fr 70px 60px 70px 70px;gap:0;background:var(--app-surface2);padding:4px 6px;font-weight:600;color:var(--app-text-muted);text-transform:uppercase;font-size:9px;letter-spacing:0.5px;">
+                <span>ID</span><span>Title</span><span>Status</span><span>Level</span><span>Trade 1</span><span>Trade 2</span>
+              </div>
+              <div style="display:grid;grid-template-columns:50px 1fr 70px 60px 70px 70px;gap:0;padding:4px 6px;border-bottom:1px solid var(--app-border);color:var(--app-text-dim);">
+                <span>1042</span><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">[P1]2.1-SM vs EL Level 05 - Cluster 1</span><span style="color:#F59E0B;">Open</span><span>L05</span><span>Sheet Metal</span><span>Electrical</span>
+              </div>
+              <div style="display:grid;grid-template-columns:50px 1fr 70px 60px 70px 70px;gap:0;padding:4px 6px;border-bottom:1px solid var(--app-border);color:var(--app-text-dim);background:rgba(239,68,68,0.05);">
+                <span>1043</span><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">[P1]3.2-PL vs FP Level ?? - Cluster 2</span><span style="color:#F59E0B;">Open</span><span style="color:#DC2626;font-weight:600;">???</span><span>Plumbing</span><span>Fire Prot.</span>
+              </div>
+              <div style="display:grid;grid-template-columns:50px 1fr 70px 60px 70px 70px;gap:0;padding:4px 6px;color:var(--app-text-dim);">
+                <span>1044</span><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">[P1]1.1-SM vs PL Level 06 - Cluster 1</span><span style="color:var(--app-text-muted);">Closed</span><span>L06</span><span>Sheet Metal</span><span>Plumbing</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <h3>API Issue Filters</h3>
+      <p>If you set the Issue Source to <strong>Autodesk API</strong> on the Sources page, the API filter panel appears at the top. Check the issue types/subtypes and statuses you want to pull. Save the filters before scanning. This prevents pulling irrelevant issues from ACC.</p>
+      <p>If using <strong>Excel File</strong>, this panel is hidden. The tool auto-detects whether the Excel is BIM360 format (has <code>Subtype</code> column) or ACC format (has <code>Category</code> column).</p>
+
+      <p>Click <strong>Scan Issues</strong> to parse. The stats bar shows counts at a glance: Total, Open, In Dispute, No Level, Unknown Trade.</p>
+
+      <h3>Assignee Mappings</h3>
+      <p>Maps issue assignee names to trades. Expand the section to see the mapping table. Unmapped assignees are flagged with quick-fill buttons so you can add them. Click an unmapped name to prefill the input, select the trade, and click Add.</p>
+
+      <h3>Trade Abbreviation Overrides</h3>
+      <p>The scanner looks for trade abbreviations in issue titles (e.g., "SM" for Sheet Metal, "PL" for Plumbing). Unmapped abbreviations are flagged the same way. If your project uses non-standard abbreviations, add overrides here.</p>
+
+      <h3>Filter Bar &amp; Issues Table</h3>
+      <p>Use the filter dropdowns (Level, Trade, Subtype, Status, Assigned To) to drill into specific issues. Check <strong>Warnings only</strong> to see just the issues with parse problems. The table shows all parsed issues with trade pair resolution, level mapping, and warnings highlighted in amber/red.</p>
+
+      <div class="callout tip">
+        <div class="callout-title">Fixing parse warnings</div>
+        <p>Issues with "No Level" (red) couldn't be mapped to a configured level name. Issues with "Unknown Trade" (amber) have abbreviations not in the lookup table. Fix these by adding assignee mappings or abbreviation overrides, then re-scan to verify they resolve.</p>
+      </div>
+    </section>
+
+    <!-- ===== DESIGN TEAM ===== -->
+    <section id="design-team">
+      <h2>Design Team</h2>
+      <p class="section-desc">Verify parsed design issues and RFIs before running the pipeline.</p>
+
+      <div class="mockup">
+        <div class="mock-header">
+          <div class="mock-header-left"><span class="mock-logo">CI</span><span class="mock-title">Coordination Intelligence</span></div>
+          <div class="mock-header-right"><span class="mock-label">Config:</span><span class="mock-path-input">C:\Users\...\E82.json</span></div>
+        </div>
+        <div class="mock-body" style="min-height: 240px;">
+          <div class="mock-sidebar">
+            <div class="mock-nav"><span class="mock-nav-icon">&#128193;</span> Sources</div>
+            <div class="mock-nav"><span class="mock-nav-icon">&#127959;</span> Levels</div>
+            <div class="mock-nav"><span class="mock-nav-icon">&#128295;</span> Trades</div>
+            <div class="mock-nav"><span class="mock-nav-icon">&#128220;</span> Deliverables</div>
+            <div class="mock-nav"><span class="mock-nav-icon">&#128203;</span> Submittals</div>
+            <div class="mock-nav"><span class="mock-nav-icon">&#9888;</span> Issues</div>
+            <div class="mock-nav active"><span class="mock-nav-icon">&#128209;</span> Design Team</div>
+            <div class="mock-nav"><span class="mock-nav-icon">&#128196;</span> File Matching</div>
+            <div class="mock-nav"><span class="mock-nav-icon">&#9654;</span> Actions</div>
+            <div style="border-top: 1px solid var(--app-border); margin: 4px 10px;"></div>
+            <div class="mock-nav"><span class="mock-nav-icon">&#127968;</span> All Projects</div>
+          </div>
+          <div class="mock-content">
+            <div class="mock-page-title">Design Team</div>
+            <div class="mock-page-desc">Verify parsed design issues and RFIs before running the pipeline.</div>
+            <!-- Tabs -->
+            <div style="display: flex; gap: 0; border-bottom: 1px solid var(--app-border); margin-bottom: 10px;">
+              <span style="padding: 6px 14px; font-size: 12px; color: var(--app-accent); border-bottom: 2px solid var(--app-accent); font-weight: 600;">Design Issues</span>
+              <span style="padding: 6px 14px; font-size: 12px; color: var(--app-text-muted);">RFIs</span>
+            </div>
+            <!-- Design Issues tab content -->
+            <div class="mock-card" style="margin-bottom: 10px;">
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <span class="mock-btn mock-btn-sm mock-btn-accent">Scan Design Issues</span>
+                <span style="font-size: 11px; color: var(--app-text-dim);">42 design issues parsed</span>
+              </div>
+            </div>
+            <!-- Stats -->
+            <div style="display: flex; gap: 14px; font-size: 11px; color: var(--app-text-dim); padding: 6px 0; border-bottom: 1px solid var(--app-border); margin-bottom: 8px;">
+              <div>Total: <strong style="color: var(--app-text);">42</strong></div>
+              <div>No Level: <strong style="color: #DC2626;">1</strong></div>
+              <div>Open: <strong style="color: #F59E0B;">28</strong></div>
+              <div>Answered: <strong>8</strong></div>
+              <div>Closed: <strong style="color: var(--app-text-muted);">6</strong></div>
+            </div>
+            <!-- Filters -->
+            <div style="display: flex; gap: 6px; align-items: center; margin-bottom: 8px;">
+              <span class="mock-form-input" style="max-width:80px;padding:3px 6px;font-size:10px;">Level &#9662;</span>
+              <span class="mock-form-input" style="max-width:90px;padding:3px 6px;font-size:10px;">Subtype &#9662;</span>
+              <span class="mock-form-input" style="max-width:80px;padding:3px 6px;font-size:10px;">Status &#9662;</span>
+              <span style="font-size:10px;color:var(--app-text-muted);margin-left:auto;">42 of 42</span>
+            </div>
+            <!-- Table preview -->
+            <div style="font-size: 10px; border: 1px solid var(--app-border); border-radius: 4px; overflow: hidden;">
+              <div style="display:grid;grid-template-columns:40px 1fr 60px 60px 70px 60px;gap:0;background:var(--app-surface2);padding:4px 6px;font-weight:600;color:var(--app-text-muted);text-transform:uppercase;font-size:9px;">
+                <span>ID</span><span>Title</span><span>Subtype</span><span>Status</span><span>Assigned To</span><span>Level</span>
+              </div>
+              <div style="display:grid;grid-template-columns:40px 1fr 60px 60px 70px 60px;gap:0;padding:4px 6px;border-bottom:1px solid var(--app-border);color:var(--app-text-dim);">
+                <span>201</span><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">Beam conflict at grid 4-C</span><span>Structural</span><span style="color:#F59E0B;">Open</span><span>Thornton T.</span><span>L12</span>
+              </div>
+              <div style="display:grid;grid-template-columns:40px 1fr 60px 60px 70px 60px;gap:0;padding:4px 6px;color:var(--app-text-dim);">
+                <span>202</span><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">Ceiling height clearance issue</span><span>Arch.</span><span style="color:var(--app-text-muted);">Answered</span><span>SOM</span><span>L08</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <p>This page has two tabs: <strong>Design Issues</strong> and <strong>RFIs</strong>.</p>
+
+      <h3>Design Issues Tab</h3>
+      <p>Parsed from a separate issue source (Excel export or Autodesk API, configured on Sources page as "Design Issue Source"). These track design-side coordination items (structural vs. MEP conflicts, architectural clearance issues, etc.) separately from the main trade clash issues.</p>
+      <p>If using Autodesk API, an API filter panel appears (same concept as the Issues page) to select which types/subtypes to pull. The stats bar shows Total, No Level, and breakdowns by subtype and status. Filter by Level, Subtype, and Status to drill into specifics.</p>
+
+      <h3>RFIs Tab</h3>
+      <p>Parsed from a Procore CSV export (pointed to in Sources as "RFI CSV"). Click <strong>Scan RFIs</strong> to parse. The stats bar shows Total, Overdue, and status breakdowns. The table shows: #, Subject, Status, Assigned To, Ball In Court, Due Date, Closed Date, Initiated, and RFI Manager. Overdue RFIs are highlighted in red.</p>
+
+      <p>Click <strong>Scan</strong> on each tab to preview the parsed data before running the pipeline. Check for issues that couldn't be assigned to a level.</p>
+
+      <div class="callout tip">
+        <div class="callout-title">Coordination vs. Design issues</div>
+        <p>Coordination issues (Issues page) track MEP-vs-MEP clashes. Design issues (Design Team page) track MEP-vs-design clashes. They use separate issue sources configured on the Sources page, so they can come from different Excel exports or different API filters.</p>
+      </div>
+    </section>
+
+    <!-- ===== FILE MATCHING ===== -->
+    <section id="file-matching">
+      <h2>File Matching</h2>
+      <p class="section-desc">The most hands-on page. This is where you teach the scanner which files belong to which levels.</p>
+
+      <div class="mockup">
+        <div class="mock-header">
+          <div class="mock-header-left"><span class="mock-logo">CI</span><span class="mock-title">Coordination Intelligence</span></div>
+          <div class="mock-header-right"><span class="mock-label">Config:</span><span class="mock-path-input">C:\Users\...\E82.json</span></div>
+        </div>
+        <div class="mock-body" style="min-height: 350px; padding: 0;">
+          <div class="mock-sidebar">
+            <div class="mock-nav"><span class="mock-nav-icon">&#128193;</span> Sources</div>
+            <div class="mock-nav"><span class="mock-nav-icon">&#127959;</span> Levels</div>
+            <div class="mock-nav"><span class="mock-nav-icon">&#128295;</span> Trades</div>
+            <div class="mock-nav"><span class="mock-nav-icon">&#128220;</span> Deliverables</div>
+            <div class="mock-nav"><span class="mock-nav-icon">&#128203;</span> Submittals</div>
+            <div class="mock-nav"><span class="mock-nav-icon">&#9888;</span> Issues</div>
+            <div class="mock-nav"><span class="mock-nav-icon">&#128209;</span> Design Team</div>
+            <div class="mock-nav active"><span class="mock-nav-icon">&#128196;</span> File Matching</div>
+            <div class="mock-nav"><span class="mock-nav-icon">&#9654;</span> Actions</div>
+            <div style="border-top: 1px solid var(--app-border); margin: 4px 10px;"></div>
+            <div class="mock-nav"><span class="mock-nav-icon">&#127968;</span> All Projects</div>
+          </div>
+          <div style="flex: 1; display: flex; flex-direction: column;">
+            <div style="padding: 16px 24px 8px;">
+              <div class="mock-page-title">File Matching</div>
+              <div class="mock-page-desc" style="display: flex; align-items: center; gap: 10px;">
+                Scan files on disk and configure level assignments
+                <span class="mock-btn mock-btn-sm mock-btn-accent">Scan All</span>
+              </div>
+            </div>
+            <div class="mock-fm" style="flex: 1; border-top: 1px solid var(--app-border);">
+              <div class="mock-fm-left">
+                <div class="mock-fm-header">Coordinator</div>
+                <div class="mock-fm-row"><span class="mock-fm-trade">NWD Files</span><span class="mock-fm-status ok">12 files, all matched</span></div>
+                <div class="mock-fm-row"><span class="mock-fm-trade">Comp. Penetrations</span><span class="mock-fm-status ok">8 files, all matched</span></div>
+                <div class="mock-fm-row"><span class="mock-fm-trade">Comp. Pads</span><span class="mock-fm-status warn">6 files, 2 unmatched</span></div>
+                <div class="mock-fm-header">Sheet Metal</div>
+                <div class="mock-fm-row selected"><span class="mock-fm-trade">NWC Models</span><span class="mock-fm-status ok">38 files, all matched</span></div>
+                <div class="mock-fm-row"><span class="mock-fm-trade">Penetrations</span><span class="mock-fm-status ok">36 files, all matched</span></div>
+                <div class="mock-fm-row"><span class="mock-fm-trade">Pads</span><span class="mock-fm-status warn">30 files, 4 unmatched</span></div>
+                <div class="mock-fm-row"><span class="mock-fm-trade">Ceiling Layout</span><span class="mock-fm-status err">no files</span></div>
+                <div class="mock-fm-header">Plumbing</div>
+                <div class="mock-fm-row"><span class="mock-fm-trade">NWC Models</span><span class="mock-fm-status ok">38 files, all matched</span></div>
+                <div style="font-size:10px;color:var(--app-text-muted);text-align:center;padding:3px 0;">... more trades ...</div>
+                <div class="mock-fm-header" style="color: #A78BFA;">Design Team</div>
+                <div class="mock-fm-row"><span class="mock-fm-trade">AR -- Revit Models</span><span class="mock-fm-status ok">2 files</span></div>
+                <div class="mock-fm-row"><span class="mock-fm-trade">AR -- NWC Models</span><span class="mock-fm-status ok">38 files, all matched</span></div>
+                <div class="mock-fm-row"><span class="mock-fm-trade">ST -- Revit Models</span><span class="mock-fm-status ok">1 file</span></div>
+                <div class="mock-fm-row"><span class="mock-fm-trade">ST -- NWC Models</span><span class="mock-fm-status warn">36 files, 2 unmatched</span></div>
+              </div>
+              <div class="mock-fm-right">
+                <div class="mock-fm-detail-title">Sheet Metal -- NWC Models</div>
+                <div style="font-size: 10px; color: var(--app-text-muted); margin-bottom: 8px;">Template: <span style="color: var(--app-text-dim); font-family: 'Consolas', monospace;">E82-{LEVEL}-SM.nwc</span></div>
+                <div class="mock-fm-grid">
+                  <span class="hdr">Level</span><span class="hdr">File</span>
+                  <span class="cell" style="font-weight: 600;">L00</span><span class="cell"><span class="mock-fm-select">E82-L00-SM.nwc</span></span>
+                  <span class="cell" style="font-weight: 600;">L01</span><span class="cell"><span class="mock-fm-select">E82-L01-SM.nwc</span></span>
+                  <span class="cell" style="font-weight: 600;">L02</span><span class="cell"><span class="mock-fm-select">E82-L02-SM.nwc</span></span>
+                  <span class="cell" style="font-weight: 600;">L03</span><span class="cell"><span class="mock-fm-select">E82-L03-SM.nwc</span></span>
+                  <span class="cell" style="font-weight: 600;">L04</span><span class="cell"><span class="mock-fm-select" style="color: var(--app-text-muted);">-- select file --</span></span>
+                  <span class="cell" style="font-weight: 600;">L05</span><span class="cell"><span class="mock-fm-select">E82-L05-SM.nwc</span></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <h3>The Master-Detail Layout</h3>
+      <p>The left panel is the <strong>summary list</strong>. It shows every category (NWC, overlays, composites, submittals) grouped by section:</p>
+      <ul style="list-style: none; padding: 0; margin: 0.5rem 0 1rem;">
+        <li style="position: relative; padding-left: 1.2em; margin-bottom: 0.3rem;"><span style="position: absolute; left: 0; color: var(--text-muted);">&bull;</span><strong>Coordinator</strong> -- NWD weekly models, composites, unmatched coordinator files</li>
+        <li style="position: relative; padding-left: 1.2em; margin-bottom: 0.3rem;"><span style="position: absolute; left: 0; color: var(--text-muted);">&bull;</span><strong>Per-Trade</strong> -- NWC models, overlays (Penetrations, Ceiling Layout, Pads), submittals, unmatched</li>
+        <li style="position: relative; padding-left: 1.2em;"><span style="position: absolute; left: 0; color: var(--text-muted);">&bull;</span><strong>Design Team</strong> -- Revit source files + NWC models per design group (from Trades page config)</li>
+      </ul>
+      <p>Each row shows how many files were found and how many are unmatched. Click any row to see the detail on the right.</p>
+      <p>The right panel shows the <strong>level grid</strong>. Each level has a dropdown listing ALL files on disk for that trade/type. The scanner pre-fills matches using templates and overrides. You can manually assign any file to any level.</p>
+
+      <h3>How File Matching Works</h3>
+      <p>The scanner tries to match files in priority order:</p>
+      <ol style="padding-left: 1.5rem; margin: 0.5rem 0 1rem;">
+        <li style="margin-bottom: 0.3rem;"><strong>Overrides (highest priority)</strong> -- manual assignments you make in the dropdowns</li>
+        <li style="margin-bottom: 0.3rem;"><strong>Templates</strong> -- filename patterns like <code>E82-{LEVEL}-SM.nwc</code> where <code>{LEVEL}</code> matches configured level codes</li>
+        <li style="margin-bottom: 0.3rem;"><strong>Auto-detect (lowest priority)</strong> -- splits filename on dashes and checks for level codes</li>
+      </ol>
+      <p>Higher-priority matches always win. If a template matches a file to L01, an auto-detect cannot reassign it.</p>
+
+      <div class="callout tip">
+        <div class="callout-title">Multi-level files</div>
+        <p>One file can cover multiple levels. Select the file in the dropdown for each level it covers. For example, an NWD file named "E82-LRF.nwd" might cover both LR1 and LR2. Assign it to both.</p>
+      </div>
+
+      <div class="callout tip">
+        <div class="callout-title">Scan All</div>
+        <p>Click <strong>Scan All</strong> to run all four scans (NWC, overlays, composites, NWD) in parallel. The left panel updates with fresh file counts. Do this after initial setup and whenever you suspect new files have been uploaded.</p>
+      </div>
+    </section>
+
+    <!-- ===== ACTIONS (setup reference) ===== -->
+    <section id="actions">
+      <h2>Actions</h2>
+      <p class="section-desc">The Actions page is where you run the pipeline. During initial setup, familiarize yourself with the options before your first run.</p>
+
+      <p>The Actions page shows:</p>
+      <ul style="list-style: none; padding: 0; margin: 0.5rem 0 1rem;">
+        <li style="position: relative; padding-left: 1.2em; margin-bottom: 0.3rem;"><span style="position: absolute; left: 0; color: var(--text-muted);">&bull;</span><strong>Output info</strong> -- where files will be saved and what they'll be named</li>
+        <li style="position: relative; padding-left: 1.2em; margin-bottom: 0.3rem;"><span style="position: absolute; left: 0; color: var(--text-muted);">&bull;</span><strong>Compare against</strong> -- snapshot picker for week-over-week change tracking</li>
+        <li style="position: relative; padding-left: 1.2em; margin-bottom: 0.3rem;"><span style="position: absolute; left: 0; color: var(--text-muted);">&bull;</span><strong>Generate Backgrounds</strong> -- DXF floor plan conversion for spatial clash view</li>
+        <li style="position: relative; padding-left: 1.2em; margin-bottom: 0.3rem;"><span style="position: absolute; left: 0; color: var(--text-muted);">&bull;</span><strong>Rescan Design Baseline</strong> -- re-parse Navisworks design clash XML</li>
+        <li style="position: relative; padding-left: 1.2em; margin-bottom: 0.3rem;"><span style="position: absolute; left: 0; color: var(--text-muted);">&bull;</span><strong>Compare baseline against</strong> -- previous baseline snapshot for delta tracking</li>
+        <li style="position: relative; padding-left: 1.2em;"><span style="position: absolute; left: 0; color: var(--text-muted);">&bull;</span><strong>Run Full Pipeline</strong> -- executes scan, derive, and generate in one click</li>
+      </ul>
+      <p>For your first run, you won't have any snapshots to compare against. Just click <strong>Run Full Pipeline</strong>. Future runs will have snapshot options available. See the <a href="#pipeline" style="color: var(--accent-a);">Run Pipeline</a> section below for a detailed walkthrough with a mockup.</p>
+    </section>
+
+    <!-- ===== WEEKLY WORKFLOW ===== -->
+    <section id="weekly">
+      <h2>Before the Meeting</h2>
+      <p class="section-desc">Your weekly workflow before each coordination meeting -- about 5 minutes.</p>
+
+      <div class="step-marker"><span class="step-num">1</span><span class="step-label">Open the app and click into your project</span></div>
+      <p>Launch the app. The Home page shows all your projects. Click into the project you want to run. All your settings persist from last time.</p>
+
+      <div class="step-marker"><span class="step-num">2</span><span class="step-label">Update level statuses (if needed)</span></div>
+      <p>Go to the <strong>Levels</strong> page. If any levels changed status since last week (a level completed, a new level became active, a level got paused for an RFI), update the dropdowns. Click <strong>Apply Changes</strong>.</p>
+
+      <div class="step-marker"><span class="step-num">3</span><span class="step-label">Update external data files (if needed)</span></div>
+      <p>If you have a fresh issue Excel export or submittal CSV, go to <strong>Sources</strong> and update the file paths. Or if the files are in the same location, they'll be re-read automatically.</p>
+
+      <div class="step-marker"><span class="step-num">4</span><span class="step-label">Run the pipeline</span></div>
+      <p>Go to the <strong>Actions</strong> page and click <strong>Run Full Pipeline</strong>.</p>
+    </section>
+
+    <!-- ===== PIPELINE ===== -->
+    <section id="pipeline">
+      <h2>Run Pipeline</h2>
+      <p class="section-desc">The Actions page runs the full scan-derive-generate pipeline.</p>
+
+      <div class="mockup">
+        <div class="mock-header">
+          <div class="mock-header-left"><span class="mock-logo">CI</span><span class="mock-title">Coordination Intelligence</span></div>
+          <div class="mock-header-right"><span class="mock-label">Config:</span><span class="mock-path-input">C:\Users\...\E82.json</span></div>
+        </div>
+        <div class="mock-body" style="min-height: 280px;">
+          <div class="mock-sidebar">
+            <div class="mock-nav"><span class="mock-nav-icon">&#128193;</span> Sources</div>
+            <div class="mock-nav"><span class="mock-nav-icon">&#127959;</span> Levels</div>
+            <div class="mock-nav"><span class="mock-nav-icon">&#128295;</span> Trades</div>
+            <div class="mock-nav"><span class="mock-nav-icon">&#128220;</span> Deliverables</div>
+            <div class="mock-nav"><span class="mock-nav-icon">&#128203;</span> Submittals</div>
+            <div class="mock-nav"><span class="mock-nav-icon">&#9888;</span> Issues</div>
+            <div class="mock-nav"><span class="mock-nav-icon">&#128209;</span> Design Team</div>
+            <div class="mock-nav"><span class="mock-nav-icon">&#128196;</span> File Matching</div>
+            <div class="mock-nav active"><span class="mock-nav-icon">&#9654;</span> Actions</div>
+            <div style="border-top: 1px solid var(--app-border); margin: 4px 10px;"></div>
+            <div class="mock-nav"><span class="mock-nav-icon">&#127968;</span> All Projects</div>
+          </div>
+          <div class="mock-content">
+            <div class="mock-page-title">Actions</div>
+            <div class="mock-page-desc">Run the full pipeline: Scanner &rarr; State Engine &rarr; Reports</div>
+            <div class="mock-card">
+              <div class="mock-card-title">Pipeline</div>
+              <div style="font-size: 11px; color: var(--app-text-muted); margin-bottom: 8px;">
+                Output: C:\Users\...\Output<br>
+                Excel: E82_2026-03-22_Upload_Status.xlsx<br>
+                Dashboard: E82 - Coordination Dashboard - 2026-03-22.html
+              </div>
+              <div class="mock-form-row" style="margin-bottom: 6px;">
+                <span class="mock-form-label" style="min-width: 120px; font-size: 12px;">Compare against:</span>
+                <span class="mock-form-input" style="max-width: 220px; font-size: 11px;">2026-03-15 14:30</span>
+              </div>
+              <div class="mock-toggle" style="margin-bottom: 6px; font-size: 12px;">
+                <div class="mock-toggle-track off"><div class="mock-toggle-knob"></div></div>
+                Generate Backgrounds (DXF floor plans)
+              </div>
+              <div class="mock-toggle" style="margin-bottom: 6px; font-size: 12px;">
+                <div class="mock-toggle-track off"><div class="mock-toggle-knob"></div></div>
+                Rescan Design Baseline (re-parse clash export XML)
+              </div>
+              <div class="mock-form-row" style="margin-bottom: 12px;">
+                <span class="mock-form-label" style="min-width: 160px; font-size: 12px;">Compare baseline against:</span>
+                <span class="mock-form-input" style="max-width: 220px; font-size: 11px;">2026-03-08 09:15</span>
+              </div>
+              <div style="display: flex; gap: 8px; align-items: center;">
+                <span class="mock-btn mock-btn-primary mock-btn-lg">Run Full Pipeline</span>
+                <span class="mock-btn" style="padding: 10px 20px; font-size: 14px; opacity: 0.4;">Open Excel</span>
+                <span class="mock-btn" style="padding: 10px 20px; font-size: 14px; opacity: 0.4;">Open Dashboard</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="mock-statusbar">
+          <div class="mock-statusbar-header"><span>Status Log</span><span class="mock-btn" style="padding: 1px 6px; font-size: 10px;">Clear</span></div>
+          <div class="mock-status-log">
+[14:32:01] Scanning NWC models...<br>
+[14:32:01] Sheet Metal: 38 files matched<br>
+[14:32:01] Plumbing: 38 files matched<br>
+[14:32:02] Scanning overlays...<br>
+[14:32:02] Scanning composites...<br>
+[14:32:03] Parsing issues (ACC format detected)...<br>
+[14:32:03] 247 issues parsed, 189 open<br>
+[14:32:04] Deriving project state...<br>
+[14:32:04] Generating Excel report...<br>
+[14:32:05] Generating dashboard...<br>
+[14:32:06] --- Pipeline finished ---
+          </div>
+        </div>
+      </div>
+
+      <h3>Options</h3>
+      <p><strong>Compare against</strong>: Select a previous snapshot date to include change-tracking in the dashboard (shows what changed since that date -- model changes, overlay changes, submittal changes).</p>
+      <p><strong>Generate Backgrounds</strong>: Converts DXF floor plans to SVG for the spatial clash view. Only needed if you have DXF files and want the clash dot visualization. Slower, so leave off unless needed.</p>
+      <p><strong>Rescan Design Baseline</strong>: Re-parses the Navisworks design clash XML. Only needed when you have a new XML export.</p>
+
+      <h3>During the Run</h3>
+      <p>The status bar at the bottom streams real-time progress. The pipeline runs in the background -- you can browse other pages while it runs. When it finishes, the <strong>Open Excel</strong> and <strong>Open Dashboard</strong> buttons activate.</p>
+    </section>
+
+    <!-- ===== OUTPUT ===== -->
+    <section id="output">
+      <h2>Output Files</h2>
+      <p class="section-desc">The pipeline produces three files in your output directory.</p>
+
+      <h3>1. project-state.json</h3>
+      <p>The canonical state file. Contains every level, every trade, every derived state. This is what the next pipeline run compares against for drift tracking. You never need to open this file directly.</p>
+
+      <h3>2. Upload Status Excel</h3>
+      <p>A multi-sheet workbook you can email to trades and the GC. Sheets include:</p>
+      <ul style="list-style: none; padding: 0; margin: 0.5rem 0 1rem;">
+        <li style="position: relative; padding-left: 1.2em; margin-bottom: 0.3rem;"><span style="position: absolute; left: 0; color: var(--text-muted);">&bull;</span><strong>Overview</strong> -- Level x Trade grid of model states, color-coded</li>
+        <li style="position: relative; padding-left: 1.2em; margin-bottom: 0.3rem;"><span style="position: absolute; left: 0; color: var(--text-muted);">&bull;</span><strong>Issues Detail</strong> -- Open issue counts per level + trade pair breakdowns</li>
+        <li style="position: relative; padding-left: 1.2em; margin-bottom: 0.3rem;"><span style="position: absolute; left: 0; color: var(--text-muted);">&bull;</span><strong>Overlay Status</strong> -- Per-trade overlay states with submittal info</li>
+        <li style="position: relative; padding-left: 1.2em; margin-bottom: 0.3rem;"><span style="position: absolute; left: 0; color: var(--text-muted);">&bull;</span><strong>Composites</strong> -- Per-type composite states + For Record dates</li>
+        <li style="position: relative; padding-left: 1.2em; margin-bottom: 0.3rem;"><span style="position: absolute; left: 0; color: var(--text-muted);">&bull;</span><strong>Clash Status</strong> -- Which trades have fresh models vs stale clash tests</li>
+        <li style="position: relative; padding-left: 1.2em;"><span style="position: absolute; left: 0; color: var(--text-muted);">&bull;</span><strong>Action Items</strong> -- Auto-generated to-do list sorted by priority</li>
+      </ul>
+
+      <h3>3. Interactive HTML Dashboard</h3>
+      <p>A self-contained HTML file you open in a browser. This is the file you share with the GC for their review, and what you use during coordination meetings. It contains all the interactive sections described in the <a href="coordination-dashboard-user-guide.html" style="color: var(--accent-a);">End User Guide</a>.</p>
+
+      <h3>4. Snapshot (automatic)</h3>
+      <p>A timestamped copy of the state is saved to the snapshot directory. Next time you run the pipeline, you can select this snapshot in the "Compare against" dropdown to see what changed week-over-week.</p>
+    </section>
+
+    <!-- ===== POST-MEETING ===== -->
+    <section id="post-meeting">
+      <h2>After the Meeting</h2>
+      <p class="section-desc">Update your config based on what was discussed, then save.</p>
+
+      <div class="step-marker"><span class="step-num">1</span><span class="step-label">Update level statuses</span></div>
+      <p>If a level was completed or paused during the meeting, go to <strong>Levels</strong> and update the status. Select a pause reason if applicable.</p>
+
+      <div class="step-marker"><span class="step-num">2</span><span class="step-label">Save the config</span></div>
+      <p>Click <strong>Save</strong> in the header bar. The config is ready for next week.</p>
+
+      <div class="step-marker"><span class="step-num">3</span><span class="step-label">Distribute reports</span></div>
+      <p>Email the Excel to trades and the GC. Share the dashboard HTML if the GC wants interactive review. The dashboard is a single self-contained file -- no server needed, just open in a browser.</p>
+
+      <div class="callout tip">
+        <div class="callout-title">Week-over-week tracking</div>
+        <p>Each pipeline run saves a snapshot. Over time, you build up a history of project state. Select older snapshots in the "Compare against" dropdown to see trends. The dashboard's "Changes" tabs show exactly what moved: which models updated, which overlays were submitted, which issues closed.</p>
+      </div>
+
+      <div class="callout warn">
+        <div class="callout-title">Re-export external data</div>
+        <p>The tool reads your issue Excel and submittal CSV at pipeline time. If you want fresh issue/submittal data in the dashboard, export new files from ACC/BIM360/Procore before running the pipeline. Update the file paths in Sources if the filenames changed.</p>
+      </div>
+    </section>
+
+  </div>
+</div>
+
+<script>
+(function() {
+  const links = document.querySelectorAll('.toc-link');
+  const sections = document.querySelectorAll('section[id]');
+  const toc = document.querySelector('.toc');
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const id = entry.target.id;
+        links.forEach(link => {
+          link.classList.toggle('active', link.getAttribute('href') === '#' + id);
+        });
+        const activeLink = toc.querySelector('.active');
+        if (activeLink && window.innerWidth < 1000) {
+          activeLink.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+        }
+      }
+    });
+  }, { rootMargin: '-15% 0px -80% 0px', threshold: 0 });
+
+  sections.forEach(section => observer.observe(section));
+
+  links.forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      const target = document.querySelector(link.getAttribute('href'));
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth' });
+        history.replaceState(null, '', link.getAttribute('href'));
+      }
+    });
+  });
+})();
+</script>
+
+</body>
+</html>
