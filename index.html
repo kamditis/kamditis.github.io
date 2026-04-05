@@ -1283,9 +1283,9 @@
                 color: '#A78BFA',
                 colorVar: 'var(--core)',
                 released: true,
-                version: 'v1.0.11',
-                downloadUrl: 'https://github.com/kamditis/kamditis.github.io/releases/download/EliteCore-latest/EliteCore-v1.0.11.zip',
-                downloadFile: 'EliteCore-v1.0.11.zip',
+                version: 'v1.0.12',
+                downloadUrl: 'https://github.com/kamditis/kamditis.github.io/releases/download/EliteCore-latest/EliteCore-v1.0.12.zip',
+                downloadFile: 'EliteCore-v1.0.12.zip',
                 docsUrl: 'docs/EliteCore-Tutorial.html',
                 description: 'Project setup and shared utilities for Autodesk Revit.',
                 installation: [
@@ -1320,9 +1320,15 @@
                         ]
                     },
                     {
+                        title: 'Sheets',
+                        tools: [
+                            { id: 'elite_sheets', label: 'Elite Sheets', icon: 'layout', fn: 'Manage sheets, views, and revisions in one window. Browse and edit sheet numbers and names, add custom parameter columns, rename views with find/replace or token-based naming, preview viewport layouts, duplicate sheets with viewports, and assign linked view backgrounds (Revit 2024+).', videoRef: '', changelog: 'v1.0.12: New command. Tabbed manager with Views, Sheets, Revisions, and Backgrounds tabs. Fast bulk loading, dark-themed popout dialogs, layout preview, and token-based naming.', requirements: ['Active Revit project open'] },
+                        ]
+                    },
+                    {
                         title: 'Export',
                         tools: [
-                            { id: 'batch_export', label: 'Batch Export', icon: 'file-output', fn: 'Export multiple sheets and views to PDF, DWG, and NWC in a single operation. Choose your formats, configure settings for each, and set up custom file naming using project parameters and tokens. Save your configurations as reusable profiles that can be shared between machines.', videoRef: '', changelog: 'v1.0.8: Select Set filter is now a checkbox dropdown — check multiple View/Sheet Sets to filter the list by their union. No sets checked shows all items. Stacks with view type filter and text search. v1.0.5: Fixed loading hang on projects with hundreds of sheets and views. v1.0.4: New feature — 3-step export wizard with PDF, DWG, and NWC support. Token-based file naming, reusable profiles, view type filtering, and View/Sheet Set management.', requirements: ['Active Revit project open', 'Sheets or views present in the project', 'DWG Export Setup configured in Revit (for DWG export)'] },
+                            { id: 'batch_export', label: 'Batch Export', icon: 'file-output', fn: 'Export multiple sheets and views to PDF, DWG, and NWC in a single operation. Choose your formats, configure settings for each, and set up custom file naming using project parameters and tokens. Save your configurations as reusable profiles that can be shared between machines.', videoRef: '', changelog: 'v1.0.12: Dark-themed input dialogs. v1.0.8: Select Set filter is now a checkbox dropdown — check multiple View/Sheet Sets to filter the list by their union. No sets checked shows all items. Stacks with view type filter and text search. v1.0.5: Fixed loading hang on projects with hundreds of sheets and views. v1.0.4: New feature — 3-step export wizard with PDF, DWG, and NWC support. Token-based file naming, reusable profiles, view type filtering, and View/Sheet Set management.', requirements: ['Active Revit project open', 'Sheets or views present in the project', 'DWG Export Setup configured in Revit (for DWG export)'] },
                         ]
                     }
                 ]

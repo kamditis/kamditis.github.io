@@ -468,7 +468,7 @@
         <h1>EliteCore</h1>
         <div class="accent-bar"></div>
         <p class="subtitle">A tutorial walkthrough of every ribbon button, dialog, and workflow in the core utilities plugin for project setup, auto-sync, tab coloring, and batch export</p>
-        <p class="version">v1.0.11 / Tutorial &amp; Reference Guide</p>
+        <p class="version">v1.0.12 / Tutorial &amp; Reference Guide</p>
     </div>
 
     <!-- ============================================================ -->
@@ -477,7 +477,7 @@
     <div class="slide slide-section">
         <div class="section-label">Section 01</div>
         <h2>Ribbon overview</h2>
-        <div class="section-sub">The &ldquo;Elite Core&rdquo; tab with four panels: Project Setup, Auto Sync, Tab Colors, and Export</div>
+        <div class="section-sub">The &ldquo;Elite Core&rdquo; tab with five panels: Project Setup, Auto Sync, Tab Colors, Sheets, and Export</div>
     </div>
 
     <div class="slide slide-content">
@@ -512,12 +512,21 @@
                         <li><strong>Toggle Colors</strong> &mdash; Enable or disable tab colors instantly</li>
                     </ul>
                 </div>
+                <div class="col-card" style="border-left:3px solid var(--core);">
+                    <h3 style="color:var(--core);">Sheets panel</h3>
+                    <ul class="col-purple">
+                        <li><strong>Elite Sheets</strong> &mdash; Manage sheets, views, revisions, and linked backgrounds</li>
+                    </ul>
+                </div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.2in;margin-top:0.2in;">
                 <div class="col-card" style="border-left:3px solid var(--coord);">
                     <h3 style="color:var(--coord);">Export panel</h3>
                     <ul class="col-green">
                         <li><strong>Batch Export</strong> &mdash; Export sheets and views to PDF, DWG, and NWC</li>
                     </ul>
                 </div>
+                <div></div>
             </div>
             <p style="margin-top:0.15in;font-size:10pt;color:var(--text-muted);">Icons auto-swap between Light and Dark variants to match Revit&rsquo;s current UI theme. The add-in uses ricaun.Revit.UI for ribbon creation with automatic DPI scaling.</p>
         </div>
@@ -1228,10 +1237,60 @@
     </div>
 
     <!-- ============================================================ -->
-    <!-- SECTION 10: BATCH EXPORT WIZARD                              -->
+    <!-- SECTION 10: ELITE SHEETS                                     -->
     <!-- ============================================================ -->
     <div class="slide slide-section">
         <div class="section-label">Section 10</div>
+        <h2>Sheets &mdash; Elite Sheets</h2>
+        <div class="section-sub">Manage sheets, views, revisions, and linked view backgrounds in one window</div>
+    </div>
+
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>Elite Sheets</h2>
+            <span class="tab-label">Sheets > Elite Sheets</span>
+        </div>
+        <div class="slide-body">
+            <p style="color:var(--text-dim);margin-bottom:0.15in;font-size:11pt;">A tabbed manager for working with sheets, views, and revisions. Open it from the Sheets panel on the Elite Core ribbon tab. The window stays open alongside Revit (modeless) so you can make changes and apply them in batches.</p>
+
+            <div class="col-card" style="border-left:3px solid var(--core);margin-bottom:0.15in;">
+                <h3 style="color:var(--core);">Tabs</h3>
+                <table class="btn-table">
+                    <tr><td class="key">Views</td><td class="desc">Browse all project views. Filter by view type, search by name, add parameter columns, rename with find/replace or token-based naming.</td></tr>
+                    <tr><td class="key">Backgrounds</td><td class="desc">Assign linked view backgrounds to host floor/ceiling plans. Auto-map by level name. Requires Revit 2024 or later.</td></tr>
+                    <tr><td class="key">Sheets</td><td class="desc">Browse all project sheets. Edit sheet numbers and names, change titleblocks, duplicate sheets with viewports, preview viewport layouts.</td></tr>
+                    <tr><td class="key">Revisions</td><td class="desc">View revision history and which sheets have each revision. Track cloud revisions issued to sheets.</td></tr>
+                </table>
+            </div>
+
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.2in;">
+                <div class="col-card" style="border-left:3px solid var(--scan);">
+                    <h3 style="color:var(--scan);">Key features</h3>
+                    <ul class="col-cyan">
+                        <li><strong>Parameter Columns</strong> &mdash; Add any sheet or view parameter as a column</li>
+                        <li><strong>Build Name</strong> &mdash; Token-based naming with parameters, separators, and custom text</li>
+                        <li><strong>Layout Preview</strong> &mdash; Visual preview of viewport positions on a sheet</li>
+                        <li><strong>Batch actions</strong> &mdash; Create, duplicate, rename, and delete in bulk</li>
+                    </ul>
+                </div>
+                <div class="col-card" style="border-left:3px solid var(--danger);">
+                    <h3 style="color:var(--danger);">Requirements</h3>
+                    <ul>
+                        <li>Active Revit project open</li>
+                        <li>Backgrounds tab requires Revit 2024+</li>
+                    </ul>
+                </div>
+            </div>
+
+            <p style="margin-top:0.12in;font-size:10pt;color:var(--text-muted);">Sheets and Revisions tabs lazy-load on first visit for faster startup. Changes are staged locally and applied when you click <span class="btn-pill pill-purple">Apply Changes</span>.</p>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 11: BATCH EXPORT WIZARD                              -->
+    <!-- ============================================================ -->
+    <div class="slide slide-section">
+        <div class="section-label">Section 11</div>
         <h2>Export &mdash; Batch Export</h2>
         <div class="section-sub">Export multiple sheets and views to PDF, DWG, and NWC in a single operation with reusable profiles</div>
     </div>
@@ -1441,10 +1500,10 @@
     </div>
 
     <!-- ============================================================ -->
-    <!-- SECTION 11: DEFAULT COLOR PALETTE                             -->
+    <!-- SECTION 12: DEFAULT COLOR PALETTE                             -->
     <!-- ============================================================ -->
     <div class="slide slide-section">
-        <div class="section-label">Section 11</div>
+        <div class="section-label">Section 12</div>
         <h2>Default color palette</h2>
         <div class="section-sub">The 10 built-in colors used for order-based tab assignment</div>
     </div>
@@ -1507,10 +1566,10 @@
     </div>
 
     <!-- ============================================================ -->
-    <!-- SECTION 12: FILE STORAGE                                     -->
+    <!-- SECTION 13: FILE STORAGE                                     -->
     <!-- ============================================================ -->
     <div class="slide slide-section">
-        <div class="section-label">Section 12</div>
+        <div class="section-label">Section 13</div>
         <h2>File storage locations</h2>
         <div class="section-sub">Where EliteCore stores settings, logs, and shared parameter files</div>
     </div>
@@ -1561,10 +1620,10 @@
     </div>
 
     <!-- ============================================================ -->
-    <!-- SECTION 13: GETTING STARTED                                  -->
+    <!-- SECTION 14: GETTING STARTED                                  -->
     <!-- ============================================================ -->
     <div class="slide slide-section">
-        <div class="section-label">Section 13</div>
+        <div class="section-label">Section 14</div>
         <h2>Getting started</h2>
         <div class="section-sub">Recommended setup workflow for a new project</div>
     </div>
@@ -1669,7 +1728,7 @@
         <div class="accent-bar"></div>
         <div class="contact">
             <strong>Project Setup</strong> &bull; <strong>Auto Sync</strong> &bull; <strong>Tab Colors</strong> &bull; <strong>Batch Export</strong> &mdash; Core utilities for Revit<br>
-            Revit 2022&ndash;2026 &bull; .NET 4.8 / .NET 8.0 &bull; v1.0.11
+            Revit 2022&ndash;2026 &bull; .NET 4.8 / .NET 8.0 &bull; v1.0.12
         </div>
     </div>
 
