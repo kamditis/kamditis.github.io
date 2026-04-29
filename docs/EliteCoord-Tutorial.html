@@ -470,7 +470,7 @@
         <h1>EliteCoord</h1>
         <div class="accent-bar"></div>
         <p class="subtitle">A tutorial walkthrough of every ribbon button, dialog, and workflow in the BIM coordination preparation plugin</p>
-        <p class="version">v1.0.13 / Tutorial &amp; Reference Guide</p>
+        <p class="version">v1.0.14 / Tutorial &amp; Reference Guide</p>
     </div>
 
     <!-- ============================================================ -->
@@ -500,6 +500,7 @@
                         <li><strong>Apply Colors</strong> &mdash; Apply DWG color overrides to the active view</li>
                         <li><strong>Material Mapping</strong> &mdash; Configure Navisworks material mappings</li>
                         <li><strong>Apply Materials</strong> &mdash; Assign materials to fabrication parts</li>
+                        <li><strong>Replace Ceilings</strong> &mdash; Bulk-swap every Basic Ceiling instance to a chosen ceiling type</li>
                     </ul>
                 </div>
                 <div class="col-card" style="border-left:3px solid var(--draft);">
@@ -777,6 +778,65 @@
         <div class="slide-footer">
             <span>EliteCoord Tutorial</span>
             <span class="slide-number">11</span>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 11b: REPLACE BASIC CEILINGS                              -->
+    <!-- ============================================================ -->
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>Replace Ceilings button</h2>
+            <span class="tab-label">Prep &gt; Replace Ceilings</span>
+        </div>
+        <div class="slide-body">
+            <p style="color:var(--text-dim);margin-bottom:0.15in;font-size:11pt;">Bulk-replaces every Basic Ceiling instance in the project with a chosen ceiling type. Walks group ancestry (including nested groups) and any attached detail groups, ungroups them in the right order, then performs the type swap inside a single transaction. One Ctrl+Z reverts the entire change.</p>
+            <table class="btn-table">
+                <thead>
+                    <tr><th>Control</th><th>What it does</th></tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="btn-pill pill-purple">Instance count</span></td>
+                        <td>Read-only header showing the total number of Basic Ceiling instances detected in the project, plus the number of attached detail groups and model groups they touch. Updates as soon as the dialog opens.</td>
+                    </tr>
+                    <tr>
+                        <td><span class="btn-pill pill-cyan">Target type</span></td>
+                        <td>Dropdown of every non-Basic ceiling type loaded in the project, sorted by family then type name. Pick the type you want every Basic Ceiling instance to become.</td>
+                    </tr>
+                    <tr>
+                        <td><span class="btn-pill pill-amber">Replace</span></td>
+                        <td>Confirms the swap. Runs inside a single transaction so one Ctrl+Z reverts everything. A failure preprocessor auto-accepts Revit's "elements will be deleted" warnings on dependent dimensions and references.</td>
+                    </tr>
+                    <tr>
+                        <td><span class="btn-pill pill-green">Cancel</span></td>
+                        <td>Closes the dialog without changing anything.</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="two-col" style="margin-top:0.15in;">
+                <div class="col-card" style="border-left:3px solid var(--coord);">
+                    <h3 style="color:var(--coord);">What gets swapped</h3>
+                    <ul class="col-green">
+                        <li><strong>Only Basic Ceiling family instances</strong> &mdash; compound ceilings and other loaded ceiling families are not touched.</li>
+                        <li><strong>Attached detail groups</strong> on the Basic Ceilings (and any nested groups) are ungrouped first so the type swap can complete cleanly.</li>
+                        <li><strong>Whole project</strong> &mdash; not view-filtered, not selection-filtered. The dialog tells you the blast radius before you confirm.</li>
+                    </ul>
+                </div>
+                <div class="col-card" style="border-left:3px solid var(--danger);">
+                    <h3 style="color:var(--danger);">Requirements</h3>
+                    <ul>
+                        <li>Project contains at least one Basic Ceiling instance.</li>
+                        <li>At least one non-Basic ceiling type is loaded as the replacement target.</li>
+                        <li>Dimensions and tags attached to the swapped ceilings will be deleted &mdash; the warning is auto-accepted, so review the result before saving.</li>
+                    </ul>
+                </div>
+            </div>
+            <p style="margin-top:0.12in;font-size:10pt;color:var(--text-muted);">No persistence: the dialog opens fresh every run with no saved target type. Different project teams pick different replacement types, so it stays a per-run choice.</p>
+        </div>
+        <div class="slide-footer">
+            <span>EliteCoord Tutorial</span>
+            <span class="slide-number">11b</span>
         </div>
     </div>
 
@@ -1134,7 +1194,7 @@
         <div class="accent-bar"></div>
         <div class="contact">
             <strong>Prep</strong> &bull; <strong>Views</strong> &bull; <strong>Clash</strong> &mdash; BIM coordination tools inside Revit<br>
-            Revit 2022&ndash;2026 &bull; .NET 4.8 / .NET 8.0 &bull; v1.0.13
+            Revit 2022&ndash;2026 &bull; .NET 4.8 / .NET 8.0 &bull; v1.0.14
         </div>
     </div>
 
