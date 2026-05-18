@@ -467,7 +467,7 @@
         <h1>EliteScan</h1>
         <div class="accent-bar"></div>
         <p class="subtitle">A tutorial walkthrough of every ribbon button, dialog, and workflow in the point cloud deviation analysis plugin</p>
-        <p class="version">v1.2.9 / Tutorial &amp; Reference Guide</p>
+        <p class="version">v1.3.0 / Tutorial &amp; Reference Guide</p>
     </div>
 
     <!-- ============================================================ -->
@@ -522,6 +522,7 @@
                 </div>
             </div>
             <p style="margin-top:0.15in;font-size:10pt;color:var(--text-muted);">Icons auto-swap between Light and Dark variants to match Revit's current UI theme. The add-in uses ricaun.Revit.UI for ribbon creation with automatic DPI scaling.</p>
+            <p style="margin-top:0.08in;font-size:10pt;color:var(--text-muted);">New in v1.3.0: deviation analysis is now occlusion-correct (each scan is compared against its own per-scan point cloud) and requires a one-time per-project calibration in <strong>Settings</strong> (see Section 03). The results window adds a <strong>Combine Analyses</strong> button for merging multiple per-area analyses into one report (see Section 12). No new ribbon buttons were added &mdash; both features live inside existing windows.</p>
         </div>
         <div class="slide-footer">
             <span>EliteScan Tutorial</span>
@@ -567,10 +568,20 @@
                         <li><strong>AnalysisRadius</strong> &mdash; Default 50 ft (configurable)</li>
                         <li><strong>SupportFolderPath</strong> &mdash; Parent folder of RCS file</li>
                         <li><strong>Location</strong> &mdash; XYZ coordinates of scan origin</li>
+                        <li><strong>Panorama orientation</strong> &mdash; Baked at Place time from the chosen mode (new in v1.3.0)</li>
                     </ul>
                 </div>
             </div>
             <p style="margin-top:0.12in;font-size:10pt;color:var(--text-muted);">Skips scans that already have instances placed. If an instance's ScanID matches an existing instance's ScanID parameter, placement is bypassed to avoid duplicates.</p>
+            <div class="col-card" style="border-left:3px solid var(--scan);margin-top:0.15in;">
+                <h3 style="color:var(--scan);">Panorama orientation baked here (new in v1.3.0)</h3>
+                <ul class="col-cyan">
+                    <li><strong>Mode chosen at Place time</strong> &mdash; FARO or E57, picked when you run Place Scans, not later in the 360 Viewer</li>
+                    <li><strong>Baked into each scan location</strong> &mdash; the correct viewing direction is stored on the family instance</li>
+                    <li><strong>Corrected formula</strong> &mdash; fixes the prior panorama misalignment (roughly 43° off in some projects)</li>
+                    <li><strong>To switch modes</strong> &mdash; re-run Place Scans for the project; the 360 Viewer simply trusts what was baked (see Section 08)</li>
+                </ul>
+            </div>
         </div>
         <div class="slide-footer">
             <span>EliteScan Tutorial</span>
@@ -579,12 +590,173 @@
     </div>
 
     <!-- ============================================================ -->
-    <!-- SLIDE 6: SECTION — ANALYSIS PANEL: RUN ANALYSIS             -->
+    <!-- SLIDE 5b: SECTION — PER-SCAN E57 SETUP & CALIBRATION        -->
     <!-- ============================================================ -->
     <div class="slide slide-section">
         <div class="section-label">Section 03</div>
+        <h2>Per-scan E57 setup &amp; calibration</h2>
+        <div class="section-sub">One-time per-project setup that makes deviation analysis occlusion-correct &mdash; required before Run Analysis in v1.3.0</div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 5c: WHY PER-SCAN E57                                   -->
+    <!-- ============================================================ -->
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>Why per-scan E57 &mdash; occlusion-correct accuracy</h2>
+            <span class="tab-label">Analysis &gt; Settings</span>
+        </div>
+        <div class="slide-body">
+            <p style="color:var(--text-dim);margin-bottom:0.15in;font-size:11pt;">Through v1.2.9, deviation analysis compared every scan against the single merged point cloud (all scanner setups combined). That meant a scanner standing in one room still produced dense "deviation" on a beam above a ceiling or a wall it could never physically see &mdash; phantom results that made elements look worse than they are. As of v1.3.0, each scan is compared against <strong>its own point cloud only</strong>. A scanner only has points where it could actually see, so things it couldn't see simply have no points and no phantom deviation. This is a large accuracy improvement, but it requires a one-time setup per project, described on the next slides.</p>
+            <div class="two-col" style="gap:0.3in;">
+                <div class="col-card" style="border-left:3px solid var(--coord);">
+                    <h3 style="color:var(--coord);">What this fixes</h3>
+                    <ul class="col-green">
+                        <li><strong>No phantom deviation</strong> on geometry a scanner couldn't see (beams behind walls, above ceilings, around corners)</li>
+                        <li><strong>True per-scan visibility</strong> &mdash; occlusion handled by physics, not guesswork</li>
+                        <li><strong>More trustworthy scores</strong> &mdash; elements graded only on points a scanner actually captured</li>
+                        <li><strong>Cleaner multi-scan picture</strong> &mdash; each scan contributes only what it really saw</li>
+                    </ul>
+                </div>
+                <div class="col-card" style="border-left:3px solid var(--scan);">
+                    <h3 style="color:var(--scan);">What it requires of you</h3>
+                    <ul class="col-cyan">
+                        <li><strong>Split the project scan</strong> into one file per scan with the separate E57ImageExtractor tool (one time per project)</li>
+                        <li><strong>Associate &amp; Calibrate</strong> in Settings so EliteScan can line up each scan with the Revit point cloud</li>
+                        <li><strong>Re-calibrate if you move the cloud</strong> &mdash; analysis stops if the saved calibration is stale</li>
+                    </ul>
+                </div>
+            </div>
+            <p style="margin-top:0.12in;font-size:10pt;color:var(--text-muted);">There is no fallback to the old merged-cloud method. If a point cloud has not been set up, Run Analysis stops with a clear message rather than producing less accurate results.</p>
+        </div>
+        <div class="slide-footer">
+            <span>EliteScan Tutorial</span>
+            <span class="slide-number">5b</span>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 5d: E57IMAGEEXTRACTOR PREREQUISITE                     -->
+    <!-- ============================================================ -->
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>Step 1 &mdash; Split the scan with E57ImageExtractor</h2>
+            <span class="tab-label">External Tool</span>
+        </div>
+        <div class="slide-body">
+            <p style="color:var(--text-dim);margin-bottom:0.15in;font-size:11pt;">E57ImageExtractor is a separate, standalone tool (run once per project, outside Revit). It takes the project's E57 export and splits it into one E57 file per individual scan, plus a small companion file that records each scan's origin. EliteScan reads these per-scan files during analysis.</p>
+            <table class="btn-table">
+                <tr><th style="width:200px;">What it produces</th><th>Details</th></tr>
+                <tr>
+                    <td><span class="btn-name">_scans folder</span></td>
+                    <td>A folder named after the source E57 with "_scans" appended, containing one E57 per scan setup. This is the folder you point EliteScan at in Settings.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-name">Companion sidecar file</span></td>
+                    <td>A small file written next to the per-scan E57s describing each scan's origin and point count. Calibration uses this to line scans up with Revit.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-name">Integrity check</span></td>
+                    <td>The split is verified after it runs. Once verified, the large original project E57 can be deleted &mdash; only the <span class="key">_scans</span> folder is needed going forward.</td>
+                </tr>
+            </table>
+            <p style="margin-top:0.12in;font-size:10pt;color:var(--text-muted);">Run this once per project (or again if you re-export the scan data). EliteScan does not split the E57 itself &mdash; it consumes the output of this tool.</p>
+        </div>
+        <div class="slide-footer">
+            <span>EliteScan Tutorial</span>
+            <span class="slide-number">5c</span>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 5e: SETTINGS — ASSOCIATE & CALIBRATE                   -->
+    <!-- ============================================================ -->
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>Step 2 &mdash; Associate &amp; Calibrate in Settings</h2>
+            <span class="tab-label">Analysis &gt; Settings</span>
+        </div>
+        <div class="slide-body">
+            <p style="color:var(--text-dim);margin-bottom:0.15in;font-size:11pt;">Settings has a new section, <strong>"Point cloud scans (occlusion-correct)"</strong>. It lists every point cloud linked into the project. For each one, point it at the matching <span class="key">_scans</span> folder produced in Step 1, then click <strong>Calibrate</strong>. Calibration lines up the per-scan E57 origins with the point cloud as placed in Revit and saves the result so analysis is fast afterward.</p>
+            <table class="btn-table">
+                <tr><th style="width:200px;">Control</th><th>What it does</th></tr>
+                <tr>
+                    <td><span class="btn-name">Point cloud list</span></td>
+                    <td>One row per linked point cloud, each showing its current setup status (see indicators below).</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-pill pill-gray">Browse / Associate</span></td>
+                    <td>Pick the <span class="key">_scans</span> folder that belongs to that point cloud. The folder must contain the per-scan E57s and the companion file from Step 1.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-pill pill-cyan">Calibrate</span></td>
+                    <td>Aligns the scan origins to the Revit point cloud and caches the result. Run once per point cloud (and again if you move the cloud).</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-name">Calibration cache size</span></td>
+                    <td>Shows how much disk the saved calibrations occupy. Calibrations are small and stored per project.</td>
+                </tr>
+            </table>
+            <div class="col-card" style="border-left:3px solid var(--scan);margin-top:0.15in;">
+                <h3 style="color:var(--scan);">Per-point-cloud status indicators</h3>
+                <ul class="col-cyan">
+                    <li><strong>Not set up</strong> &mdash; no <span class="key">_scans</span> folder associated yet; analysis of this cloud's scans will stop</li>
+                    <li><strong>Associated, not calibrated</strong> &mdash; folder linked but Calibrate has not been run yet</li>
+                    <li><strong>Calibrated</strong> &mdash; ready for analysis; shows when it was calibrated</li>
+                    <li><strong>Stale (cloud moved)</strong> &mdash; the point cloud was moved or replaced since calibrating; re-run Calibrate</li>
+                </ul>
+            </div>
+        </div>
+        <div class="slide-footer">
+            <span>EliteScan Tutorial</span>
+            <span class="slide-number">5d</span>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 5f: ABORT-ON-MISSING/STALE BEHAVIOR                    -->
+    <!-- ============================================================ -->
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>What happens if calibration is missing or stale</h2>
+            <span class="tab-label">Analysis &gt; Run Analysis</span>
+        </div>
+        <div class="slide-body">
+            <p style="color:var(--text-dim);margin-bottom:0.15in;font-size:11pt;">When you click Run Analysis, EliteScan first checks that every point cloud the chosen scans belong to is calibrated and still current. If any check fails, the whole run stops before doing any work and tells you exactly which point cloud needs attention. There is deliberately no fallback to the old, less accurate merged-cloud method.</p>
+            <div class="two-col" style="gap:0.3in;">
+                <div class="col-card" style="border-left:3px solid var(--danger);">
+                    <h3 style="color:var(--danger);">Setup required (run stops here)</h3>
+                    <ul class="col-cyan">
+                        <li><strong>E57ImageExtractor</strong> has been run for the project and produced a <span class="key">_scans</span> folder</li>
+                        <li><strong>Each point cloud</strong> has its <span class="key">_scans</span> folder associated in Settings</li>
+                        <li><strong>Calibrate</strong> has been clicked and succeeded for each point cloud</li>
+                        <li><strong>The point cloud has not moved</strong> in Revit since it was calibrated (otherwise re-Calibrate)</li>
+                    </ul>
+                </div>
+                <div class="col-card" style="border-left:3px solid var(--coord);">
+                    <h3 style="color:var(--coord);">When the run stops, you'll see</h3>
+                    <ul class="col-green">
+                        <li><strong>A clear message</strong> naming the point cloud and the reason (not set up, can't read scans, or stale)</li>
+                        <li><strong>No partial results</strong> &mdash; nothing is analyzed until setup is complete</li>
+                        <li><strong>The fix</strong> &mdash; open Settings, associate the <span class="key">_scans</span> folder and/or click Calibrate, then re-run</li>
+                    </ul>
+                </div>
+            </div>
+            <p style="margin-top:0.12in;font-size:10pt;color:var(--text-muted);">Individual scans with no matching per-scan E57 (or a name mismatch) are skipped and called out in the analysis summary rather than stopping the whole run.</p>
+        </div>
+        <div class="slide-footer">
+            <span>EliteScan Tutorial</span>
+            <span class="slide-number">5e</span>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 6: SECTION — ANALYSIS PANEL: RUN ANALYSIS             -->
+    <!-- ============================================================ -->
+    <div class="slide slide-section">
+        <div class="section-label">Section 04</div>
         <h2>Analysis panel &mdash; Run Analysis</h2>
-        <div class="section-sub">CloudCompare C2M deviation analysis workflow with multi-scan support</div>
+        <div class="section-sub">Occlusion-correct per-scan deviation analysis workflow with multi-scan support</div>
     </div>
 
     <!-- ============================================================ -->
@@ -596,7 +768,7 @@
             <span class="tab-label">Analysis &gt; Run Analysis</span>
         </div>
         <div class="slide-body">
-            <p style="color:var(--text-dim);margin-bottom:0.15in;font-size:11pt;">Opens a dialog listing all Scan Location instances. Choose which scans to analyze, or run analysis for all scans at once.</p>
+            <p style="color:var(--text-dim);margin-bottom:0.15in;font-size:11pt;">Opens a dialog listing all Scan Location instances. Choose which scans to analyze, or run analysis for all scans at once. Before any work begins, EliteScan validates the per-scan E57 calibration for every point cloud the chosen scans belong to &mdash; if a point cloud is not set up, or was moved since calibrating, the run stops with a clear message (see Section 03).</p>
             <table class="btn-table">
                 <tr><th style="width:180px;">Control</th><th>What it does</th></tr>
                 <tr>
@@ -633,27 +805,31 @@
             <span class="tab-label">Analysis &gt; Run Analysis</span>
         </div>
         <div class="slide-body">
-            <p style="color:var(--text-dim);margin-bottom:0.15in;font-size:11pt;">Modal progress dialog displays the current scan, operation step, progress bar, and cancel button. Each scan runs through four steps sequentially.</p>
+            <p style="color:var(--text-dim);margin-bottom:0.15in;font-size:11pt;">First, a calibration gate runs once for the whole batch: EliteScan confirms every point cloud the chosen scans belong to is calibrated and current (see Section 03). If that check fails the run stops here. Otherwise a modal progress dialog displays the current scan, operation step, progress bar, and cancel button, and each scan runs through the steps below.</p>
             <table class="btn-table">
                 <tr><th style="width:180px;">Step</th><th>What happens</th></tr>
                 <tr>
-                    <td><span class="btn-pill pill-cyan">1. Export Geometry</span></td>
-                    <td>Collects elements within AnalysisRadius of scan. Filters by included categories (Settings). Exports to E57 format via CustomExporter API. Saved to <span class="key">%LOCALAPPDATA%\EliteTools\EliteScan\TempGeometry\[ScanID].e57</span>.</td>
+                    <td><span class="btn-pill pill-amber">0. Calibration gate</span></td>
+                    <td>Runs once before the loop. Validates the per-scan E57 calibration for every point cloud the chosen scans belong to. Missing, unreadable, or stale (cloud moved) &mdash; the run stops with a clear message and nothing is analyzed. No fallback to the old merged-cloud method.</td>
                 </tr>
                 <tr>
-                    <td><span class="btn-pill pill-cyan">2. Export Cloud</span></td>
-                    <td>Extracts RCS point cloud to E57 format using CloudCompare CLI. Crops to a box matching the AnalysisRadius. Saved to <span class="key">%LOCALAPPDATA%\EliteTools\EliteScan\TempClouds\[ScanID].e57</span>.</td>
+                    <td><span class="btn-pill pill-cyan">1. Export Geometry</span></td>
+                    <td>Collects elements within the scan's analysis radius. Filters by included categories (Settings). Exports the model surfaces to a mesh file used as the comparison reference.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-pill pill-cyan">2. Resolve per-scan cloud</span></td>
+                    <td>Finds the scan's own per-scan E57 (from the calibration set up in Section 03) instead of the merged point cloud. A scan with no matching per-scan E57 (or a name mismatch) is skipped and called out in the summary.</td>
                 </tr>
                 <tr>
                     <td><span class="btn-pill pill-cyan">3. CloudCompare C2M</span></td>
-                    <td>Runs Cloud-to-Mesh distance calculation using CloudCompare CLI. Geometry E57 is the reference mesh, Cloud E57 is compared against it. Outputs per-point deviation scalars.</td>
+                    <td>CloudCompare applies the saved calibration so the scan lines up with the model, optionally crops to the analysis area for speed, then measures the distance from each point to the model surface.</td>
                 </tr>
                 <tr>
                     <td><span class="btn-pill pill-cyan">4. Compute Statistics</span></td>
-                    <td>Parses CloudCompare output. Groups points by originating element using spatial queries. Computes mean deviation, max deviation, % in tolerance, point count per element. Assigns letter grades (A-F). Saves to <span class="key">%LOCALAPPDATA%\EliteTools\EliteScan\Results\[timestamp].json</span>.</td>
+                    <td>Parses CloudCompare output. Groups points by originating element using spatial queries. Computes mean deviation, max deviation, % in tolerance, point count per element. Assigns letter grades (A-F). Saves to the project's Results folder (see Section 13).</td>
                 </tr>
             </table>
-            <p style="margin-top:0.12in;font-size:10pt;color:var(--text-muted);">Canceling aborts the current scan and skips remaining scans. Partial results are not saved. CloudCompare executable path must be configured in Settings.</p>
+            <p style="margin-top:0.12in;font-size:10pt;color:var(--text-muted);">Canceling aborts the current scan and skips remaining scans. Partial results are not saved. CloudCompare executable path must be configured in Settings, and per-scan E57 calibration must be set up first (Section 03).</p>
         </div>
         <div class="slide-footer">
             <span>EliteScan Tutorial</span>
@@ -665,7 +841,7 @@
     <!-- SLIDE 9: SECTION — RESULTS WINDOW                            -->
     <!-- ============================================================ -->
     <div class="slide slide-section">
-        <div class="section-label">Section 04</div>
+        <div class="section-label">Section 05</div>
         <h2>Results Window</h2>
         <div class="section-sub">Comprehensive interface for reviewing deviation analysis, verifying elements, and exporting reports</div>
     </div>
@@ -898,6 +1074,10 @@
                     <td>Exports all element data to CSV spreadsheet. Includes Category, ElementId, Name, Score, Mean/Max Deviation, % In Tolerance, Point Count, ScanID, Verified, Reason.</td>
                 </tr>
                 <tr>
+                    <td><span class="btn-pill pill-cyan">Combine Analyses</span></td>
+                    <td>New in v1.3.0. Opens a dialog to pick 2+ saved analyses (e.g. one per area) and merge them into a single consolidated report that opens like a whole-building run. See Section 12 for how the merge resolves overlaps.</td>
+                </tr>
+                <tr>
                     <td><span class="btn-pill pill-purple">Export Report</span></td>
                     <td>Generates comprehensive HTML report with embedded CSS, base64 screenshots, executive summary, category breakdown, and verification details.</td>
                 </tr>
@@ -914,10 +1094,52 @@
     </div>
 
     <!-- ============================================================ -->
+    <!-- SLIDE 14b: RESULTS WINDOW — v1.3.0 CHANGES                  -->
+    <!-- ============================================================ -->
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>Results Window &mdash; What's new in v1.3.0</h2>
+            <span class="tab-label">Analysis &gt; View Report</span>
+        </div>
+        <div class="slide-body">
+            <p style="color:var(--text-dim);margin-bottom:0.15in;font-size:11pt;">Several results-window changes land in v1.3.0: a live point-count filter, durable per-project review state, and a correction to how reviewed elements affect category accuracy.</p>
+            <table class="btn-table">
+                <tr><th style="width:200px;">Change</th><th>What it means for you</th></tr>
+                <tr>
+                    <td><span class="btn-name">Minimum-point filter (live)</span></td>
+                    <td>A toggle in the results window hides elements/scans at or below a point-count threshold (set in Settings). By default it only hides zero-point "No Data" rows so the list shows what was actually scanned. Toggling it recalculates the visible list immediately.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-name">Reviewed counts as accepted</span></td>
+                    <td>Manually reviewed (verified) elements now count as accepted in category and discipline accuracy, instead of being dropped from the math. Reviewing a poor element now improves the area's accuracy as expected.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-name">Combine Analyses button</span></td>
+                    <td>Next to Export CSV &mdash; merges multiple saved analyses into one consolidated report. Full detail in Section 12.</td>
+                </tr>
+            </table>
+            <div class="col-card" style="border-left:3px solid var(--scan);margin-top:0.15in;">
+                <h3 style="color:var(--scan);">Review persistence (QC approvals survive re-analysis)</h3>
+                <ul class="col-cyan">
+                    <li><strong>Saved per project</strong>, not per results file &mdash; approvals are no longer tied to one analysis run</li>
+                    <li><strong>Survive re-analysis</strong> &mdash; re-run on new scans or after model fixes and your approvals carry over automatically</li>
+                    <li><strong>Flagged, never lost</strong> &mdash; if an element's geometry or score changed since you reviewed it, it shows a "data changed since review" note but keeps the approval</li>
+                    <li><strong>Conflicts surfaced</strong> &mdash; differing approvals for the same element become a conflict that counts as unreviewed until a person resolves it; nothing is silently discarded</li>
+                    <li><strong>First open migrates history</strong> &mdash; existing approvals from past results files are seeded into the project review store automatically</li>
+                </ul>
+            </div>
+        </div>
+        <div class="slide-footer">
+            <span>EliteScan Tutorial</span>
+            <span class="slide-number">14b</span>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
     <!-- SLIDE 15: SECTION — SCORING SYSTEM                          -->
     <!-- ============================================================ -->
     <div class="slide slide-section">
-        <div class="section-label">Section 05</div>
+        <div class="section-label">Section 06</div>
         <h2>Scoring System</h2>
         <div class="section-sub">Letter grade thresholds and multi-scan scoring modes</div>
     </div>
@@ -981,7 +1203,7 @@
     <!-- SLIDE 17: SECTION — ELEMENT VERIFICATION                    -->
     <!-- ============================================================ -->
     <div class="slide slide-section">
-        <div class="section-label">Section 06</div>
+        <div class="section-label">Section 07</div>
         <h2>Element Verification</h2>
         <div class="section-sub">Document reasons for deviations with screenshots and structured notes</div>
     </div>
@@ -1085,7 +1307,7 @@
     <!-- SLIDE 20: SECTION — 360° PANORAMA VIEWER                    -->
     <!-- ============================================================ -->
     <div class="slide slide-section">
-        <div class="section-label">Section 07</div>
+        <div class="section-label">Section 08</div>
         <h2>360° Panorama Viewer</h2>
         <div class="section-sub">Dockable pane for equirectangular scan panorama visualization with Revit view sync</div>
     </div>
@@ -1099,7 +1321,7 @@
             <span class="tab-label">Viewer &gt; 360 Viewer</span>
         </div>
         <div class="slide-body">
-            <p style="color:var(--text-dim);margin-bottom:0.15in;font-size:11pt;">Dockable pane displaying equirectangular panorama images from FARO scans or E57 exports. Toolbar provides navigation, synchronization, and screenshot controls.</p>
+            <p style="color:var(--text-dim);margin-bottom:0.15in;font-size:11pt;">Dockable pane displaying equirectangular panorama images from FARO scans or E57 exports. Toolbar provides navigation, synchronization, and screenshot controls. As of v1.3.0 the viewer no longer has a FARO/E57 orientation toggle &mdash; it trusts the panorama orientation that was baked when you ran Place Scans (corrected formula; fixes the prior ~43° misalignment). To change orientation mode, re-run Place Scans (see Section 02).</p>
             <table class="btn-table">
                 <tr><th style="width:160px;">Control</th><th>What it does</th></tr>
                 <tr>
@@ -1209,7 +1431,7 @@
     <!-- SLIDE 24: SECTION — OVERLAY & QUICK VISUALIZATION           -->
     <!-- ============================================================ -->
     <div class="slide slide-section">
-        <div class="section-label">Section 08</div>
+        <div class="section-label">Section 09</div>
         <h2>Overlay &amp; Quick Visualization</h2>
         <div class="section-sub">Visual feedback of analysis results directly in Revit's 3D viewport</div>
     </div>
@@ -1258,7 +1480,7 @@
     <!-- SLIDE 26: SECTION — SETTINGS CONFIGURATION                  -->
     <!-- ============================================================ -->
     <div class="slide slide-section">
-        <div class="section-label">Section 09</div>
+        <div class="section-label">Section 10</div>
         <h2>Settings Configuration</h2>
         <div class="section-sub">Configure scoring thresholds, analysis parameters, paths, and included categories</div>
     </div>
@@ -1338,12 +1560,58 @@
                     <td><span class="btn-name">Point Cloud Root</span></td>
                     <td>Folder path input with Browse button. Root directory where RCS files are stored. Used as fallback if RCP doesn't contain absolute paths to RCS files.</td>
                 </tr>
+                <tr>
+                    <td><span class="btn-name">Analyze visible only</span></td>
+                    <td>New in v1.3.0. Checkbox. When on, analysis is scoped to only the elements visible in the active Revit view &mdash; hidden, filtered-out, or view-cropped elements are skipped. Use it to QC one area or floor without analyzing the whole model.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-name">Minimum points to display</span></td>
+                    <td>New in v1.3.0. Numeric input. Elements and scans at or below this point count are hidden from results. Default is 0, which only hides zero-point "No Data" rows. Raise it to drop sparsely-captured elements from the report. A live toggle in the results window honors this value.</td>
+                </tr>
             </table>
             <p style="margin-top:0.15in;color:var(--text-dim);font-size:11pt;"><strong>Paths section:</strong> Critical for analysis workflow. If CloudCompare.exe is not found, Run Analysis will fail immediately with error message.</p>
+            <p style="margin-top:0.08in;font-size:10pt;color:var(--text-muted);">Settings also hosts the new <strong>"Point cloud scans (occlusion-correct)"</strong> section &mdash; the required per-scan E57 association and Calibrate step. That setup is covered in full in Section 03.</p>
         </div>
         <div class="slide-footer">
             <span>EliteScan Tutorial</span>
             <span class="slide-number">28</span>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 28b: SETTINGS — POINT CLOUD SCANS (OCCLUSION-CORRECT) -->
+    <!-- ============================================================ -->
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>Settings &mdash; Point cloud scans (occlusion-correct)</h2>
+            <span class="tab-label">Analysis &gt; Settings</span>
+        </div>
+        <div class="slide-body">
+            <p style="color:var(--text-dim);margin-bottom:0.15in;font-size:11pt;">New in v1.3.0. This section is the per-project setup that makes deviation analysis occlusion-correct. It lists every point cloud linked into the project; each one must be associated with its per-scan E57 folder and calibrated before analysis will run. The concepts and the E57ImageExtractor prerequisite are explained in full in Section 03 &mdash; this slide is the Settings reference.</p>
+            <table class="btn-table">
+                <tr><th style="width:200px;">Control</th><th>What it does</th></tr>
+                <tr>
+                    <td><span class="btn-name">Point cloud list</span></td>
+                    <td>One row per linked point cloud. Each row shows the associated <span class="key">_scans</span> folder (if any) and a setup status: Not set up, Associated (not calibrated), Calibrated (with date), or Stale (cloud moved).</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-pill pill-gray">Browse / Associate</span></td>
+                    <td>Pick the <span class="key">_scans</span> folder produced by E57ImageExtractor for that point cloud. Must contain the per-scan E57 files and the companion sidecar.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-pill pill-cyan">Calibrate</span></td>
+                    <td>Lines up the scan origins with the point cloud as placed in Revit and caches the result. Run once per point cloud; re-run if you move or replace the cloud.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-name">Calibration cache size</span></td>
+                    <td>Shows how much disk the saved calibrations occupy for this project. Calibrations are small.</td>
+                </tr>
+            </table>
+            <p style="margin-top:0.12in;font-size:10pt;color:var(--text-muted);">If a point cloud here is not calibrated (or shows Stale), Run Analysis stops with a clear message for that cloud &mdash; there is no fallback to the old merged-cloud method. See Section 03 for the end-to-end setup walkthrough.</p>
+        </div>
+        <div class="slide-footer">
+            <span>EliteScan Tutorial</span>
+            <span class="slide-number">28b</span>
         </div>
     </div>
 
@@ -1359,8 +1627,8 @@
             <table class="btn-table">
                 <tr><th style="width:180px;">Setting</th><th>Details</th></tr>
                 <tr>
-                    <td><span class="btn-name">Panorama Source</span></td>
-                    <td>Radio buttons: <span class="btn-pill pill-cyan" style="font-size:9pt;">FARO (180°)</span> or <span class="btn-pill pill-gray" style="font-size:9pt;">E57 Export (270°)</span>. FARO mode looks for native FARO panorama JPGs in scan folders. E57 Export mode generates panoramas from E57 files via CloudCompare. Default: FARO.</td>
+                    <td><span class="btn-name">Panorama orientation</span></td>
+                    <td>Changed in v1.3.0. There is no longer a FARO vs E57 toggle in Settings. Panorama viewing direction is decided when you run <strong>Place Scans</strong> (FARO or E57 mode chosen there) and is baked into each scan location. The 360 Viewer trusts that baked orientation. See Section 02 (Place Scans) and Section 08 (360 Viewer).</td>
                 </tr>
                 <tr>
                     <td><span class="btn-name">Family Name</span></td>
@@ -1371,7 +1639,7 @@
                     <td>Text input (default "ScanID"). Specifies which instance parameter stores the scan identifier. Must match the parameter name in the Scan Location family.</td>
                 </tr>
             </table>
-            <p style="margin-top:0.15in;color:var(--text-dim);font-size:11pt;"><strong>360° Panorama Viewer:</strong> FARO mode requires original FARO scan folder structure with panorama_*.jpg files. E57 Export mode works with any E57-compatible scan data but requires CloudCompare for panorama generation (slower).</p>
+            <p style="margin-top:0.15in;color:var(--text-dim);font-size:11pt;"><strong>360° Panorama Viewer:</strong> v1.3.0 uses a corrected orientation formula that fixes the prior panorama misalignment (roughly 43° off in some projects). Because orientation is now baked at Place time, re-run Place Scans if you change which orientation mode a project should use.</p>
         </div>
         <div class="slide-footer">
             <span>EliteScan Tutorial</span>
@@ -1499,7 +1767,7 @@
     <!-- SLIDE 32: SECTION — EXPORT & REPORTS                        -->
     <!-- ============================================================ -->
     <div class="slide slide-section">
-        <div class="section-label">Section 10</div>
+        <div class="section-label">Section 11</div>
         <h2>Export &amp; Reports</h2>
         <div class="section-sub">CSV data export and comprehensive HTML report generation</div>
     </div>
@@ -1579,10 +1847,99 @@
     </div>
 
     <!-- ============================================================ -->
+    <!-- SLIDE 34b: SECTION — COMBINE ANALYSES                       -->
+    <!-- ============================================================ -->
+    <div class="slide slide-section">
+        <div class="section-label">Section 12</div>
+        <h2>Combine Analyses</h2>
+        <div class="section-sub">Merge several saved per-area analyses into one consolidated whole-building report &mdash; new in v1.3.0</div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 34c: COMBINE ANALYSES — DIALOG                        -->
+    <!-- ============================================================ -->
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>Combine Analyses &mdash; Selection Dialog</h2>
+            <span class="tab-label">Results Window &gt; Combine Analyses</span>
+        </div>
+        <div class="slide-body">
+            <p style="color:var(--text-dim);margin-bottom:0.15in;font-size:11pt;">Large projects are often analyzed area by area (one analysis per floor or zone). The <strong>Combine Analyses</strong> button in the results window (next to Export CSV) lets you pick two or more of those saved analyses and merge them into a single consolidated report that opens just like a whole-building run.</p>
+            <table class="btn-table">
+                <tr><th style="width:200px;">Control</th><th>What it does</th></tr>
+                <tr>
+                    <td><span class="btn-name">Analysis checklist</span></td>
+                    <td>Checkbox list of saved analyses for this project. Each row shows the analysis date, its grading signature (tolerance and grade thresholds), and element/scan counts so you can tell them apart.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-name">First selection locks settings</span></td>
+                    <td>The first analysis you check sets the grading signature for the combine. Analyses with a different tolerance or thresholds are then disabled (greyed out) so you can't mix incompatible grading.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-pill pill-cyan">Combine</span></td>
+                    <td>Enabled once 2 or more compatible analyses are checked. Builds the consolidated result and opens it in the results window.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-pill pill-gray">Cancel</span></td>
+                    <td>Closes the dialog without combining anything.</td>
+                </tr>
+            </table>
+            <p style="margin-top:0.12in;font-size:10pt;color:var(--text-muted);">The consolidated result is saved as <span class="key">EliteScan_consolidated_[timestamp].json</span> in the project's Results folder (see Section 13) and can be reopened or exported like any analysis.</p>
+        </div>
+        <div class="slide-footer">
+            <span>EliteScan Tutorial</span>
+            <span class="slide-number">34b</span>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 34d: COMBINE ANALYSES — HOW THE MERGE RESOLVES        -->
+    <!-- ============================================================ -->
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>Combine Analyses &mdash; How the merge resolves</h2>
+            <span class="tab-label">Results Window &gt; Combine Analyses</span>
+        </div>
+        <div class="slide-body">
+            <p style="color:var(--text-dim);margin-bottom:0.15in;font-size:11pt;">When the same scan location appears in more than one selected analysis, the merge keeps the newest capture. Scan locations that appear in only one analysis are simply carried through. The result reads exactly like a single whole-building analysis.</p>
+            <div class="two-col" style="gap:0.3in;">
+                <div class="col-card" style="border-left:3px solid var(--scan);">
+                    <h3 style="color:var(--scan);">Merge rules</h3>
+                    <ul class="col-cyan">
+                        <li><strong>Newest wins per scan</strong> &mdash; if a scan location is in two analyses, the most recent one is kept; older captures are discarded</li>
+                        <li><strong>Point count is irrelevant</strong> &mdash; recency decides, not which run had more points</li>
+                        <li><strong>Different scans are unioned</strong> &mdash; scan locations unique to each analysis are all included</li>
+                        <li><strong>Grading signature gate</strong> &mdash; the first selection locks tolerance and thresholds; incompatible analyses are disabled in the dialog</li>
+                    </ul>
+                </div>
+                <div class="col-card" style="border-left:3px solid var(--coord);">
+                    <h3 style="color:var(--coord);">What carries over</h3>
+                    <ul class="col-green">
+                        <li><strong>Manual approvals</strong> &mdash; QC approvals carry across the combine (they are project-level; see Section 05)</li>
+                        <li><strong>Opens like a normal run</strong> &mdash; discipline/category tree, scoring modes, export, and overlay all work as usual</li>
+                        <li><strong>Saved separately</strong> &mdash; written as <span class="key">EliteScan_consolidated_[timestamp].json</span>; the source analyses are untouched</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-card" style="border-left:3px solid var(--danger);margin-top:0.15in;">
+                <h3 style="color:var(--danger);">Requirements</h3>
+                <ul class="col-cyan">
+                    <li><strong>At least 2 saved analyses</strong> exist for the project (Run Analysis on each area first)</li>
+                    <li><strong>Matching grading settings</strong> &mdash; same tolerance and grade thresholds; analyses that differ are disabled in the dialog</li>
+                </ul>
+            </div>
+        </div>
+        <div class="slide-footer">
+            <span>EliteScan Tutorial</span>
+            <span class="slide-number">34c</span>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
     <!-- SLIDE 35: SECTION — FILE STORAGE LOCATIONS                  -->
     <!-- ============================================================ -->
     <div class="slide slide-section">
-        <div class="section-label">Section 11</div>
+        <div class="section-label">Section 13</div>
         <h2>File Storage Locations</h2>
         <div class="section-sub">Where EliteScan stores settings, results, temporary data, and logs</div>
     </div>
@@ -1604,7 +1961,15 @@
                 </tr>
                 <tr>
                     <td><span class="key">Results\</span></td>
-                    <td>Analysis result JSON files. Each file is timestamped: <span class="key">[ProjectName]_[timestamp].json</span>. Contains element scores, deviations, scan selections, verification data.</td>
+                    <td>Analysis result JSON files. Each file is timestamped: <span class="key">[ProjectName]_[timestamp].json</span>. Contains element scores, deviations, scan selections, verification data. Merged reports from Combine Analyses (Section 12) are saved here as <span class="key">EliteScan_consolidated_[timestamp].json</span>.</td>
+                </tr>
+                <tr>
+                    <td><span class="key">[Project]\Scan\calibration\</span></td>
+                    <td>New in v1.3.0. Per-scan E57 calibration cache, one file per point cloud: <span class="key">[rcpKey].json</span>. Created when you click Calibrate in Settings (Section 03). Validated before every analysis; re-Calibrate if the point cloud moves. Project-scoped path: <span class="key">%LOCALAPPDATA%\EliteTools\[Project]\Scan\calibration\</span>.</td>
+                </tr>
+                <tr>
+                    <td><span class="key">[Project]\Scan\review-store.json</span></td>
+                    <td>New in v1.3.0. Durable per-project QC review store. Holds your element approvals so they survive re-analysis and model fixes; conflicts are flagged, never lost (Section 05). Project-scoped path: <span class="key">%LOCALAPPDATA%\EliteTools\[Project]\Scan\review-store.json</span>.</td>
                 </tr>
                 <tr>
                     <td><span class="key">TempGeometry\</span></td>
@@ -1643,7 +2008,7 @@
     <!-- SLIDE 37: SECTION — TROUBLESHOOTING                         -->
     <!-- ============================================================ -->
     <div class="slide slide-section">
-        <div class="section-label">Section 12</div>
+        <div class="section-label">Section 14</div>
         <h2>Troubleshooting</h2>
         <div class="section-sub">Common issues and solutions</div>
     </div>
@@ -1674,13 +2039,22 @@
                         <li><strong>Solution:</strong> Verify RCS files exist, check RCP properties, set Point Cloud Root in Settings</li>
                     </ul>
                 </div>
+                <div class="col-card" style="border-left:3px solid var(--danger);">
+                    <h3 style="color:var(--danger);">Analysis Stops: Calibration Missing or Stale</h3>
+                    <ul class="col-cyan">
+                        <li><strong>Symptom:</strong> Run Analysis stops with a message naming a point cloud (not set up, can't read scans, or stale)</li>
+                        <li><strong>Cause:</strong> v1.3.0 needs each point cloud associated with its per-scan E57 folder and calibrated; or the cloud was moved since calibrating</li>
+                        <li><strong>Solution:</strong> Run E57ImageExtractor, then in Settings associate the <span class="key">_scans</span> folder and click Calibrate for that point cloud (re-Calibrate if moved). See Section 03</li>
+                        <li><strong>Note:</strong> There is no fallback to the old merged-cloud method by design</li>
+                    </ul>
+                </div>
                 <div class="col-card" style="border-left:3px solid var(--warning);">
                     <h3 style="color:var(--warning);">Panorama Images Not Loading</h3>
                     <ul class="col-amber">
                         <li><strong>Symptom:</strong> 360 Viewer shows "No panorama found" message</li>
                         <li><strong>FARO mode:</strong> Verify original FARO scan folders with panorama_*.jpg files are accessible</li>
-                        <li><strong>E57 Export mode:</strong> Check CloudCompare path, verify E57 files contain panorama data</li>
-                        <li><strong>Fallback:</strong> Switch panorama source mode in Settings</li>
+                        <li><strong>E57 mode:</strong> Verify E57 panorama images are available for the scans</li>
+                        <li><strong>Wrong orientation:</strong> Orientation is baked at Place time in v1.3.0 &mdash; re-run Place Scans with the correct mode (Section 02), not a Settings toggle</li>
                     </ul>
                 </div>
                 <div class="col-card" style="border-left:3px solid var(--primary);">
@@ -1723,7 +2097,7 @@
         <div class="accent-bar"></div>
         <div class="contact">
             <strong>Analysis</strong> &bull; <strong>Viewer</strong> &bull; <strong>Overlay</strong> &bull; <strong>Point Clouds</strong> &mdash; Point cloud deviation analysis for Revit<br>
-            Revit 2022&ndash;2026 &bull; .NET 4.8 / .NET 8.0 &bull; CloudCompare integration &bull; v1.2.9
+            Revit 2022&ndash;2026 &bull; .NET 4.8 / .NET 8.0 &bull; CloudCompare integration &bull; v1.3.0
         </div>
     </div>
 

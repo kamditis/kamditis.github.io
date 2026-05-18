@@ -1128,9 +1128,9 @@
                 color: '#5ED5DD',
                 colorVar: 'var(--scan)',
                 released: true,
-                version: 'v1.2.9',
-                downloadUrl: 'https://github.com/kamditis/kamditis.github.io/releases/download/EliteScan-latest/EliteScan-v1.2.9.zip',
-                downloadFile: 'EliteScan-v1.2.9.zip',
+                version: 'v1.3.0',
+                downloadUrl: 'https://github.com/kamditis/kamditis.github.io/releases/download/EliteScan-latest/EliteScan-v1.3.0.zip',
+                downloadFile: 'EliteScan-v1.3.0.zip',
                 docsUrl: 'docs/EliteScan-Tutorial.html',
                 description: 'Point cloud deviation analysis for Autodesk Revit.',
                 installation: [
@@ -1148,22 +1148,22 @@
                     {
                         title: 'Analysis',
                         tools: [
-                            { id: 'place_scans', label: 'Place Scans', icon: 'target', fn: 'Auto-places scan location markers at point cloud scan origins. Links each marker to its source scan for analysis tracking.', videoRef: 'GGQTLdprTyA', changelog: 'v1.2.4: Ribbon icons now automatically match the Revit UI theme (light/dark).', requirements: ['Point cloud linked in model (RCP/RCS)', 'Family: "Scan Location" loaded in project', 'Params on family: ScanID (text), PointCloudId (integer)', 'Levels defined in model'] },
-                            { id: 'run_analysis', label: 'Run Analysis', icon: 'play', fn: 'Compares your Revit model against point cloud scans to verify installation accuracy. Grades each element A-F based on how closely the as-built matches design.', videoRef: '', changelog: '', requirements: ['Scan locations placed with ScanID populated', 'PointCloudId parameter linked to loaded point cloud', 'CloudCompare installed (auto-detected or set in Settings)'] },
-                            { id: 'view_report', label: 'View Report', icon: 'file-text', fn: 'Opens the interactive results window showing which elements passed or failed quality checks. Drill down by discipline, category, or element to investigate deviations.', videoRef: '', changelog: '', requirements: ['Analysis completed (current session or saved results)'] },
-                            { id: 'settings', label: 'Settings', icon: 'settings', fn: 'Configure analysis tolerance (how close is close enough), grading thresholds, and which element categories to include in quality checks.', videoRef: '', changelog: '', requirements: [] },
+                            { id: 'place_scans', label: 'Place Scans', icon: 'target', fn: 'Auto-places scan location markers at point cloud scan origins. Links each marker to its source scan for analysis tracking.', videoRef: 'GGQTLdprTyA', changelog: 'v1.3.0: Panorama orientation is now baked into each scan marker when placed (FARO vs E57 mode chosen at Place time) so the 360 Viewer shows the correct direction. v1.2.4: Ribbon icons now automatically match the Revit UI theme (light/dark).', requirements: ['Point cloud linked in model (RCP/RCS)', 'Family: "Scan Location" loaded in project', 'Params on family: ScanID (text), PointCloudId (integer)', 'Levels defined in model'] },
+                            { id: 'run_analysis', label: 'Run Analysis', icon: 'play', fn: 'Compares your Revit model against point cloud scans to verify installation accuracy. Grades each element A-F based on how closely the as-built matches design.', videoRef: '', changelog: 'v1.3.0: Deviation analysis now compares each scan against its own per-scan E57 file instead of the merged point cloud, removing false deviation on areas a scanner could not physically see (behind walls, above ceilings). One-time setup required: split the project E57 with E57ImageExtractor, then associate each point cloud’s scans folder and Calibrate in Settings — analysis will not run until this is done.', requirements: ['Scan locations placed with ScanID populated', 'PointCloudId parameter linked to loaded point cloud', 'CloudCompare installed (auto-detected or set in Settings)'] },
+                            { id: 'view_report', label: 'View Report', icon: 'file-text', fn: 'Opens the interactive results window showing which elements passed or failed quality checks. Drill down by discipline, category, or element to investigate deviations.', videoRef: '', changelog: 'v1.3.0: New "Combine Analyses" button merges two or more saved section analyses into one consolidated report. Approvals now persist per project and survive re-analysis on new scans. Added a live minimum-point filter to hide low-point elements. Fixed manually reviewed elements not counting as accepted in category accuracy.', requirements: ['Analysis completed (current session or saved results)'] },
+                            { id: 'settings', label: 'Settings', icon: 'settings', fn: 'Configure analysis tolerance (how close is close enough), grading thresholds, and which element categories to include in quality checks.', videoRef: '', changelog: 'v1.3.0: New "Point cloud scans (occlusion-correct)" section to associate each point cloud with its per-scan E57 folder and calibrate it (now required before analysis). Added a view-only analysis option and a minimum-point display filter.', requirements: [] },
                         ]
                     },
                     {
                         title: 'Viewer',
                         tools: [
-                            { id: '360_viewer', label: '360 Viewer', icon: 'globe', fn: 'View scan locations as interactive 360° panoramas with hotspot navigation between nearby scans. Sync the panorama view direction with Revit\'s 3D view for spatial context.', videoRef: '-glwNk8CL8c', changelog: 'v1.2.9: Fixed E57 panorama rotation alignment. Added debug panel (D key) and calibration panel (C key) for rotation fine-tuning.', requirements: ['Scan Location family instance selected', 'ScanID parameter populated', 'Support folder: "[PointCloudName] Support/"', 'Panorama image: [ScanID].jpg in support folder'] },
+                            { id: '360_viewer', label: '360 Viewer', icon: 'globe', fn: 'View scan locations as interactive 360° panoramas with hotspot navigation between nearby scans. Sync the panorama view direction with Revit\'s 3D view for spatial context.', videoRef: '-glwNk8CL8c', changelog: 'v1.3.0: Panorama viewing direction is now set when you Place Scan Locations using a corrected orientation formula, fixing the prior ~43° misalignment. v1.2.9: Fixed E57 panorama rotation alignment. Added debug panel (D key) and calibration panel (C key) for rotation fine-tuning.', requirements: ['Scan Location family instance selected', 'ScanID parameter populated', 'Support folder: "[PointCloudName] Support/"', 'Panorama image: [ScanID].jpg in support folder'] },
                         ]
                     },
                     {
                         title: 'Overlay',
                         tools: [
-                            { id: 'show_overlay', label: 'Show Overlay', icon: 'layers', fn: 'Color-code elements in the active view by their accuracy grade (green = excellent, red = failed). Quickly spot problem areas without opening the full report.', videoRef: '', changelog: '', requirements: ['Analysis results (current session or saved)', 'Active view open'] },
+                            { id: 'show_overlay', label: 'Show Overlay', icon: 'layers', fn: 'Color-code elements in the active view by their accuracy grade (green = excellent, red = failed). Quickly spot problem areas without opening the full report.', videoRef: '', changelog: 'v1.3.0: Overlay now reflects per-project saved approvals — verified elements show in cyan and keep their reviewed state across re-analysis.', requirements: ['Analysis results (current session or saved)', 'Active view open'] },
                             { id: 'clear_overlay', label: 'Clear Overlay', icon: 'eye-off', fn: 'Remove color-coded deviation overlays from the current view to restore normal element appearance.', videoRef: '', changelog: '', requirements: ['Active view with overlay applied'] },
                         ]
                     },
