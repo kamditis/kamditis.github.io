@@ -467,7 +467,7 @@
         <h1>EliteScan</h1>
         <div class="accent-bar"></div>
         <p class="subtitle">A tutorial walkthrough of every ribbon button, dialog, and workflow in the point cloud deviation analysis plugin</p>
-        <p class="version">v1.3.0 / Tutorial &amp; Reference Guide</p>
+        <p class="version">v1.3.1 / Tutorial &amp; Reference Guide</p>
     </div>
 
     <!-- ============================================================ -->
@@ -784,11 +784,15 @@
                     <td>Runs analysis workflow for every scan in the project, regardless of selection state.</td>
                 </tr>
                 <tr>
+                    <td><span class="btn-pill pill-purple">Store points for visualization</span></td>
+                    <td><strong>Off by default &mdash; leave it off for full-floor and section runs.</strong> Statistics, grades, and the report are computed from every point either way, so results are identical. Turning it on additionally keeps the raw deviation points in memory for the on-element heatmap (Show Deviations) &mdash; useful only on small jobs. On a full floor the heatmap is unreadable and the retained points make the run far slower and memory-heavy, so keep it off there.</td>
+                </tr>
+                <tr>
                     <td><span class="btn-pill pill-gray">Cancel</span></td>
                     <td>Closes the dialog without running any analysis.</td>
                 </tr>
             </table>
-            <p style="margin-top:0.12in;font-size:10pt;color:var(--text-muted);">Tip: Use "Analyze Selected" when you only need to update specific scans after model changes. Use "Analyze All" for the initial full-project analysis.</p>
+            <p style="margin-top:0.12in;font-size:10pt;color:var(--text-muted);">Tip: Use "Analyze Selected" when you only need to update specific scans after model changes. Use "Analyze All" for the initial full-project analysis. Leave "Store points for visualization" off for these large runs &mdash; it keeps them fast and light on memory (a full floor of hundreds of scans completes in hours, not overnight).</p>
         </div>
         <div class="slide-footer">
             <span>EliteScan Tutorial</span>
@@ -2097,7 +2101,7 @@
         <div class="accent-bar"></div>
         <div class="contact">
             <strong>Analysis</strong> &bull; <strong>Viewer</strong> &bull; <strong>Overlay</strong> &bull; <strong>Point Clouds</strong> &mdash; Point cloud deviation analysis for Revit<br>
-            Revit 2022&ndash;2026 &bull; .NET 4.8 / .NET 8.0 &bull; CloudCompare integration &bull; v1.3.0
+            Revit 2022&ndash;2026 &bull; .NET 4.8 / .NET 8.0 &bull; CloudCompare integration &bull; v1.3.1
         </div>
     </div>
 
