@@ -470,7 +470,7 @@
         <h1>EliteCoord</h1>
         <div class="accent-bar"></div>
         <p class="subtitle">A tutorial walkthrough of every ribbon button, dialog, and workflow in the BIM coordination preparation plugin</p>
-        <p class="version">v1.0.14 / Tutorial &amp; Reference Guide</p>
+        <p class="version">v1.0.15 / Tutorial &amp; Reference Guide</p>
     </div>
 
     <!-- ============================================================ -->
@@ -479,7 +479,7 @@
     <div class="slide slide-section">
         <div class="section-label">Section 01</div>
         <h2>Ribbon overview</h2>
-        <div class="section-sub">The "Elite Coord" tab with three panels: Prep, Views, and Clash</div>
+        <div class="section-sub">The "Elite Coord" tab with five panels: Prep, Views, Measure, Sleeves, and Clash</div>
     </div>
 
     <!-- ============================================================ -->
@@ -491,7 +491,7 @@
             <span class="tab-label">Elite Coord</span>
         </div>
         <div class="slide-body">
-            <p style="color:var(--text-dim);margin-bottom:0.15in;font-size:11pt;">EliteCoord installs a dedicated "Elite Coord" tab in the Revit ribbon. It contains three panels, each grouping related tools for coordination workflows. Supports Revit 2022 through 2026.</p>
+            <p style="color:var(--text-dim);margin-bottom:0.15in;font-size:11pt;">EliteCoord installs a dedicated "Elite Coord" tab in the Revit ribbon. It contains five panels, each grouping related tools for coordination workflows. Supports Revit 2022 through 2026.</p>
             <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0.2in;">
                 <div class="col-card" style="border-left:3px solid var(--coord);">
                     <h3 style="color:var(--coord);">Prep panel</h3>
@@ -509,6 +509,18 @@
                         <li><strong>Create Scopes</strong> &mdash; Create per-level 3D views with section boxes</li>
                         <li><strong>Reset Scope</strong> &mdash; Reset section box from selected levels</li>
                         <li><strong>Find in 2D</strong> &mdash; Find plan views containing the selected element</li>
+                    </ul>
+                </div>
+                <div class="col-card" style="border-left:3px solid var(--scan);">
+                    <h3 style="color:var(--scan);">Measure panel</h3>
+                    <ul class="col-cyan">
+                        <li><strong>Measure</strong> &mdash; Surface-to-surface measurement in the active 3D view</li>
+                    </ul>
+                </div>
+                <div class="col-card" style="border-left:3px solid var(--draft);">
+                    <h3 style="color:var(--draft);">Sleeves panel</h3>
+                    <ul class="col-amber">
+                        <li><strong>Wall Sleeve</strong> &mdash; Place sized sleeves where MEP runs pass through walls</li>
                     </ul>
                 </div>
                 <div class="col-card" style="border-left:3px solid var(--core);">
@@ -990,10 +1002,168 @@
     </div>
 
     <!-- ============================================================ -->
-    <!-- SLIDE 15: SECTION — CLASH PANEL                                -->
+    <!-- SLIDE 15: SECTION — MEASURE PANEL                              -->
+    <!-- ============================================================ -->
+    <div class="slide slide-section" style="border-left-color:var(--scan);">
+        <div class="section-label">Section 05</div>
+        <h2>Measure panel</h2>
+        <div class="section-sub">Surface-to-surface measurement in the active 3D view with a live on-screen overlay</div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 16: MEASURE                                              -->
+    <!-- ============================================================ -->
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>Measure</h2>
+            <span class="tab-label">Measure &gt; Measure</span>
+        </div>
+        <div class="slide-body">
+            <p style="color:var(--text-dim);margin-bottom:0.15in;font-size:11pt;">Measures the distance between two points you pick in the active 3D view. A floating panel shows the X, Y, and Z differences, the horizontal distance, and the straight-line 3D distance &mdash; all in feet and inches. Nothing is added to the model; the measurement is a temporary on-screen overlay.</p>
+            <table class="btn-table">
+                <tr><th style="width:160px;">Mode</th><th>How you pick</th></tr>
+                <tr>
+                    <td><span class="btn-pill pill-cyan">FACE</span></td>
+                    <td>Click any face &mdash; including faces inside linked models &mdash; and it measures to that exact point on the surface.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-pill pill-green">SNAP</span></td>
+                    <td>Click near a face and it snaps to the nearest edge endpoint, midpoint, arc center, or face center within a small threshold (default 1&Prime;). Arc centers are always available regardless of distance.</td>
+                </tr>
+            </table>
+            <div class="two-col" style="gap:0.3in;margin-top:0.15in;">
+                <div class="col-card" style="border-left:3px solid var(--scan);">
+                    <h3 style="color:var(--scan);">On-screen overlay</h3>
+                    <ul class="col-cyan">
+                        <li><strong>Crosshairs</strong> mark each point as you pick it</li>
+                        <li><strong>Color-coded legs</strong> draw the measurement &mdash; red for X, blue for Y, yellow for Z</li>
+                        <li><strong>Readout panel</strong> shows the X / Y / Z differences, horizontal distance, and 3D distance in feet and inches</li>
+                        <li><strong>Nothing is modeled</strong> &mdash; the overlay clears when you finish or close the panel</li>
+                    </ul>
+                </div>
+                <div class="col-card" style="border-left:3px solid var(--danger);">
+                    <h3 style="color:var(--danger);">Requirements</h3>
+                    <ul>
+                        <li>The active view must be a 3D view &mdash; Measure cannot run in plan or section views.</li>
+                        <li>Pick two points to complete a measurement.</li>
+                    </ul>
+                </div>
+            </div>
+            <p style="margin-top:0.12in;font-size:10pt;color:var(--text-muted);">Settings: the gear button on the panel sets the snap threshold (in inches) and the on-screen marker size. These are saved globally, so they apply to every project.</p>
+        </div>
+        <div class="slide-footer">
+            <span>EliteCoord Tutorial</span>
+            <span class="slide-number">16</span>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 17: SECTION — SLEEVES PANEL                              -->
+    <!-- ============================================================ -->
+    <div class="slide slide-section" style="border-left-color:var(--draft);">
+        <div class="section-label">Section 06</div>
+        <h2>Sleeves panel</h2>
+        <div class="section-sub">Place correctly-sized wall sleeves where selected MEP runs pass through walls</div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 18: WALL SLEEVE — DIALOG & WORKFLOW                      -->
+    <!-- ============================================================ -->
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>Wall Sleeve</h2>
+            <span class="tab-label">Sleeves &gt; Wall Sleeve</span>
+        </div>
+        <div class="slide-body">
+            <p style="color:var(--text-dim);margin-bottom:0.15in;font-size:11pt;">Places correctly-sized sleeves wherever the MEP runs you select pass through walls &mdash; pipes, ducts, cable tray, conduit, or fabrication straights &mdash; whether the wall lives in the current model or in a linked model. When you click Wall Sleeve, a size dialog opens first so you can review and adjust the sleeve size for every run size found in your selection.</p>
+            <table class="btn-table">
+                <tr><th style="width:160px;">Size dialog</th><th>What it does</th></tr>
+                <tr>
+                    <td><span class="btn-pill pill-amber">Size list</span></td>
+                    <td>One row per pipe or duct size found in your selection. Round pipe and duct shows as a single diameter; rectangular or oval shows as width &times; height.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-name">Sleeve size</span></td>
+                    <td>Editable value next to each size, pre-filled with a sensible default. Adjust any you want before placing.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-pill pill-green">Place</span></td>
+                    <td>Places the sleeves using the sizes shown in the dialog.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-pill pill-gray">Cancel</span></td>
+                    <td>Closes the dialog and leaves the model untouched.</td>
+                </tr>
+            </table>
+            <div class="two-col" style="gap:0.3in;margin-top:0.15in;">
+                <div class="col-card" style="border-left:3px solid var(--draft);">
+                    <h3 style="color:var(--draft);">Step by step</h3>
+                    <ul class="col-amber">
+                        <li><strong>Select one or more runs</strong> &mdash; or let the tool prompt you to pick them</li>
+                        <li><strong>Click Wall Sleeve</strong> to open the size dialog</li>
+                        <li><strong>Review the sleeve sizes</strong> and adjust any defaults you want to change</li>
+                        <li><strong>Click Place</strong> to drop the sleeves, or Cancel to back out</li>
+                    </ul>
+                </div>
+                <div class="col-card" style="border-left:3px solid var(--danger);">
+                    <h3 style="color:var(--danger);">Requirements</h3>
+                    <ul>
+                        <li>The active view must be a 3D view.</li>
+                        <li>Select one or more pipe, duct, cable tray, conduit, or fabrication runs.</li>
+                        <li>The selected runs must actually cross a wall &mdash; runs that pierce nothing get no sleeve.</li>
+                    </ul>
+                </div>
+            </div>
+            <p style="margin-top:0.12in;font-size:10pt;color:var(--text-muted);">The sleeve sizes you set are remembered per project, so the next time you run the tool those sizes are pre-filled.</p>
+        </div>
+        <div class="slide-footer">
+            <span>EliteCoord Tutorial</span>
+            <span class="slide-number">18</span>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 19: WALL SLEEVE — PLACEMENT & UPDATES                    -->
+    <!-- ============================================================ -->
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>Wall Sleeve &mdash; placement &amp; updates</h2>
+            <span class="tab-label">Sleeves &gt; Wall Sleeve</span>
+        </div>
+        <div class="slide-body">
+            <p style="color:var(--text-dim);margin-bottom:0.15in;font-size:11pt;">For each run you select, the tool finds every wall it pierces and drops one sleeve at each crossing, sized from your dialog. Run the tool again later and it refreshes what's already there instead of duplicating it.</p>
+            <div class="two-col" style="gap:0.3in;">
+                <div class="col-card" style="border-left:3px solid var(--draft);">
+                    <h3 style="color:var(--draft);">What gets placed</h3>
+                    <ul class="col-amber">
+                        <li><strong>One sleeve per wall pierced</strong> &mdash; every wall a run passes through gets its own sleeve at the crossing point</li>
+                        <li><strong>Host and linked walls</strong> &mdash; works whether the wall is in the current model or a linked model</li>
+                        <li><strong>Stamped for reference</strong> &mdash; each sleeve records the run's nominal size and its service</li>
+                        <li><strong>Round family ships with the add-in</strong> &mdash; a rectangular family isn't included yet, so rectangular runs are skipped for now with a note in the summary</li>
+                    </ul>
+                </div>
+                <div class="col-card" style="border-left:3px solid var(--coord);">
+                    <h3 style="color:var(--coord);">Re-running the tool</h3>
+                    <ul class="col-green">
+                        <li><strong>Refreshes in place</strong> &mdash; running the tool again over sleeves you already placed updates their stamped info instead of making duplicates</li>
+                        <li><strong>Placed sizes are preserved</strong> &mdash; it does not change the size of a sleeve that's already placed; to resize one, delete it and place again</li>
+                        <li><strong>Sizes remembered per project</strong> &mdash; the sleeve sizes you set are pre-filled the next time you run the tool in the same project</li>
+                    </ul>
+                </div>
+            </div>
+            <p style="margin-top:0.12in;font-size:10pt;color:var(--text-muted);">This is an early tool &mdash; expect refinements in future releases.</p>
+        </div>
+        <div class="slide-footer">
+            <span>EliteCoord Tutorial</span>
+            <span class="slide-number">19</span>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 20: SECTION — CLASH PANEL                                -->
     <!-- ============================================================ -->
     <div class="slide slide-section" style="border-left-color:var(--core);">
-        <div class="section-label">Section 05</div>
+        <div class="section-label">Section 07</div>
         <h2>Clash panel &mdash; Clash Viewer</h2>
         <div class="section-sub">Import Navisworks XML clash reports and visualize them inside Revit with 3D markers</div>
     </div>
@@ -1127,7 +1297,7 @@
     <!-- SLIDE 18: SECTION — WORKFLOWS                                  -->
     <!-- ============================================================ -->
     <div class="slide slide-section">
-        <div class="section-label">Section 06</div>
+        <div class="section-label">Section 08</div>
         <h2>Workflows</h2>
         <div class="section-sub">End-to-end coordination workflows using EliteCoord's tools</div>
     </div>
@@ -1178,6 +1348,24 @@
                         <li><strong>Update review statuses</strong> directly in the grid; statuses persist in a JSON sidecar file</li>
                     </ul>
                 </div>
+                <div class="col-card" style="border-left:3px solid var(--scan);">
+                    <h3 style="color:var(--scan);">5. Surface measurement</h3>
+                    <ul class="col-cyan">
+                        <li><strong>Open a 3D view</strong> and click Measure to bring up the floating readout panel</li>
+                        <li><strong>Pick two points</strong> &mdash; use FACE for an exact surface point, or SNAP to grab edge endpoints, midpoints, and centers</li>
+                        <li><strong>Read the result</strong> &mdash; X, Y, and Z differences plus horizontal and 3D distance, in feet and inches</li>
+                        <li><strong>Tune snap threshold or marker size</strong> from the gear button if needed</li>
+                    </ul>
+                </div>
+                <div class="col-card" style="border-left:3px solid var(--draft);">
+                    <h3 style="color:var(--draft);">6. Wall sleeve placement</h3>
+                    <ul class="col-amber">
+                        <li><strong>Select the MEP runs</strong> (pipe, duct, cable tray, conduit, or fabrication) that cross walls</li>
+                        <li><strong>Click Wall Sleeve</strong> and review the per-size sleeve sizes in the dialog, adjusting any defaults</li>
+                        <li><strong>Click Place</strong> to drop a correctly-sized sleeve at every wall each run pierces</li>
+                        <li><strong>Re-run anytime</strong> to refresh existing sleeves in place without creating duplicates</li>
+                    </ul>
+                </div>
             </div>
         </div>
         <div class="slide-footer">
@@ -1193,8 +1381,8 @@
         <h2>EliteCoord</h2>
         <div class="accent-bar"></div>
         <div class="contact">
-            <strong>Prep</strong> &bull; <strong>Views</strong> &bull; <strong>Clash</strong> &mdash; BIM coordination tools inside Revit<br>
-            Revit 2022&ndash;2026 &bull; .NET 4.8 / .NET 8.0 &bull; v1.0.14
+            <strong>Prep</strong> &bull; <strong>Views</strong> &bull; <strong>Measure</strong> &bull; <strong>Sleeves</strong> &bull; <strong>Clash</strong> &mdash; BIM coordination tools inside Revit<br>
+            Revit 2022&ndash;2026 &bull; .NET 4.8 / .NET 8.0 &bull; v1.0.15
         </div>
     </div>
 
