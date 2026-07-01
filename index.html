@@ -1233,6 +1233,21 @@
                             { id: 'isolate_service', label: 'Isolate Service', icon: 'eye', fn: 'Show only the selected system in the current view. Quickly focus on hot water, chilled water, or any service without manual filters.', videoRef: '', changelog: '', requirements: ['Fabrication parts in active view', 'Select or pick a fabrication part to identify the service'] },
                             { id: 'hide_service', label: 'Hide Service', icon: 'eye-off', fn: 'Hide the selected system in the current view. Clean up spool drawings by removing interfering systems outside the fabrication scope.', videoRef: '', changelog: '', requirements: ['Fabrication parts in active view', 'Pick a fabrication part to identify the service to hide'] },
                         ]
+                    },
+                    {
+                        title: 'Modeling',
+                        tools: [
+                            { id: 'move_connect', label: 'Move Connect', icon: 'link-2', fn: 'Move an element so its nearest aligned connector snaps to another element\'s connector. Auto-detects whether you are connecting fabrication or standard MEP parts.', videoRef: '', changelog: 'v1.1.0: Refreshed ribbon icon.', requirements: ['Two elements with connectors (fabrication or MEP)'] },
+                            { id: 'moco_align', label: 'Mo-Co Align', icon: 'git-merge', fn: 'Move and rotate an element to align and connect to another at any angle — not just parallel runs.', videoRef: '', changelog: 'v1.1.0: Refreshed ribbon icon.', requirements: ['Two elements with connectors (fabrication or MEP)'] },
+                            { id: 'match_fab', label: 'Match Fab', icon: 'copy', fn: 'Copy fabrication dimensions and connector body/lock settings from one picked part to other selected parts that share the same fabrication button.', videoRef: '', changelog: 'v1.1.0: Refreshed ribbon icon.', requirements: ['A source fabrication part to pick', 'Target fabrication parts selected that share the same fab button'] },
+                        ]
+                    },
+                    {
+                        title: 'Blueprint',
+                        tools: [
+                            { id: 'save_blueprint', label: 'Save Blueprint', icon: 'save', fn: 'Capture the selected fabrication parts as a reusable blueprint — saved per project with a name, category, and optional description.', videoRef: '', changelog: 'v1.1.0: Added a ribbon icon (was previously blank). v1.0.22: New tool — capture any selection of fabrication parts as a reusable blueprint.', requirements: ['Fabrication parts selected'] },
+                            { id: 'blueprints', label: 'Blueprints', icon: 'library', fn: 'Open the Blueprints side pane. Single-click a saved blueprint to place it in the active view; right-click to rename, re-categorize, edit its description, or delete.', videoRef: '', changelog: 'v1.1.0: Added a ribbon icon (was previously blank). v1.0.22: New tool — dockable pane to browse and place saved blueprints; supports categories, name search, and right-click edit/delete.', requirements: ['Blueprints saved in the current project'] },
+                        ]
                     }
                 ]
             },
