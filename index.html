@@ -1034,6 +1034,11 @@
             { id: 'Renumber', group: 'draft', path: '<text x="18" y="51" font-size="48" font-weight="bold" fill="white" font-family="sans-serif">#</text><path d="M31 7A27 27 0 1 1 4.59 28.39" stroke="currentColor" stroke-width="5" fill="none" stroke-linecap="round"/><path d="M31 2.5V7H35.5" stroke="currentColor" stroke-width="5" fill="none" stroke-linecap="round"/>' },
             { id: 'IsolateService', group: 'draft', path: '<path d="M3 32C3 32 11 12 31.5 12C52 12 60 32 60 32C60 32 52 52 31.5 52C11 52 3 32 3 32Z" stroke="white" stroke-width="5" fill="none"/><circle cx="31.5" cy="32" r="14" fill="currentColor"/>' },
             { id: 'HideService', group: 'draft', path: '<path d="M3 32C3 32 11 12 31.5 12C52 12 60 32 60 32C60 32 52 52 31.5 52C11 52 3 32 3 32Z" stroke="#5A5A6A" stroke-width="5" fill="none"/><line x1="10" y1="10" x2="54" y2="54" stroke="currentColor" stroke-width="12"/>' },
+            { id: 'MoveConnect', group: 'draft', path: '<path d="M 4 22 H 16 M 4 42 H 16" stroke="white" stroke-width="5" stroke-linecap="round" fill="none"/><line x1="16" y1="14" x2="16" y2="50" stroke="white" stroke-width="5" stroke-linecap="round"/><path d="M 60 22 H 48 M 60 42 H 48" stroke="white" stroke-width="5" stroke-linecap="round" fill="none"/><line x1="48" y1="14" x2="48" y2="50" stroke="white" stroke-width="5" stroke-linecap="round"/><path d="M 42 32 H 26 M 34 24 L 26 32 L 34 40" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>' },
+            { id: 'MoCoAlign', group: 'draft', path: '<path d="M 12 46 H 44" stroke="white" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M 18 46 V 60 M 38 46 V 60" stroke="white" stroke-width="5" stroke-linecap="round" fill="none"/><path d="M 30 16 L 50 36" stroke="white" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M 30 16 L 42 4 M 50 36 L 62 24" stroke="white" stroke-width="5" stroke-linecap="round" fill="none"/><path d="M 46 16 A 22 22 0 0 0 28 32 M 36 26 L 28 32 L 26 22" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>' },
+            { id: 'MatchFab', group: 'draft', path: '<rect x="28" y="12" width="24" height="24" rx="2" stroke="#5A5A6A" stroke-width="5" stroke-linejoin="round" fill="none"/><line x1="28" y1="24" x2="52" y2="24" stroke="#5A5A6A" stroke-width="5" stroke-linecap="round"/><rect x="12" y="28" width="24" height="24" rx="2" stroke="white" stroke-width="5" stroke-linejoin="round" fill="none"/><line x1="12" y1="40" x2="36" y2="40" stroke="white" stroke-width="5" stroke-linecap="round"/><path d="M 26 38 L 34 46 L 50 22" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>' },
+            { id: 'SaveBlueprint', group: 'draft', path: '<path d="M 28 56 H 12 V 6 H 36 L 52 22 V 28" stroke="white" stroke-width="5" stroke-linejoin="round" fill="none"/><path d="M 36 6 V 22 H 52" stroke="white" stroke-width="5" stroke-linejoin="round" fill="none"/><line x1="22" y1="32" x2="42" y2="32" stroke="white" stroke-width="5" stroke-linecap="round"/><line x1="22" y1="44" x2="28" y2="44" stroke="white" stroke-width="5" stroke-linecap="round"/><path d="M 46 36 V 56 M 36 46 H 56" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>' },
+            { id: 'Blueprints', group: 'draft', path: '<rect x="6" y="6" width="52" height="52" rx="4" stroke="white" stroke-width="5" stroke-linejoin="round" fill="none"/><line x1="6" y1="20" x2="58" y2="20" stroke="white" stroke-width="5" stroke-linecap="round"/><line x1="16" y1="28" x2="40" y2="28" stroke="white" stroke-width="5" stroke-linecap="round"/><line x1="16" y1="52" x2="32" y2="52" stroke="white" stroke-width="5" stroke-linecap="round"/><rect x="12" y="36" width="40" height="8" rx="2" fill="currentColor"/>' },
             { id: 'QuickTag', group: 'draft', path: '<path d="M6 10L13 3H56V59H6Z" stroke="currentColor" stroke-width="5" fill="none"/><circle cx="15" cy="12" r="3" fill="#5A5A6A"/><line x1="11" y1="22" x2="52" y2="22" stroke="white" stroke-width="5"/><line x1="11" y1="34" x2="52" y2="34" stroke="white" stroke-width="5"/>' },
 
             // --- COORD ---
@@ -1086,7 +1091,12 @@
             'renumber': 'Renumber',
             'isolate_service': 'IsolateService',
             'hide_service': 'HideService',
-            
+            'move_connect': 'MoveConnect',
+            'moco_align': 'MoCoAlign',
+            'match_fab': 'MatchFab',
+            'save_blueprint': 'SaveBlueprint',
+            'blueprints': 'Blueprints',
+
             // Coord
             'dwg_overrides': 'DWGOverrides',
             'apply_colors': 'ApplyColors',
