@@ -467,7 +467,7 @@
         <h1>EliteScan</h1>
         <div class="accent-bar"></div>
         <p class="subtitle">A tutorial walkthrough of every ribbon button, dialog, and workflow in the point cloud deviation analysis plugin</p>
-        <p class="version">v2.0.1 / Tutorial &amp; Reference Guide</p>
+        <p class="version">v2.0.2 / Tutorial &amp; Reference Guide</p>
     </div>
 
     <!-- ============================================================ -->
@@ -652,7 +652,7 @@
                 </tr>
                 <tr>
                     <td><span class="btn-pill pill-cyan">Build cache</span></td>
-                    <td>Converts a row that has no render cache yet (e.g. a canceled convert or an Insert &gt; Point Cloud link). Rebuilding an existing cache asks for confirmation first, with a time estimate.</td>
+                    <td>Converts a row that has no render cache yet (e.g. a canceled convert or an Insert &gt; Point Cloud link). Every build asks for confirmation first with a size and time estimate &mdash; fresh builds default to Yes, rebuilding an existing cache defaults to No.</td>
                 </tr>
                 <tr>
                     <td><span class="btn-pill pill-gray">Cancel</span></td>
@@ -1855,14 +1855,14 @@
             <span class="tab-label">Results Window &gt; Combine Analyses</span>
         </div>
         <div class="slide-body">
-            <p style="color:var(--text-dim);margin-bottom:0.15in;font-size:11pt;">When the same scan location appears in more than one selected analysis, the merge keeps the newest capture. Scan locations that appear in only one analysis are simply carried through. The result reads exactly like a single whole-building analysis.</p>
+            <p style="color:var(--text-dim);margin-bottom:0.15in;font-size:11pt;">The merge resolves element by element: every element from every selected analysis is kept, and when the same element appears in more than one, the newest capture wins. Elements that have since been deleted from the model are skipped (the completion message says how many). The result reads exactly like a single whole-building analysis.</p>
             <div class="two-col" style="gap:0.3in;">
                 <div class="col-card" style="border-left:3px solid var(--scan);">
                     <h3 style="color:var(--scan);">Merge rules</h3>
                     <ul class="col-cyan">
-                        <li><strong>Newest wins per scan</strong> &mdash; if a scan location is in two analyses, the most recent one is kept; older captures are discarded</li>
+                        <li><strong>Newest wins per element</strong> &mdash; if an element was captured in two analyses, the most recent capture is kept; an element in only one analysis is carried through</li>
                         <li><strong>Point count is irrelevant</strong> &mdash; recency decides, not which run had more points</li>
-                        <li><strong>Different scans are unioned</strong> &mdash; scan locations unique to each analysis are all included</li>
+                        <li><strong>Deleted elements are dropped</strong> &mdash; elements no longer in the model are removed from the merged report and counted in the completion message</li>
                         <li><strong>Grading signature gate</strong> &mdash; the first selection locks tolerance and thresholds; incompatible analyses are disabled in the dialog</li>
                     </ul>
                 </div>
@@ -2040,7 +2040,7 @@
         <div class="accent-bar"></div>
         <div class="contact">
             <strong>Analysis</strong> &bull; <strong>Viewer</strong> &bull; <strong>Overlay</strong> &bull; <strong>Point Clouds</strong> &mdash; Point cloud deviation analysis for Revit<br>
-            Revit 2022&ndash;2026 &bull; .NET 4.8 / .NET 8.0 &bull; ReCap SDK point-cloud engine &bull; v2.0.1
+            Revit 2022&ndash;2026 &bull; .NET 4.8 / .NET 8.0 &bull; ReCap SDK point-cloud engine &bull; v2.0.2
         </div>
     </div>
 
