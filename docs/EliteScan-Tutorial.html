@@ -467,7 +467,7 @@
         <h1>EliteScan</h1>
         <div class="accent-bar"></div>
         <p class="subtitle">A tutorial walkthrough of every ribbon button, dialog, and workflow in the point cloud deviation analysis plugin</p>
-        <p class="version">v2.0.0 / Tutorial &amp; Reference Guide</p>
+        <p class="version">v2.0.1 / Tutorial &amp; Reference Guide</p>
     </div>
 
     <!-- ============================================================ -->
@@ -515,8 +515,7 @@
                 <div class="col-card" style="border-left:3px solid var(--core);">
                     <h3 style="color:var(--core);">Point Clouds panel</h3>
                     <ul class="col-purple">
-                        <li><strong>Cloud Panel</strong> &mdash; Dockable list of every point cloud in the project</li>
-                        <li><strong>Load Point Cloud</strong> &mdash; Pick an RCP file and check its render-cache state</li>
+                        <li><strong>Cloud Panel</strong> &mdash; Dockable list of every point cloud in the project; add, convert, show/hide, and remove clouds here</li>
                         <li><strong>Revit 2 ReCap</strong> &mdash; Shows point cloud transform data with per-value copy buttons</li>
                         <li><strong>Render Settings</strong> &mdash; Live point density, size, and color controls</li>
                         <li><strong>Cloud Reset</strong> &mdash; Resets a cloud's placement back to origin</li>
@@ -526,7 +525,8 @@
                 </div>
             </div>
             <p style="margin-top:0.15in;font-size:10pt;color:var(--text-muted);">Icons auto-swap between Light and Dark variants to match Revit's current UI theme. The add-in uses ricaun.Revit.UI for ribbon creation with automatic DPI scaling.</p>
-            <p style="margin-top:0.08in;font-size:10pt;color:var(--text-muted);">New in v2.0.0: deviation analysis is now element-based &mdash; <strong>Analyze View</strong> scores every element in the active view (or your selection) directly against the point cloud using a built-in multi-core engine, with no CloudCompare and no per-scan E57 setup. Point clouds are loaded and managed from the new <strong>Cloud Panel</strong> and <strong>Load Point Cloud</strong> buttons, displayed by a fast built-in renderer with live <strong>Render Settings</strong>, and can be clipped to a single element with <strong>Isolate to Element</strong>.</p>
+            <p style="margin-top:0.08in;font-size:10pt;color:var(--text-muted);">New in v2.0.0: deviation analysis is now element-based &mdash; <strong>Analyze View</strong> scores every element in the active view (or your selection) directly against the point cloud using a built-in multi-core engine, with no CloudCompare and no per-scan E57 setup. Point clouds are added and managed from the new <strong>Cloud Panel</strong>, displayed by a fast built-in renderer with live <strong>Render Settings</strong>, and can be clipped to a single element with <strong>Isolate to Element</strong>.</p>
+            <p style="margin-top:0.08in;font-size:10pt;color:var(--text-muted);">New in v2.0.1: adding a cloud converts it <strong>in the background inside Revit</strong> &mdash; a preview appears immediately and swaps to the full renderer when conversion finishes, with a live progress bar and an upfront time estimate. The separate Load Point Cloud button is retired; everything lives in the Cloud Panel.</p>
         </div>
         <div class="slide-footer">
             <span>EliteScan Tutorial</span>
@@ -552,7 +552,7 @@
             <span class="tab-label">Analysis &gt; Place Scans</span>
         </div>
         <div class="slide-body">
-            <p style="color:var(--text-dim);margin-bottom:0.15in;font-size:11pt;">Before placing scans, load the point cloud for the project (see Section 03 &mdash; Point clouds). Automatically places Scan Location family instances at each scan origin. Both the origin position and the scanner's viewing orientation are read straight from the ReCap point cloud &mdash; there is no FARO/E57 mode prompt to choose. Each instance is populated with the metadata used by analysis and the 360 Viewer.</p>
+            <p style="color:var(--text-dim);margin-bottom:0.15in;font-size:11pt;">Before placing scans, add the point cloud for the project in the Cloud Panel (see Section 03 &mdash; Point clouds). Automatically places Scan Location family instances at each scan origin. Both the origin position and the scanner's viewing orientation are read straight from the ReCap point cloud &mdash; there is no FARO/E57 mode prompt to choose. Each instance is populated with the metadata used by analysis and the 360 Viewer.</p>
             <div class="two-col" style="gap:0.3in;">
                 <div class="col-card" style="border-left:3px solid var(--scan);">
                     <h3 style="color:var(--scan);">Requirements</h3>
@@ -595,38 +595,38 @@
     <div class="slide slide-section">
         <div class="section-label">Section 03</div>
         <h2>Point clouds &mdash; load, manage &amp; display</h2>
-        <div class="section-sub">Load an .rcp, manage every cloud in the project, and tune how the built-in renderer draws them &mdash; all on the Point Clouds panel</div>
+        <div class="section-sub">Add an .rcp and convert it in the background, manage every cloud in the project, and tune how the built-in renderer draws them &mdash; all on the Point Clouds panel</div>
     </div>
 
     <!-- ============================================================ -->
-    <!-- SLIDE 5c: LOAD POINT CLOUD                                   -->
+    <!-- SLIDE 5c: ADD A CLOUD (IN-REVIT CONVERSION)                  -->
     <!-- ============================================================ -->
     <div class="slide slide-content">
         <div class="slide-header">
-            <h2>Load Point Cloud</h2>
-            <span class="tab-label">Point Clouds &gt; Load Point Cloud</span>
+            <h2>Add a cloud &mdash; convert in the background</h2>
+            <span class="tab-label">Point Clouds &gt; Cloud Panel &gt; Add</span>
         </div>
         <div class="slide-body">
-            <p style="color:var(--text-dim);margin-bottom:0.15in;font-size:11pt;">Pick an <span class="key">.rcp</span> file to bring a scan into the project. EliteScan validates the file through the ReCap SDK, remembers its path, and reports the state of the cloud's <strong>render cache</strong> &mdash; the <span class="key">.potree</span> folder the built-in renderer draws from. The render cache is built once by the standalone <strong>EliteScan Converter</strong> (not inside Revit yet).</p>
+            <p style="color:var(--text-dim);margin-bottom:0.15in;font-size:11pt;">Pick an <span class="key">.rcp</span> file in the Cloud Panel to bring a scan into the project. EliteScan validates the file through the ReCap SDK and checks the cloud's <strong>render cache</strong> &mdash; the <span class="key">.potree</span> folder the built-in renderer draws from. If the cache is missing, EliteScan offers to <strong>convert it in the background right inside Revit</strong>, with an upfront time estimate.</p>
             <div class="two-col" style="gap:0.3in;">
                 <div class="col-card" style="border-left:3px solid var(--scan);">
-                    <h3 style="color:var(--scan);">What it does</h3>
+                    <h3 style="color:var(--scan);">What happens when you Add</h3>
                     <ul class="col-cyan">
-                        <li><strong>Validates the .rcp</strong> through the ReCap SDK so you know the file is readable</li>
-                        <li><strong>Remembers the path</strong> &mdash; analysis and the 360 Viewer read the cloud live from here</li>
-                        <li><strong>Reports render-cache state</strong> so you know whether the cloud will draw</li>
+                        <li><strong>Preview appears immediately</strong> &mdash; the cloud shows via Revit's native display while the cache builds</li>
+                        <li><strong>Background conversion</strong> with a live progress bar on the cloud's row</li>
+                        <li><strong>Automatic swap</strong> &mdash; when conversion finishes, the high-performance renderer takes over, no reload needed</li>
                     </ul>
                 </div>
                 <div class="col-card" style="border-left:3px solid var(--coord);">
-                    <h3 style="color:var(--coord);">Render-cache state it reports</h3>
+                    <h3 style="color:var(--coord);">Your choices at Add time</h3>
                     <ul class="col-green">
-                        <li><strong>Ready</strong> &mdash; the cloud draws in 3D and supported 2D views (plan/section/elevation)</li>
-                        <li><strong>Still building</strong> &mdash; conversion is in progress; wait for it to finish</li>
-                        <li><strong>Needs the Converter</strong> &mdash; no cache yet; EliteScan shows the EliteScan Converter command to run</li>
+                        <li><strong>Convert in the background</strong> &mdash; the recommended path described here</li>
+                        <li><strong>Use the standalone converter</strong> &mdash; keep the preview and build the cache outside Revit (e.g. a scanning-team machine)</li>
+                        <li><strong>Cancel</strong> &mdash; the cloud stays listed as a preview row; convert it later with Build cache</li>
                     </ul>
                 </div>
             </div>
-            <p style="margin-top:0.12in;font-size:10pt;color:var(--text-muted);">EliteScan does not convert the cloud in-Revit yet &mdash; when a cache is missing it tells you which command to run. Once the render cache is ready, both display and Analyze View (Section 04) work against it.</p>
+            <p style="margin-top:0.12in;font-size:10pt;color:var(--text-muted);">A cache that is already built loads instantly &mdash; no prompt. Once the render cache is ready, both display and Analyze View (Section 04) work against it.</p>
         </div>
         <div class="slide-footer">
             <span>EliteScan Tutorial</span>
@@ -643,12 +643,24 @@
             <span class="tab-label">Point Clouds &gt; Cloud Panel</span>
         </div>
         <div class="slide-body">
-            <p style="color:var(--text-dim);margin-bottom:0.15in;font-size:11pt;">A dockable panel that lists every point cloud in the project. Each row shows the cloud's name, its file path, and a status: <span class="key">linked</span> (the source file is where EliteScan expects it) or <span class="key">source missing</span> (the file has moved or been deleted). Per-cloud buttons let you add, re-locate, and remove.</p>
+            <p style="color:var(--text-dim);margin-bottom:0.15in;font-size:11pt;">A dockable panel that lists every point cloud in the project &mdash; including preview rows (canceled conversions) and clouds inserted with Revit's own Insert &gt; Point Cloud. Each row shows the cloud's name, its file path, and its status: <span class="key">linked</span>, <span class="key">source missing</span>, <span class="key">no cache</span>, or <span class="key">converting</span> (with a live progress bar).</p>
             <table class="btn-table">
                 <tr><th style="width:180px;">Button</th><th>What it does</th></tr>
                 <tr>
                     <td><span class="btn-pill pill-cyan">Add</span></td>
-                    <td>Brings another point cloud into the project (same validation as Load Point Cloud).</td>
+                    <td>Brings another point cloud into the project and offers background conversion if its render cache is missing (previous slide).</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-pill pill-cyan">Build cache</span></td>
+                    <td>Converts a row that has no render cache yet (e.g. a canceled convert or an Insert &gt; Point Cloud link). Rebuilding an existing cache asks for confirmation first, with a time estimate.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-pill pill-gray">Cancel</span></td>
+                    <td>Stops tracking an in-progress conversion; the row stays listed as a preview so you can Build cache later.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-pill pill-gray">Show / Hide / Hide in view</span></td>
+                    <td>Per-cloud visibility: Hide hides the cloud in every view for this session, Hide in view hides it in the active view only (saved with the document), Show clears both. An "All clouds" bar applies the same three to every cloud at once.</td>
                 </tr>
                 <tr>
                     <td><span class="btn-pill pill-gray">Re-locate</span></td>
@@ -659,7 +671,7 @@
                     <td>Drops the cloud from the project list. Does not delete the source file on disk.</td>
                 </tr>
             </table>
-            <p style="margin-top:0.12in;font-size:10pt;color:var(--text-muted);">The panel is the single place to see, at a glance, which clouds are linked and which need attention before you analyze or view them.</p>
+            <p style="margin-top:0.12in;font-size:10pt;color:var(--text-muted);">The panel is the single place to see, at a glance, which clouds are linked, converting, or need attention before you analyze or view them.</p>
         </div>
         <div class="slide-footer">
             <span>EliteScan Tutorial</span>
@@ -1961,7 +1973,7 @@
                     <ul class="col-cyan">
                         <li><strong>Symptom:</strong> Analyze View stops immediately and tells you to convert the cloud</li>
                         <li><strong>Cause:</strong> No point cloud has a built render cache (the <span class="key">.potree</span> folder)</li>
-                        <li><strong>Solution:</strong> Build the cache with the standalone EliteScan Converter (Load Point Cloud shows the exact command), then re-run Analyze View. See Section 03&ndash;04</li>
+                        <li><strong>Solution:</strong> Click Build cache on the cloud's row in the Cloud Panel (or use the standalone EliteScan Converter), then re-run Analyze View. See Section 03&ndash;04</li>
                     </ul>
                 </div>
                 <div class="col-card" style="border-left:3px solid var(--warning);">
@@ -1969,7 +1981,7 @@
                     <ul class="col-amber">
                         <li><strong>Symptom:</strong> A loaded cloud doesn't draw in the 3D or 2D view</li>
                         <li><strong>Causes:</strong> No render cache yet, conversion still in progress, or an unsupported view (schedule/sheet/template)</li>
-                        <li><strong>Solution:</strong> Check the cloud's state in Load Point Cloud / Cloud Panel; build the cache with the EliteScan Converter if needed; switch to a 3D, plan, section, or elevation view (Section 03)</li>
+                        <li><strong>Solution:</strong> Check the cloud's state in the Cloud Panel; click Build cache if needed; make sure the cloud isn't hidden (Show / Hide buttons); switch to a 3D, plan, section, or elevation view (Section 03)</li>
                     </ul>
                 </div>
                 <div class="col-card" style="border-left:3px solid var(--warning);">
@@ -1985,7 +1997,7 @@
                     <ul class="col-amber">
                         <li><strong>Symptom:</strong> 360 Viewer shows "No panorama available" message</li>
                         <li><strong>Cause:</strong> The cloud isn't loaded, Place Scans hasn't run, or the scan is not <em>structured</em> (only structured scans have a panorama)</li>
-                        <li><strong>Solution:</strong> Load the point cloud and run Place Scans (Section 02); panoramas are pulled from the cloud, lazily on first open. Orientation is baked at Place time &mdash; re-run Place Scans if it looks off (Section 08)</li>
+                        <li><strong>Solution:</strong> Add the point cloud in the Cloud Panel and run Place Scans (Section 02); panoramas are pulled from the cloud, lazily on first open. Orientation is baked at Place time &mdash; re-run Place Scans if it looks off (Section 08)</li>
                     </ul>
                 </div>
                 <div class="col-card" style="border-left:3px solid var(--primary);">
@@ -2028,7 +2040,7 @@
         <div class="accent-bar"></div>
         <div class="contact">
             <strong>Analysis</strong> &bull; <strong>Viewer</strong> &bull; <strong>Overlay</strong> &bull; <strong>Point Clouds</strong> &mdash; Point cloud deviation analysis for Revit<br>
-            Revit 2022&ndash;2026 &bull; .NET 4.8 / .NET 8.0 &bull; ReCap SDK point-cloud engine &bull; v2.0.0
+            Revit 2022&ndash;2026 &bull; .NET 4.8 / .NET 8.0 &bull; ReCap SDK point-cloud engine &bull; v2.0.1
         </div>
     </div>
 
