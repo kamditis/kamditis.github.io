@@ -467,8 +467,8 @@
         <div class="tag">Revit Add-in</div>
         <h1>EliteCore</h1>
         <div class="accent-bar"></div>
-        <p class="subtitle">A tutorial walkthrough of every ribbon button, dialog, and workflow in the core utilities plugin for project setup, auto-sync, tab coloring, and batch export</p>
-        <p class="version">v1.0.14 / Tutorial &amp; Reference Guide</p>
+        <p class="subtitle">A tutorial walkthrough of every ribbon button, dialog, and workflow in the core utilities plugin for project setup, auto-sync, tab coloring, sheet management, batch export, and property matching</p>
+        <p class="version">v1.0.16 / Tutorial &amp; Reference Guide</p>
     </div>
 
     <!-- ============================================================ -->
@@ -477,7 +477,7 @@
     <div class="slide slide-section">
         <div class="section-label">Section 01</div>
         <h2>Ribbon overview</h2>
-        <div class="section-sub">The &ldquo;Elite Core&rdquo; tab with five panels: Project Setup, Auto Sync, Tab Colors, Sheets, and Export</div>
+        <div class="section-sub">The &ldquo;Elite Core&rdquo; tab with six panels: Project Setup, Auto Sync, Tab Colors, Sheets, Export, and Modify</div>
     </div>
 
     <div class="slide slide-content">
@@ -486,7 +486,7 @@
             <span class="tab-label">Elite Core</span>
         </div>
         <div class="slide-body">
-            <p style="color:var(--text-dim);margin-bottom:0.15in;font-size:11pt;">EliteCore installs a dedicated &ldquo;Elite Core&rdquo; tab in the Revit ribbon. It contains four panels grouping core utilities for project setup, automatic syncing, tab color customization, and batch export. Supports Revit 2022 through 2026.</p>
+            <p style="color:var(--text-dim);margin-bottom:0.15in;font-size:11pt;">EliteCore installs a dedicated &ldquo;Elite Core&rdquo; tab in the Revit ribbon. It contains six panels grouping core utilities for project setup, automatic syncing, tab color customization, sheet management, batch export, and property matching. Supports Revit 2022 through 2026.</p>
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.2in;margin-bottom:0.15in;">
                 <div class="col-card" style="border-left:3px solid var(--core);">
                     <h3 style="color:var(--core);">Project Setup panel</h3>
@@ -526,7 +526,12 @@
                         <li><strong>Batch Export</strong> &mdash; Export sheets and views to PDF, DWG, and NWC</li>
                     </ul>
                 </div>
-                <div></div>
+                <div class="col-card" style="border-left:3px solid var(--core);">
+                    <h3 style="color:var(--core);">Modify panel</h3>
+                    <ul class="col-purple">
+                        <li><strong>Match Props</strong> &mdash; Copy family type and parameters from one element to others</li>
+                    </ul>
+                </div>
             </div>
             <p style="margin-top:0.15in;font-size:10pt;color:var(--text-muted);">Icons auto-swap between Light and Dark variants to match Revit&rsquo;s current UI theme. The add-in uses ricaun.Revit.UI for ribbon creation with automatic DPI scaling.</p>
         </div>
@@ -1500,10 +1505,58 @@
     </div>
 
     <!-- ============================================================ -->
-    <!-- SECTION 12: DEFAULT COLOR PALETTE                             -->
+    <!-- SECTION 12: MODIFY - MATCH PROPERTIES                        -->
     <!-- ============================================================ -->
     <div class="slide slide-section">
         <div class="section-label">Section 12</div>
+        <h2>Modify &mdash; Match Properties</h2>
+        <div class="section-sub">AutoCAD-style property copy: match family type and instance parameters across elements in one click</div>
+    </div>
+
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>Match Properties command</h2>
+            <span class="tab-label">Modify &gt; Match Props</span>
+        </div>
+        <div class="slide-body">
+            <p style="color:var(--text-dim);margin-bottom:0.15in;font-size:11pt;">Copies a family type and instance parameters from one element to a set of target elements &mdash; the same workflow as AutoCAD&rsquo;s Match Properties tool. Select your targets first with Revit&rsquo;s own selection tools, run the command, then pick one element to copy from.</p>
+
+            <div class="col-card" style="border-left:3px solid var(--core);margin-bottom:0.15in;">
+                <h3 style="color:var(--core);">Workflow</h3>
+                <table class="btn-table">
+                    <tr><td class="key">1. Select targets</td><td class="desc">Select the elements you want to change using window select, right-click &gt; Select Connected, filters, or any other native Revit selection method.</td></tr>
+                    <tr><td class="key">2. Run command</td><td class="desc">Click <span class="btn-pill pill-purple">Match Props</span> on the Modify panel.</td></tr>
+                    <tr><td class="key">3. Pick source</td><td class="desc">Click the single element whose properties you want to copy. Press Esc to cancel.</td></tr>
+                    <tr><td class="key">4. Review &amp; apply</td><td class="desc">A Current &rarr; Source preview dialog lists every row that will change. Check or uncheck rows, then click Apply. Everything is applied in one transaction (single undo).</td></tr>
+                </table>
+            </div>
+
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.2in;">
+                <div class="col-card" style="border-left:3px solid var(--scan);">
+                    <h3 style="color:var(--scan);">What gets copied</h3>
+                    <ul class="col-cyan">
+                        <li><strong>Family Type</strong> &mdash; Only when the source and every target share the same category</li>
+                        <li><strong>Instance parameters</strong> &mdash; Every writable text, integer, or number parameter present on both the source and every target</li>
+                    </ul>
+                </div>
+                <div class="col-card" style="border-left:3px solid var(--danger);">
+                    <h3 style="color:var(--danger);">Requirements</h3>
+                    <ul>
+                        <li>Active Revit project open</li>
+                        <li>One or more target elements selected before running the command</li>
+                    </ul>
+                </div>
+            </div>
+
+            <p style="margin-top:0.15in;font-size:10pt;color:var(--text-muted);">Rows that already match the source are shown but disabled. Text parameters default to checked; number parameters default to unchecked &mdash; your choices are remembered per parameter for next time. Elements inside groups are skipped automatically, and one failing element never blocks the rest of the batch.</p>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 13: DEFAULT COLOR PALETTE                             -->
+    <!-- ============================================================ -->
+    <div class="slide slide-section">
+        <div class="section-label">Section 13</div>
         <h2>Default color palette</h2>
         <div class="section-sub">The 10 built-in colors used for order-based tab assignment</div>
     </div>
@@ -1566,10 +1619,10 @@
     </div>
 
     <!-- ============================================================ -->
-    <!-- SECTION 13: FILE STORAGE                                     -->
+    <!-- SECTION 14: FILE STORAGE                                     -->
     <!-- ============================================================ -->
     <div class="slide slide-section">
-        <div class="section-label">Section 13</div>
+        <div class="section-label">Section 14</div>
         <h2>File storage locations</h2>
         <div class="section-sub">Where EliteCore stores settings, logs, and shared parameter files</div>
     </div>
@@ -1606,6 +1659,10 @@
                     <td><span class="key">%LOCALAPPDATA%\EliteTools\Global\Core\BatchExportProfiles\{Name}.json</span></td>
                 </tr>
                 <tr>
+                    <td class="btn-name">Match Properties settings</td>
+                    <td><span class="key">%LOCALAPPDATA%\EliteTools\Global\Core\MatchPropertiesSettings.json</span></td>
+                </tr>
+                <tr>
                     <td class="btn-name">Shared parameters</td>
                     <td><span class="key">%LOCALAPPDATA%\EliteTools\SharedParameters\ECD_SharedParameters.txt</span></td>
                 </tr>
@@ -1620,10 +1677,10 @@
     </div>
 
     <!-- ============================================================ -->
-    <!-- SECTION 14: GETTING STARTED                                  -->
+    <!-- SECTION 15: GETTING STARTED                                  -->
     <!-- ============================================================ -->
     <div class="slide slide-section">
-        <div class="section-label">Section 14</div>
+        <div class="section-label">Section 15</div>
         <h2>Getting started</h2>
         <div class="section-sub">Recommended setup workflow for a new project</div>
     </div>
@@ -1674,6 +1731,11 @@
                     <td class="btn-name"><span class="btn-pill pill-purple">7</span></td>
                     <td class="btn-name">Set up Batch Export</td>
                     <td class="desc">Click <span class="btn-pill pill-green">Batch Export</span> to create your first export profile. Configure file naming, format settings, and output folder. Save as a profile for future use.</td>
+                </tr>
+                <tr>
+                    <td class="btn-name"><span class="btn-pill pill-purple">8</span></td>
+                    <td class="btn-name">Try Match Properties</td>
+                    <td class="desc">Select a few elements, then click <span class="btn-pill pill-purple">Match Props</span> and pick a source element to copy its type and parameters to the selection.</td>
                 </tr>
             </table>
         </div>
@@ -1727,8 +1789,8 @@
         <h2>EliteCore</h2>
         <div class="accent-bar"></div>
         <div class="contact">
-            <strong>Project Setup</strong> &bull; <strong>Auto Sync</strong> &bull; <strong>Tab Colors</strong> &bull; <strong>Batch Export</strong> &mdash; Core utilities for Revit<br>
-            Revit 2022&ndash;2026 &bull; .NET 4.8 / .NET 8.0 &bull; v1.0.14
+            <strong>Project Setup</strong> &bull; <strong>Auto Sync</strong> &bull; <strong>Tab Colors</strong> &bull; <strong>Batch Export</strong> &bull; <strong>Match Properties</strong> &mdash; Core utilities for Revit<br>
+            Revit 2022&ndash;2026 &bull; .NET 4.8 / .NET 8.0 &bull; v1.0.16
         </div>
     </div>
 

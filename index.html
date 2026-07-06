@@ -1059,6 +1059,7 @@
             { id: 'TabColorSettings', group: 'core', path: '<rect x="4" y="7" width="16" height="12" fill="#5A5A6A"/><rect x="4" y="7" width="16" height="50" stroke="currentColor" stroke-width="5" fill="none"/><rect x="24" y="7" width="16" height="12" fill="#5A5A6A"/><rect x="24" y="7" width="16" height="50" stroke="currentColor" stroke-width="5" fill="none"/><rect x="44" y="7" width="16" height="12" fill="#5A5A6A"/><rect x="44" y="7" width="16" height="50" stroke="currentColor" stroke-width="5" fill="none"/><g transform="translate(34, 33) rotate(45) scale(2) translate(-16, -16)"><path d="M 14 28 L 14 14 Q 14 10 10 9 L 10 4 L 12 4 L 12 7 Q 16 9 20 7 L 20 4 L 22 4 L 22 9 Q 18 10 18 14 L 18 28 A 2 2 0 0 1 14 28 Z" fill="none" stroke="white" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/></g>' },
             { id: 'ToggleColors', group: 'core', path: '<rect x="5" y="7" width="16" height="12" fill="currentColor"/><rect x="5" y="7" width="16" height="50" stroke="white" stroke-width="5" fill="none"/><rect x="24" y="7" width="16" height="12" fill="#5A5A6A"/><rect x="24" y="7" width="16" height="50" stroke="white" stroke-width="5" fill="none"/><rect x="43" y="7" width="16" height="12" fill="currentColor"/><rect x="43" y="7" width="16" height="50" stroke="white" stroke-width="5" fill="none"/>' },
             { id: 'BatchExport', group: 'core', path: '<rect x="3" y="18" width="42" height="42" fill="#222" stroke="currentColor" stroke-width="5"/><rect x="10.5" y="10.5" width="42" height="42" fill="#222" stroke="#5A5A6A" stroke-width="5"/><rect x="18" y="3" width="42" height="42" fill="#222" stroke="white" stroke-width="5"/>' },
+            { id: 'MatchProperties', group: 'core', path: '<path d="M 27 27 L 37 37 L 15 51 Z" fill="currentColor"/><line x1="26" y1="28" x2="36" y2="38" stroke="white" stroke-width="6" stroke-linecap="round"/><line x1="55" y1="9" x2="33" y2="31" stroke="white" stroke-width="6" stroke-linecap="round"/><path d="M 11 56 Q 22 50 33 55" stroke="white" stroke-width="5" stroke-linecap="round" fill="none"/>' },
         ];
 
         // MAPPING: Links App Tool IDs to Custom Icon IDs
@@ -1114,7 +1115,8 @@
             'setup_wizard': 'SetupWizard',
             'tab_color_settings': 'TabColorSettings',
             'toggle_colors': 'ToggleColors',
-            'batch_export': 'BatchExport'
+            'batch_export': 'BatchExport',
+            'match_properties': 'MatchProperties'
         };
 
         function createIconSVG(iconId, color) {
@@ -1329,9 +1331,9 @@
                 color: '#A78BFA',
                 colorVar: 'var(--core)',
                 released: true,
-                version: 'v1.0.14',
-                downloadUrl: 'https://github.com/kamditis/kamditis.github.io/releases/download/EliteCore-latest/EliteCore-v1.0.14.zip',
-                downloadFile: 'EliteCore-v1.0.14.zip',
+                version: 'v1.0.16',
+                downloadUrl: 'https://github.com/kamditis/kamditis.github.io/releases/download/EliteCore-latest/EliteCore-v1.0.16.zip',
+                downloadFile: 'EliteCore-v1.0.16.zip',
                 docsUrl: 'docs/EliteCore-Tutorial.html',
                 description: 'Project setup and shared utilities for Autodesk Revit.',
                 installation: [
@@ -1361,8 +1363,8 @@
                     {
                         title: 'Tab Colors',
                         tools: [
-                            { id: 'tab_color_settings', label: 'Tab Color Settings', icon: 'palette', fn: 'Customize how your open document tabs are color-coded in Revit. Assign colors from a palette to help visually distinguish between multiple open projects and family editors at a glance.', videoRef: '', changelog: 'v1.0.13: Tab coloring is now off by default on first install — enable it in settings. v1.0.11: Fixed log entries leaking into other add-in log files when running commands from EliteCoord or EliteDraft. v1.0.9: Fixed a crash that caused Revit to close unexpectedly after several minutes with tab colors enabled. v1.0.8: Fixed a crash that could occur during zooming or view switching. Service now self-heals if Revit rebuilds its UI. v1.0.7: Improved stability — additional safety checks when coloring tabs during idle processing. v1.0.4: New dedicated ribbon icon.', requirements: [] },
-                            { id: 'toggle_colors', label: 'Toggle Colors', icon: 'toggle-left', fn: 'Quickly turn tab coloring on or off without opening the settings dialog.', videoRef: '', changelog: 'v1.0.13: Tab coloring is now off by default on first install — enable it in settings. v1.0.11: Fixed log entries leaking into other add-in log files when running commands from EliteCoord or EliteDraft. v1.0.9: Fixed a crash that caused Revit to close unexpectedly after several minutes with tab colors enabled. v1.0.8: Fixed a crash that could occur during zooming or view switching. Service now self-heals if Revit rebuilds its UI. v1.0.7: Improved stability — additional safety checks when coloring tabs during idle processing. v1.0.4: New dedicated ribbon icon.', requirements: [] },
+                            { id: 'tab_color_settings', label: 'Tab Color Settings', icon: 'palette', fn: 'Customize how your open document tabs are color-coded in Revit. Assign colors from a palette to help visually distinguish between multiple open projects and family editors at a glance.', videoRef: '', changelog: 'v1.0.16: Fixed the color swatch popup closing immediately, before you could actually pick a color. Fixed a bug where saving tab-coloring settings would scramble and reshuffle every open document\'s assigned color. v1.0.13: Tab coloring is now off by default on first install — enable it in settings. v1.0.11: Fixed log entries leaking into other add-in log files when running commands from EliteCoord or EliteDraft. v1.0.9: Fixed a crash that caused Revit to close unexpectedly after several minutes with tab colors enabled. v1.0.8: Fixed a crash that could occur during zooming or view switching. Service now self-heals if Revit rebuilds its UI. v1.0.7: Improved stability — additional safety checks when coloring tabs during idle processing. v1.0.4: New dedicated ribbon icon.', requirements: [] },
+                            { id: 'toggle_colors', label: 'Toggle Colors', icon: 'toggle-left', fn: 'Quickly turn tab coloring on or off without opening the settings dialog.', videoRef: '', changelog: 'v1.0.16: Fixed the color swatch popup closing immediately, before you could actually pick a color. Fixed a bug where saving tab-coloring settings would scramble and reshuffle every open document\'s assigned color. v1.0.13: Tab coloring is now off by default on first install — enable it in settings. v1.0.11: Fixed log entries leaking into other add-in log files when running commands from EliteCoord or EliteDraft. v1.0.9: Fixed a crash that caused Revit to close unexpectedly after several minutes with tab colors enabled. v1.0.8: Fixed a crash that could occur during zooming or view switching. Service now self-heals if Revit rebuilds its UI. v1.0.7: Improved stability — additional safety checks when coloring tabs during idle processing. v1.0.4: New dedicated ribbon icon.', requirements: [] },
                         ]
                     },
                     {
@@ -1375,6 +1377,12 @@
                         title: 'Export',
                         tools: [
                             { id: 'batch_export', label: 'Batch Export', icon: 'file-output', fn: 'Export multiple sheets and views to PDF, DWG, and NWC in a single operation. Choose your formats, configure settings for each, and set up custom file naming using project parameters and tokens. Save your configurations as reusable profiles that can be shared between machines.', videoRef: '', changelog: 'v1.0.12: Dark-themed input dialogs. v1.0.8: Select Set filter is now a checkbox dropdown — check multiple View/Sheet Sets to filter the list by their union. No sets checked shows all items. Stacks with view type filter and text search. v1.0.5: Fixed loading hang on projects with hundreds of sheets and views. v1.0.4: New feature — 3-step export wizard with PDF, DWG, and NWC support. Token-based file naming, reusable profiles, view type filtering, and View/Sheet Set management.', requirements: ['Active Revit project open', 'Sheets or views present in the project', 'DWG Export Setup configured in Revit (for DWG export)'] },
+                        ]
+                    },
+                    {
+                        title: 'Modify',
+                        tools: [
+                            { id: 'match_properties', label: 'Match Props', icon: 'paintbrush', fn: 'AutoCAD-style property copy for Revit. Select the elements you want to change first using Revit\'s own selection tools (window select, right-click > Select Connected, filters), run the command, then pick one element to copy from. A preview dialog shows exactly what will change — family type and instance parameters — before applying everything in a single undo step.', videoRef: '', changelog: 'v1.0.16: New command.', requirements: ['Active Revit project open', 'One or more target elements selected before running the command'] },
                         ]
                     }
                 ]
