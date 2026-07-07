@@ -467,7 +467,7 @@
         <h1>EliteScan</h1>
         <div class="accent-bar"></div>
         <p class="subtitle">A tutorial walkthrough of every ribbon button, dialog, and workflow in the point cloud deviation analysis plugin</p>
-        <p class="version">v2.0.2 / Tutorial &amp; Reference Guide</p>
+        <p class="version">v2.1.0 / Tutorial &amp; Reference Guide</p>
     </div>
 
     <!-- ============================================================ -->
@@ -700,6 +700,14 @@
                     <td>How big each point draws on screen, <span class="key">1&ndash;5 px</span>. Larger points fill gaps in sparse areas; smaller points show fine structure.</td>
                 </tr>
                 <tr>
+                    <td><span class="btn-name">Style &mdash; Normal</span></td>
+                    <td>Default. Draws the cloud solid and opaque.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-name">Style &mdash; X-ray</span></td>
+                    <td>Draws the cloud semi-transparent so you can read model geometry and structure through it. The <span class="key">Contrast</span> slider controls how see-through it gets. Works with any color mode.</td>
+                </tr>
+                <tr>
                     <td><span class="btn-name">Color &mdash; RGB</span></td>
                     <td>Default. Draws each point in its captured scan color.</td>
                 </tr>
@@ -707,7 +715,31 @@
                     <td><span class="btn-name">Color &mdash; Elevation</span></td>
                     <td>Colors points by height (Z) through a blue-to-red ramp. Use the <span class="key">Use cloud bounds</span> toggle to auto-range to the cloud, or type a manual <strong>Min / Max Z</strong> in feet to color a specific band.</td>
                 </tr>
+                <tr>
+                    <td><span class="btn-name">Color &mdash; Uniform</span></td>
+                    <td>Paints the whole cloud one color you pick by hex value (<span class="key">#RRGGBB</span>), with a preview swatch. Handy for clean overlays and presentation views.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-name">Color &mdash; Intensity</span></td>
+                    <td>Colors points by the scanner's raw return brightness (grayscale), which makes surfaces, materials, and markings much easier to read. Needs a cache built with v2.1.0 or newer &mdash; see the note below.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-name">Color &mdash; Normal shading</span></td>
+                    <td>Lights the cloud like a headlight so shape and depth stand out clearly, even on single-color scans. Needs a cache built with v2.1.0 or newer &mdash; see the note below.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-name">Deviation heatmap</span></td>
+                    <td>After running <strong>Analyze View</strong> (Section 04), colors every point by how far it sits from the model &mdash; green within tolerance, shading to red at the outlier limit, dim gray where nothing was measured. Layers on top of any style, including X-ray. Off by default.</td>
+                </tr>
             </table>
+            <div class="col-card" style="border-left:3px solid var(--scan);margin-top:0.15in;">
+                <h3 style="color:var(--scan);">Intensity &amp; Normal shading need a v2.1.0 cache</h3>
+                <ul class="col-cyan">
+                    <li>These two color modes read extra per-point data (scanner intensity and surface normals) that the <strong>v2.1.0 converter</strong> records into the render cache</li>
+                    <li>A cloud built by an older converter won't have it &mdash; the radio button stays disabled with a tooltip telling you to rebuild</li>
+                    <li>Rebuild from the <strong>Cloud Panel</strong> (Section 03) &mdash; <span class="key">Build cache</span> reconverts the cloud and adds the new data</li>
+                </ul>
+            </div>
             <p style="margin-top:0.12in;font-size:10pt;color:var(--text-muted);">Display settings live here, separate from the analysis Settings dialog (Section 10), so changing how a cloud looks never touches your tolerance or category setup.</p>
         </div>
         <div class="slide-footer">
@@ -791,7 +823,7 @@
                     </ul>
                 </div>
             </div>
-            <p style="margin-top:0.12in;font-size:10pt;color:var(--text-muted);">Results auto-save and open in the Results Window (Section 05), exactly as before &mdash; only the engine underneath changed.</p>
+            <p style="margin-top:0.12in;font-size:10pt;color:var(--text-muted);">Results auto-save and open in the Results Window (Section 05), exactly as before &mdash; only the engine underneath changed. After a run, switch on the <strong>Deviation heatmap</strong> in Render Settings (Section 03) to color the cloud itself by distance to the model.</p>
         </div>
         <div class="slide-footer">
             <span>EliteScan Tutorial</span>
@@ -2040,7 +2072,7 @@
         <div class="accent-bar"></div>
         <div class="contact">
             <strong>Analysis</strong> &bull; <strong>Viewer</strong> &bull; <strong>Overlay</strong> &bull; <strong>Point Clouds</strong> &mdash; Point cloud deviation analysis for Revit<br>
-            Revit 2022&ndash;2026 &bull; .NET 4.8 / .NET 8.0 &bull; ReCap SDK point-cloud engine &bull; v2.0.2
+            Revit 2022&ndash;2026 &bull; .NET 4.8 / .NET 8.0 &bull; ReCap SDK point-cloud engine &bull; v2.1.0
         </div>
     </div>
 
