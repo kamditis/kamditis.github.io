@@ -467,7 +467,7 @@
         <h1>EliteScan</h1>
         <div class="accent-bar"></div>
         <p class="subtitle">A tutorial walkthrough of every ribbon button, dialog, and workflow in the point cloud deviation analysis plugin</p>
-        <p class="version">v2.1.1 / Tutorial &amp; Reference Guide</p>
+        <p class="version">v2.2.0 / Tutorial &amp; Reference Guide</p>
     </div>
 
     <!-- ============================================================ -->
@@ -493,7 +493,6 @@
                 <div class="col-card" style="border-left:3px solid var(--scan);">
                     <h3 style="color:var(--scan);">Analysis panel</h3>
                     <ul class="col-cyan">
-                        <li><strong>Place Scans</strong> &mdash; Places scan-location markers from the point cloud's scan origins</li>
                         <li><strong>Analyze View</strong> &mdash; Element-based deviation analysis of the active view</li>
                         <li><strong>View Report</strong> &mdash; Opens the results window</li>
                         <li><strong>Settings</strong> &mdash; Configure tolerance, scoring thresholds, and categories</li>
@@ -502,7 +501,7 @@
                 <div class="col-card" style="border-left:3px solid var(--draft);">
                     <h3 style="color:var(--draft);">Viewer panel</h3>
                     <ul class="col-amber">
-                        <li><strong>360 Viewer</strong> &mdash; Dockable equirectangular panorama pane</li>
+                        <li><strong>360 Viewer</strong> &mdash; Popup window with equirectangular scan panoramas</li>
                     </ul>
                 </div>
                 <div class="col-card" style="border-left:3px solid var(--coord);">
@@ -515,9 +514,8 @@
                 <div class="col-card" style="border-left:3px solid var(--core);">
                     <h3 style="color:var(--core);">Point Clouds panel</h3>
                     <ul class="col-purple">
-                        <li><strong>Cloud Panel</strong> &mdash; Dockable list of every point cloud in the project; add, convert, show/hide, and remove clouds here</li>
+                        <li><strong>Point Clouds</strong> &mdash; One window for every cloud: add, convert, show/hide, place scans, remove, and per-cloud display settings</li>
                         <li><strong>Revit 2 ReCap</strong> &mdash; Shows point cloud transform data with per-value copy buttons</li>
-                        <li><strong>Render Settings</strong> &mdash; Live point density, size, and color controls</li>
                         <li><strong>Cloud Reset</strong> &mdash; Resets a cloud's placement back to origin</li>
                         <li><strong>Isolate to Element</strong> &mdash; Clips the cloud to the selected element(s)</li>
                         <li><strong>Clear Isolation</strong> &mdash; Shows the full cloud again</li>
@@ -525,8 +523,8 @@
                 </div>
             </div>
             <p style="margin-top:0.15in;font-size:10pt;color:var(--text-muted);">Icons auto-swap between Light and Dark variants to match Revit's current UI theme. The add-in uses ricaun.Revit.UI for ribbon creation with automatic DPI scaling.</p>
-            <p style="margin-top:0.08in;font-size:10pt;color:var(--text-muted);">New in v2.0.0: deviation analysis is now element-based &mdash; <strong>Analyze View</strong> scores every element in the active view (or your selection) directly against the point cloud using a built-in multi-core engine, with no CloudCompare and no per-scan E57 setup. Point clouds are added and managed from the new <strong>Cloud Panel</strong>, displayed by a fast built-in renderer with live <strong>Render Settings</strong>, and can be clipped to a single element with <strong>Isolate to Element</strong>.</p>
-            <p style="margin-top:0.08in;font-size:10pt;color:var(--text-muted);">New in v2.0.1: adding a cloud converts it <strong>in the background inside Revit</strong> &mdash; a preview appears immediately and swaps to the full renderer when conversion finishes, with a live progress bar and an upfront time estimate. The separate Load Point Cloud button is retired; everything lives in the Cloud Panel.</p>
+            <p style="margin-top:0.08in;font-size:10pt;color:var(--text-muted);">New in v2.2.0: the former Cloud Panel and Render Settings buttons merged into one <strong>Point Clouds</strong> window &mdash; every cloud row carries its own actions (visibility, Build cache, Place scans, reload, Remove) and its own Color section, with global density, size, and style dials alongside. Per-cloud color settings save per project, and the elevation color range can be entered as offsets from a Revit level. Scan-location placement lives on each cloud row as <strong>Place scans</strong> (it left the ribbon in v2.1.1, so projects with several clouds place markers for the right cloud).</p>
+            <p style="margin-top:0.08in;font-size:10pt;color:var(--text-muted);">Since v2.0: deviation analysis is element-based &mdash; <strong>Analyze View</strong> scores every element in the active view (or your selection) directly against the point cloud using a built-in multi-core engine, with no CloudCompare and no per-scan E57 setup. Adding a cloud converts it <strong>in the background inside Revit</strong> &mdash; a preview appears immediately and swaps to the fast built-in renderer when conversion finishes, with a live progress bar and an upfront time estimate.</p>
         </div>
         <div class="slide-footer">
             <span>EliteScan Tutorial</span>
@@ -539,8 +537,8 @@
     <!-- ============================================================ -->
     <div class="slide slide-section">
         <div class="section-label">Section 02</div>
-        <h2>Analysis panel &mdash; Place Scans</h2>
-        <div class="section-sub">Auto-places Scan Location family instances at each scan origin, with origin and orientation read straight from the ReCap point cloud</div>
+        <h2>Place scans &mdash; per-cloud row button</h2>
+        <div class="section-sub">Auto-places Scan Location family instances at each scan origin, with origin and orientation read straight from the ReCap point cloud &mdash; run from the cloud's row in the Point Clouds window</div>
     </div>
 
     <!-- ============================================================ -->
@@ -548,11 +546,11 @@
     <!-- ============================================================ -->
     <div class="slide slide-content">
         <div class="slide-header">
-            <h2>Place Scans button</h2>
-            <span class="tab-label">Analysis &gt; Place Scans</span>
+            <h2>Place scans button</h2>
+            <span class="tab-label">Point Clouds panel &gt; Point Clouds &gt; cloud row &gt; Place scans</span>
         </div>
         <div class="slide-body">
-            <p style="color:var(--text-dim);margin-bottom:0.15in;font-size:11pt;">Before placing scans, add the point cloud for the project in the Cloud Panel (see Section 03 &mdash; Point clouds). Automatically places Scan Location family instances at each scan origin. Both the origin position and the scanner's viewing orientation are read straight from the ReCap point cloud &mdash; there is no FARO/E57 mode prompt to choose. Each instance is populated with the metadata used by analysis and the 360 Viewer.</p>
+            <p style="color:var(--text-dim);margin-bottom:0.15in;font-size:11pt;">Before placing scans, add the point cloud for the project in the Point Clouds window (see Section 03 &mdash; Point clouds). Each cloud row has its own <strong>Place scans</strong> button, so in a project with several clouds you always place markers from the cloud you mean. It automatically places Scan Location family instances at each scan origin. Both the origin position and the scanner's viewing orientation are read straight from the ReCap point cloud &mdash; there is no FARO/E57 mode prompt to choose. Each instance is populated with the metadata used by analysis and the 360 Viewer.</p>
             <div class="two-col" style="gap:0.3in;">
                 <div class="col-card" style="border-left:3px solid var(--scan);">
                     <h3 style="color:var(--scan);">Requirements</h3>
@@ -573,7 +571,7 @@
                     </ul>
                 </div>
             </div>
-            <p style="margin-top:0.12in;font-size:10pt;color:var(--text-muted);">Re-runnable: instances are matched by their ScanID parameter. Re-running Place Scans <strong>updates existing markers in place</strong> (re-baking position and orientation from the cloud) and places new ones for any scans that don't have a marker yet &mdash; it no longer skips them.</p>
+            <p style="margin-top:0.12in;font-size:10pt;color:var(--text-muted);">Re-runnable: instances are matched by their ScanID parameter. Re-running Place scans <strong>updates existing markers in place</strong> (re-baking position and orientation from the cloud) and places new ones for any scans that don't have a marker yet &mdash; it no longer skips them.</p>
             <div class="col-card" style="border-left:3px solid var(--scan);margin-top:0.15in;">
                 <h3 style="color:var(--scan);">Panorama extraction choice at place time</h3>
                 <ul class="col-cyan">
@@ -595,7 +593,7 @@
     <div class="slide slide-section">
         <div class="section-label">Section 03</div>
         <h2>Point clouds &mdash; load, manage &amp; display</h2>
-        <div class="section-sub">Add an .rcp and convert it in the background, manage every cloud in the project, and tune how the built-in renderer draws them &mdash; all on the Point Clouds panel</div>
+        <div class="section-sub">Add an .rcp and convert it in the background, manage every cloud in the project, and tune how the built-in renderer draws them &mdash; all in one Point Clouds window</div>
     </div>
 
     <!-- ============================================================ -->
@@ -604,10 +602,10 @@
     <div class="slide slide-content">
         <div class="slide-header">
             <h2>Add a cloud &mdash; convert in the background</h2>
-            <span class="tab-label">Point Clouds &gt; Cloud Panel &gt; Add</span>
+            <span class="tab-label">Point Clouds panel &gt; Point Clouds &gt; + Add</span>
         </div>
         <div class="slide-body">
-            <p style="color:var(--text-dim);margin-bottom:0.15in;font-size:11pt;">Pick an <span class="key">.rcp</span> file in the Cloud Panel to bring a scan into the project. EliteScan validates the file through the ReCap SDK and checks the cloud's <strong>render cache</strong> &mdash; the <span class="key">.potree</span> folder the built-in renderer draws from. If the cache is missing, EliteScan offers to <strong>convert it in the background right inside Revit</strong>, with an upfront time estimate.</p>
+            <p style="color:var(--text-dim);margin-bottom:0.15in;font-size:11pt;">Pick an <span class="key">.rcp</span> file with the <strong>+ Add</strong> button in the Point Clouds window to bring a scan into the project. EliteScan validates the file through the ReCap SDK and checks the cloud's <strong>render cache</strong> &mdash; the <span class="key">.potree</span> folder the built-in renderer draws from. If the cache is missing, EliteScan offers to <strong>convert it in the background right inside Revit</strong>, with an upfront time estimate.</p>
             <div class="two-col" style="gap:0.3in;">
                 <div class="col-card" style="border-left:3px solid var(--scan);">
                     <h3 style="color:var(--scan);">What happens when you Add</h3>
@@ -639,16 +637,20 @@
     <!-- ============================================================ -->
     <div class="slide slide-content">
         <div class="slide-header">
-            <h2>Cloud Panel &mdash; manage every cloud in the project</h2>
-            <span class="tab-label">Point Clouds &gt; Cloud Panel</span>
+            <h2>Cloud list &mdash; every cloud with its own controls</h2>
+            <span class="tab-label">Point Clouds panel &gt; Point Clouds</span>
         </div>
         <div class="slide-body">
-            <p style="color:var(--text-dim);margin-bottom:0.15in;font-size:11pt;">A dockable panel that lists every point cloud in the project &mdash; including preview rows (canceled conversions) and clouds inserted with Revit's own Insert &gt; Point Cloud. Each row shows the cloud's name, its file path, and its status: <span class="key">linked</span>, <span class="key">source missing</span>, <span class="key">no cache</span>, or <span class="key">converting</span> (with a live progress bar).</p>
+            <p style="color:var(--text-dim);margin-bottom:0.15in;font-size:11pt;">The Point Clouds window lists every point cloud in the project &mdash; including preview rows (canceled conversions) and clouds inserted with Revit's own Insert &gt; Point Cloud. Each row shows the cloud's name, its file path, its status (<span class="key">linked</span>, <span class="key">source missing</span>, <span class="key">no cache</span>, or <span class="key">converting</span> with a live progress bar) &mdash; and carries its own action buttons, so there is nothing to select first.</p>
             <table class="btn-table">
-                <tr><th style="width:180px;">Button</th><th>What it does</th></tr>
+                <tr><th style="width:180px;">Control</th><th>What it does</th></tr>
                 <tr>
-                    <td><span class="btn-pill pill-cyan">Add</span></td>
-                    <td>Brings another point cloud into the project and offers background conversion if its render cache is missing (previous slide).</td>
+                    <td><span class="btn-pill pill-cyan">Visibility checkbox</span></td>
+                    <td>Shows or hides the cloud in every view for this session. <span class="key">Check all</span> / <span class="key">Uncheck all</span> at the top of the list flip every cloud at once.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-pill pill-gray">Hide in view / Show in view</span></td>
+                    <td>Hides or shows the cloud in the <em>active view only</em>, saved with the document (it appears under Revit's Reveal Hidden Elements).</td>
                 </tr>
                 <tr>
                     <td><span class="btn-pill pill-cyan">Build cache</span></td>
@@ -659,19 +661,27 @@
                     <td>Stops tracking an in-progress conversion; the row stays listed as a preview so you can Build cache later.</td>
                 </tr>
                 <tr>
-                    <td><span class="btn-pill pill-gray">Show / Hide / Hide in view</span></td>
-                    <td>Per-cloud visibility: Hide hides the cloud in every view for this session, Hide in view hides it in the active view only (saved with the document), Show clears both. An "All clouds" bar applies the same three to every cloud at once.</td>
+                    <td><span class="btn-pill pill-cyan">Place scans</span></td>
+                    <td>Places or updates scan-location markers from this cloud's scan origins (Section 02).</td>
                 </tr>
                 <tr>
-                    <td><span class="btn-pill pill-gray">Re-locate</span></td>
-                    <td>Point a row at the cloud's new file location after the source <span class="key">.rcp</span> has moved &mdash; clears the "source missing" status without losing any results.</td>
+                    <td><span class="btn-pill pill-gray">Reload from...</span></td>
+                    <td>Point the row at the cloud's new file location after the source <span class="key">.rcp</span> has moved &mdash; clears the "source missing" status without losing any results.</td>
                 </tr>
                 <tr>
                     <td><span class="btn-pill pill-gray">Remove</span></td>
                     <td>Drops the cloud from the project list. Does not delete the source file on disk.</td>
                 </tr>
+                <tr>
+                    <td><span class="btn-pill pill-cyan">Color (expander)</span></td>
+                    <td>Per-cloud color settings &mdash; color mode, elevation range, uniform color &mdash; saved per project (next slide).</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-pill pill-gray">+ Add / Refresh</span></td>
+                    <td>Bottom of the sidebar: bring another cloud into the project (previous slide) or refresh the list.</td>
+                </tr>
             </table>
-            <p style="margin-top:0.12in;font-size:10pt;color:var(--text-muted);">The panel is the single place to see, at a glance, which clouds are linked, converting, or need attention before you analyze or view them.</p>
+            <p style="margin-top:0.12in;font-size:10pt;color:var(--text-muted);">The window is the single place to see, at a glance, which clouds are linked, converting, or need attention before you analyze or view them.</p>
         </div>
         <div class="slide-footer">
             <span>EliteScan Tutorial</span>
@@ -684,11 +694,11 @@
     <!-- ============================================================ -->
     <div class="slide slide-content">
         <div class="slide-header">
-            <h2>Render Settings &mdash; live display dials</h2>
-            <span class="tab-label">Point Clouds &gt; Render Settings</span>
+            <h2>Display dials &mdash; global render and per-cloud color</h2>
+            <span class="tab-label">Point Clouds panel &gt; Point Clouds</span>
         </div>
         <div class="slide-body">
-            <p style="color:var(--text-dim);margin-bottom:0.15in;font-size:11pt;">A modeless panel with live dials over the built-in point-cloud renderer. Every change applies <strong>instantly</strong> &mdash; no reload and no re-conversion, just a redraw. These settings control how the cloud looks, not how it's analyzed.</p>
+            <p style="color:var(--text-dim);margin-bottom:0.15in;font-size:11pt;">Live dials over the built-in point-cloud renderer, right in the Point Clouds window. Every change applies <strong>instantly</strong> &mdash; no reload and no re-conversion, just a redraw. <strong>Density, point size, and style are global</strong> (the sidebar's Global render expander); <strong>Color is per cloud</strong> &mdash; it lives in each cloud row's Color expander and is saved per cloud per project, so every cloud remembers its own look. These settings control how the cloud looks, not how it's analyzed.</p>
             <table class="btn-table">
                 <tr><th style="width:180px;">Control</th><th>What it does</th></tr>
                 <tr>
@@ -713,11 +723,11 @@
                 </tr>
                 <tr>
                     <td><span class="btn-name">Color &mdash; Elevation</span></td>
-                    <td>Colors points by height (Z) through a blue-to-red ramp. Use the <span class="key">Use cloud bounds</span> toggle to auto-range to the cloud, or type a manual <strong>Min / Max Z</strong> in feet to color a specific band.</td>
+                    <td>Colors points by height (Z) through a blue-to-red ramp. Use the <span class="key">Use cloud bounds</span> toggle to auto-range to the cloud, or type a manual <strong>Min / Max</strong> in feet. New in v2.2.0: pick a <span class="key">Base level</span> and the Min / Max become offsets from that Revit level (e.g. Level 2 + 0 ft to + 12 ft) &mdash; keep <span class="key">(absolute Z)</span> for plain world elevations.</td>
                 </tr>
                 <tr>
                     <td><span class="btn-name">Color &mdash; Uniform</span></td>
-                    <td>Paints the whole cloud one color you pick by hex value (<span class="key">#RRGGBB</span>), with a preview swatch. Handy for clean overlays and presentation views.</td>
+                    <td>Paints the whole cloud one color. Click the preview swatch to pick it with a color picker (v2.2.0). Handy for clean overlays and presentation views.</td>
                 </tr>
                 <tr>
                     <td><span class="btn-name">Color &mdash; Intensity</span></td>
@@ -737,10 +747,10 @@
                 <ul class="col-cyan">
                     <li>These two color modes read extra per-point data (scanner intensity and surface normals) that the <strong>v2.1.0 converter</strong> records into the render cache</li>
                     <li>A cloud built by an older converter won't have it &mdash; the radio button stays disabled with a tooltip telling you to rebuild</li>
-                    <li>Rebuild from the <strong>Cloud Panel</strong> (Section 03) &mdash; <span class="key">Build cache</span> reconverts the cloud and adds the new data</li>
+                    <li>Rebuild with the cloud row's <span class="key">Build cache</span> button (previous slide) &mdash; it reconverts the cloud and adds the new data</li>
                 </ul>
             </div>
-            <p style="margin-top:0.12in;font-size:10pt;color:var(--text-muted);">Display settings live here, separate from the analysis Settings dialog (Section 10), so changing how a cloud looks never touches your tolerance or category setup.</p>
+            <p style="margin-top:0.12in;font-size:10pt;color:var(--text-muted);">Display settings live here, separate from the analysis Settings dialog (Section 10), so changing how a cloud looks never touches your tolerance or category setup. Global dials save once per machine; each cloud's Color setup saves per cloud per project.</p>
         </div>
         <div class="slide-footer">
             <span>EliteScan Tutorial</span>
@@ -754,7 +764,7 @@
     <div class="slide slide-content">
         <div class="slide-header">
             <h2>Isolate to Element &amp; Clear Isolation</h2>
-            <span class="tab-label">Point Clouds &gt; Isolate to Element</span>
+            <span class="tab-label">Point Clouds panel &gt; Isolate to Element</span>
         </div>
         <div class="slide-body">
             <p style="color:var(--text-dim);margin-bottom:0.15in;font-size:11pt;">When a full cloud hides the element you're checking, isolate the display to just the points around it. <strong>Isolate to Element</strong> clips the rendered cloud to your selected element(s), padded by the same window the analysis uses, so you see only the points that matter for that element. <strong>Clear Isolation</strong> shows the full cloud again.</p>
@@ -773,7 +783,7 @@
                 <h3 style="color:var(--scan);">Where the renderer draws</h3>
                 <ul class="col-cyan">
                     <li><strong>3D and supported 2D views</strong> &mdash; floor/ceiling/area plans, sections, and elevations, each respecting that view's own clipping</li>
-                    <li><strong>Built-in renderer</strong> &mdash; nothing reloads when you isolate, clear, or change Render Settings; the view just repaints</li>
+                    <li><strong>Built-in renderer</strong> &mdash; nothing reloads when you isolate, clear, or change display settings; the view just repaints</li>
                     <li><strong>Render cache required</strong> &mdash; a cloud only draws once its <span class="key">.potree</span> cache is built by the EliteScan Converter (Section 03 start)</li>
                 </ul>
             </div>
@@ -823,7 +833,7 @@
                     </ul>
                 </div>
             </div>
-            <p style="margin-top:0.12in;font-size:10pt;color:var(--text-muted);">Results auto-save and open in the Results Window (Section 05), exactly as before &mdash; only the engine underneath changed. After a run, switch on the <strong>Deviation heatmap</strong> in Render Settings (Section 03) to color the cloud itself by distance to the model.</p>
+            <p style="margin-top:0.12in;font-size:10pt;color:var(--text-muted);">Results auto-save and open in the Results Window (Section 05), exactly as before &mdash; only the engine underneath changed. After a run, switch on the <strong>Deviation heatmap</strong> in the Point Clouds window (Section 03) to color the cloud itself by distance to the model.</p>
         </div>
         <div class="slide-footer">
             <span>EliteScan Tutorial</span>
@@ -1336,7 +1346,7 @@
     <div class="slide slide-section">
         <div class="section-label">Section 08</div>
         <h2>360° Panorama Viewer</h2>
-        <div class="section-sub">Dockable pane for equirectangular scan panorama visualization with Revit view sync</div>
+        <div class="section-sub">Popup viewer for equirectangular scan panoramas with Revit view sync</div>
     </div>
 
     <!-- ============================================================ -->
@@ -1348,7 +1358,7 @@
             <span class="tab-label">Viewer &gt; 360 Viewer</span>
         </div>
         <div class="slide-body">
-            <p style="color:var(--text-dim);margin-bottom:0.15in;font-size:11pt;">Pane displaying equirectangular panorama images that come straight from the ReCap point cloud. Panoramas are lazy-extracted the first time you open a scan (if you didn't extract them all up front at Place time), so the first open of a scan may take a moment. There is no separate E57 export and no orientation mode to pick &mdash; the viewer trusts the viewing orientation baked onto each scan location when you ran Place Scans (see Section 02). Only <em>structured</em> scans have a panorama. Toolbar provides navigation, synchronization, and screenshot controls.</p>
+            <p style="color:var(--text-dim);margin-bottom:0.15in;font-size:11pt;">A popup window displaying equirectangular panorama images that come straight from the ReCap point cloud. Panoramas are lazy-extracted the first time you open a scan (if you didn't extract them all up front at Place time), so the first open of a scan may take a moment. There is no separate E57 export and no orientation mode to pick &mdash; the viewer trusts the viewing orientation baked onto each scan location when you ran Place scans (see Section 02). Only <em>structured</em> scans have a panorama. Toolbar provides navigation, synchronization, and screenshot controls.</p>
             <table class="btn-table">
                 <tr><th style="width:160px;">Control</th><th>What it does</th></tr>
                 <tr>
@@ -1593,7 +1603,7 @@
                 </tr>
             </table>
             <p style="margin-top:0.15in;color:var(--text-dim);font-size:11pt;"><strong>No external tools:</strong> Analyze View uses EliteScan's built-in cloud-to-mesh engine &mdash; there is no CloudCompare path to configure and no per-scan E57 setup. It only needs a converted point cloud (Section 03&ndash;04).</p>
-            <p style="margin-top:0.08in;font-size:10pt;color:var(--text-muted);">Point-cloud <strong>display</strong> (density, point size, color) is not configured here &mdash; it lives in the separate <strong>Render Settings</strong> panel on the Point Clouds panel (Section 03), so changing how a cloud looks never touches your analysis setup.</p>
+            <p style="margin-top:0.08in;font-size:10pt;color:var(--text-muted);">Point-cloud <strong>display</strong> (density, point size, color) is not configured here &mdash; it lives in the <strong>Point Clouds</strong> window (Section 03), so changing how a cloud looks never touches your analysis setup.</p>
         </div>
         <div class="slide-footer">
             <span>EliteScan Tutorial</span>
@@ -1618,14 +1628,14 @@
                 </tr>
                 <tr>
                     <td><span class="btn-name">Family Name</span></td>
-                    <td>Text input (default "Scan Location"). Specifies which family type represents scan locations. Used by Place Scans to identify scan instances.</td>
+                    <td>Text input (default "Scan Location"). Specifies which family type represents scan locations. Used by Place scans to identify scan instances.</td>
                 </tr>
                 <tr>
                     <td><span class="btn-name">ScanID Parameter</span></td>
                     <td>Text input (default "ScanID"). Specifies which instance parameter stores the scan identifier. Must match the parameter name in the Scan Location family.</td>
                 </tr>
             </table>
-            <p style="margin-top:0.15in;color:var(--text-dim);font-size:11pt;"><strong>Panorama orientation:</strong> there is no FARO/E57 orientation option in Settings. Each scan's viewing direction is read from the ReCap point cloud and baked onto the scan location when you run Place Scans &mdash; the 360 Viewer simply trusts it. See Section 02 (Place Scans) and Section 08 (360 Viewer).</p>
+            <p style="margin-top:0.15in;color:var(--text-dim);font-size:11pt;"><strong>Panorama orientation:</strong> there is no FARO/E57 orientation option in Settings. Each scan's viewing direction is read from the ReCap point cloud and baked onto the scan location when you run Place scans &mdash; the 360 Viewer simply trusts it. See Section 02 (Place scans) and Section 08 (360 Viewer).</p>
         </div>
         <div class="slide-footer">
             <span>EliteScan Tutorial</span>
@@ -1947,7 +1957,11 @@
                 </tr>
                 <tr>
                     <td><span class="key">Global\Scan\render-settings.json</span></td>
-                    <td>Render Settings panel state (Section 03): point density, point size, and color mode. Kept separate from <span class="key">settings.json</span> so display changes never touch analysis setup.</td>
+                    <td>Global display dials (Section 03): point density, point size, and style, plus the fallback color defaults a new cloud inherits. Kept separate from <span class="key">settings.json</span> so display changes never touch analysis setup.</td>
+                </tr>
+                <tr>
+                    <td><span class="key">{Project}\Scan\cloud-render-settings.json</span></td>
+                    <td>Per-cloud color settings (v2.2.0, Section 03): each cloud's color mode, elevation range or level offsets, and uniform color &mdash; saved per project so every cloud remembers its own look.</td>
                 </tr>
                 <tr>
                     <td><span class="key">Global\Scan\Templates\</span></td>
@@ -1971,7 +1985,7 @@
                 </tr>
                 <tr>
                     <td><span class="key">&lt;rcpName&gt; Support\</span> (beside the cloud)</td>
-                    <td>Panorama JPGs, one per structured scan: <span class="key">[scanId].jpg</span>. These live next to the point cloud on disk &mdash; <strong>not</strong> under EliteTools &mdash; written by Place Scans or lazily by the 360 Viewer (Section 08).</td>
+                    <td>Panorama JPGs, one per structured scan: <span class="key">[scanId].jpg</span>. These live next to the point cloud on disk &mdash; <strong>not</strong> under EliteTools &mdash; written by Place scans or lazily by the 360 Viewer (Section 08).</td>
                 </tr>
             </table>
             <p style="margin-top:0.12in;font-size:10pt;color:var(--text-muted);">To reset global EliteScan settings to defaults, delete <span class="key">%LOCALAPPDATA%\EliteTools\Global\Scan\</span>; settings and templates regenerate on next launch. Per-project results and approvals live under <span class="key">%LOCALAPPDATA%\EliteTools\{Project}\Scan\</span>.</p>
@@ -2005,7 +2019,7 @@
                     <ul class="col-cyan">
                         <li><strong>Symptom:</strong> Analyze View stops immediately and tells you to convert the cloud</li>
                         <li><strong>Cause:</strong> No point cloud has a built render cache (the <span class="key">.potree</span> folder)</li>
-                        <li><strong>Solution:</strong> Click Build cache on the cloud's row in the Cloud Panel (or use the standalone EliteScan Converter), then re-run Analyze View. See Section 03&ndash;04</li>
+                        <li><strong>Solution:</strong> Click Build cache on the cloud's row in the Point Clouds window (or use the standalone EliteScan Converter), then re-run Analyze View. See Section 03&ndash;04</li>
                     </ul>
                 </div>
                 <div class="col-card" style="border-left:3px solid var(--warning);">
@@ -2013,23 +2027,23 @@
                     <ul class="col-amber">
                         <li><strong>Symptom:</strong> A loaded cloud doesn't draw in the 3D or 2D view</li>
                         <li><strong>Causes:</strong> No render cache yet, conversion still in progress, or an unsupported view (schedule/sheet/template)</li>
-                        <li><strong>Solution:</strong> Check the cloud's state in the Cloud Panel; click Build cache if needed; make sure the cloud isn't hidden (Show / Hide buttons); switch to a 3D, plan, section, or elevation view (Section 03)</li>
+                        <li><strong>Solution:</strong> Check the cloud's state in the Point Clouds window; click Build cache if needed; make sure the cloud isn't hidden (visibility checkbox / Show in view); switch to a 3D, plan, section, or elevation view (Section 03)</li>
                     </ul>
                 </div>
                 <div class="col-card" style="border-left:3px solid var(--warning);">
                     <h3 style="color:var(--warning);">No Scans Found</h3>
                     <ul class="col-amber">
-                        <li><strong>Symptom:</strong> Place Scans reports "No scans found in point cloud"</li>
+                        <li><strong>Symptom:</strong> Place scans reports "No scans found in point cloud"</li>
                         <li><strong>Causes:</strong> The point cloud isn't loaded, its <span class="key">.rcp</span> source has moved, or it holds no scan origins</li>
-                        <li><strong>Solution:</strong> Load the cloud (or Re-locate it in the Cloud Panel), confirm the <span class="key">.rcp</span> path is valid, then re-run Place Scans (Section 02&ndash;03)</li>
+                        <li><strong>Solution:</strong> Load the cloud (or use Reload from... in the Point Clouds window), confirm the <span class="key">.rcp</span> path is valid, then re-run Place scans (Section 02&ndash;03)</li>
                     </ul>
                 </div>
                 <div class="col-card" style="border-left:3px solid var(--warning);">
                     <h3 style="color:var(--warning);">Panorama Images Not Loading</h3>
                     <ul class="col-amber">
                         <li><strong>Symptom:</strong> 360 Viewer shows "No panorama available" message</li>
-                        <li><strong>Cause:</strong> The cloud isn't loaded, Place Scans hasn't run, or the scan is not <em>structured</em> (only structured scans have a panorama)</li>
-                        <li><strong>Solution:</strong> Add the point cloud in the Cloud Panel and run Place Scans (Section 02); panoramas are pulled from the cloud, lazily on first open. Orientation is baked at Place time &mdash; re-run Place Scans if it looks off (Section 08)</li>
+                        <li><strong>Cause:</strong> The cloud isn't loaded, Place scans hasn't run, or the scan is not <em>structured</em> (only structured scans have a panorama)</li>
+                        <li><strong>Solution:</strong> Add the point cloud in the Point Clouds window and run Place scans on its row (Section 02); panoramas are pulled from the cloud, lazily on first open. Orientation is baked at Place time &mdash; re-run Place scans if it looks off (Section 08)</li>
                     </ul>
                 </div>
                 <div class="col-card" style="border-left:3px solid var(--primary);">
@@ -2072,7 +2086,7 @@
         <div class="accent-bar"></div>
         <div class="contact">
             <strong>Analysis</strong> &bull; <strong>Viewer</strong> &bull; <strong>Overlay</strong> &bull; <strong>Point Clouds</strong> &mdash; Point cloud deviation analysis for Revit<br>
-            Revit 2022&ndash;2026 &bull; .NET 4.8 / .NET 8.0 &bull; ReCap SDK point-cloud engine &bull; v2.1.1
+            Revit 2022&ndash;2026 &bull; .NET 4.8 / .NET 8.0 &bull; ReCap SDK point-cloud engine &bull; v2.2.0
         </div>
     </div>
 
