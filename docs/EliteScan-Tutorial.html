@@ -467,7 +467,7 @@
         <h1>EliteScan</h1>
         <div class="accent-bar"></div>
         <p class="subtitle">A tutorial walkthrough of every ribbon button, dialog, and workflow in the point cloud deviation analysis plugin</p>
-        <p class="version">v2.2.0 / Tutorial &amp; Reference Guide</p>
+        <p class="version">v2.3.0 / Tutorial &amp; Reference Guide</p>
     </div>
 
     <!-- ============================================================ -->
@@ -718,7 +718,7 @@
                 </tr>
                 <tr>
                     <td><span class="btn-name">Color &mdash; Elevation</span></td>
-                    <td>Colors points by height (Z) through a blue-to-red ramp. Use the <span class="key">Use cloud bounds</span> toggle to auto-range to the cloud, or type a manual <strong>Min / Max</strong> in feet. New in v2.2.0: pick a <span class="key">Base level</span> and the Min / Max become offsets from that Revit level (e.g. Level 2 + 0 ft to + 12 ft) &mdash; keep <span class="key">(absolute Z)</span> for plain world elevations.</td>
+                    <td>Colors points by height (Z) through a color ramp. Pick the <span class="key">Ramp</span> per cloud (Blue to Red default, Grayscale, Viridis, Heat) and choose what happens <span class="key">Out of range</span> &mdash; clamp to the end colors (default), draw gray, or hide those points (new in v2.3.0). Use the <span class="key">Use cloud bounds</span> toggle to auto-range to the cloud, or type a manual <strong>Min / Max</strong> in feet. Pick a <span class="key">Base level</span> and the Min / Max become offsets from that Revit level (e.g. Level 2 + 0 ft to + 12 ft) &mdash; keep <span class="key">(absolute Z)</span> for plain world elevations (v2.2.0).</td>
                 </tr>
                 <tr>
                     <td><span class="btn-name">Color &mdash; Uniform</span></td>
@@ -733,14 +733,18 @@
                     <td>Lights the cloud like a headlight so shape and depth stand out clearly, even on single-color scans. Needs a cache built with v2.1.0 or newer &mdash; see the note below.</td>
                 </tr>
                 <tr>
+                    <td><span class="btn-name">Color &mdash; Normals (color)</span></td>
+                    <td>New in v2.3.0. Paints every point by which way its surface faces &mdash; floors, ceilings, and each wall direction get their own consistent color, so orientation and modeling errors jump out at a glance. The color never changes as you orbit. Needs a cache built with v2.1.0 or newer &mdash; see the note below.</td>
+                </tr>
+                <tr>
                     <td><span class="btn-name">Deviation heatmap</span></td>
-                    <td>After running <strong>Analyze View</strong> (Section 04), colors every point by how far it sits from the model &mdash; green within tolerance, shading to red at the outlier limit, dim gray where nothing was measured. Layers on top of any style, including X-ray. Off by default.</td>
+                    <td>After running <strong>Analyze View</strong> (Section 04), colors every point by how far it sits from the model &mdash; within tolerance shading to the outlier limit, dim gray where nothing was measured. New in v2.3.0: pick the heatmap <span class="key">Ramp</span> (Green-Yellow-Red default, Blue-Yellow-Red, Grayscale &mdash; the legend follows it) and check <span class="key">Hide unscored points</span> to show only analyzed geometry. Layers on top of any style, including X-ray. Off by default.</td>
                 </tr>
             </table>
             <div class="col-card" style="border-left:3px solid var(--scan);margin-top:0.15in;">
-                <h3 style="color:var(--scan);">Intensity &amp; Normal shading need a v2.1.0 cache</h3>
+                <h3 style="color:var(--scan);">Intensity, Normal shading &amp; Normals (color) need a v2.1.0+ cache</h3>
                 <ul class="col-cyan">
-                    <li>These two color modes read extra per-point data (scanner intensity and surface normals) that the <strong>v2.1.0 converter</strong> records into the render cache</li>
+                    <li>These color modes read extra per-point data (scanner intensity and surface normals) that the <strong>v2.1.0 or newer converter</strong> records into the render cache</li>
                     <li>A cloud built by an older converter won't have it &mdash; the radio button stays disabled with a tooltip telling you to rebuild</li>
                     <li>Rebuild with the cloud row's <span class="key">Build cache</span> button (previous slide) &mdash; it reconverts the cloud and adds the new data</li>
                 </ul>
@@ -2081,7 +2085,7 @@
         <div class="accent-bar"></div>
         <div class="contact">
             <strong>Analysis</strong> &bull; <strong>Viewer</strong> &bull; <strong>Point Clouds</strong> &mdash; Point cloud deviation analysis for Revit<br>
-            Revit 2022&ndash;2026 &bull; .NET 4.8 / .NET 8.0 &bull; ReCap SDK point-cloud engine &bull; v2.2.0
+            Revit 2022&ndash;2026 &bull; .NET 4.8 / .NET 8.0 &bull; ReCap SDK point-cloud engine &bull; v2.3.0
         </div>
     </div>
 
