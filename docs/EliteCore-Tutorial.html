@@ -468,7 +468,7 @@
         <h1>EliteCore</h1>
         <div class="accent-bar"></div>
         <p class="subtitle">A tutorial walkthrough of every ribbon button, dialog, and workflow in the core utilities plugin for project setup, auto-sync, tab coloring, sheet management, batch export, and property matching</p>
-        <p class="version">v1.0.16 / Tutorial &amp; Reference Guide</p>
+        <p class="version">v1.0.18 / Tutorial &amp; Reference Guide</p>
     </div>
 
     <!-- ============================================================ -->
@@ -477,7 +477,7 @@
     <div class="slide slide-section">
         <div class="section-label">Section 01</div>
         <h2>Ribbon overview</h2>
-        <div class="section-sub">The &ldquo;Elite Core&rdquo; tab with six panels: Project Setup, Auto Sync, Tab Colors, Sheets, Export, and Modify</div>
+        <div class="section-sub">The &ldquo;Elite Core&rdquo; tab with seven panels: Project Setup, Auto Sync, Tab Colors, Sheets, Export, Modify, and View Tools</div>
     </div>
 
     <div class="slide slide-content">
@@ -486,7 +486,7 @@
             <span class="tab-label">Elite Core</span>
         </div>
         <div class="slide-body">
-            <p style="color:var(--text-dim);margin-bottom:0.15in;font-size:11pt;">EliteCore installs a dedicated &ldquo;Elite Core&rdquo; tab in the Revit ribbon. It contains six panels grouping core utilities for project setup, automatic syncing, tab color customization, sheet management, batch export, and property matching. Supports Revit 2022 through 2026.</p>
+            <p style="color:var(--text-dim);margin-bottom:0.15in;font-size:11pt;">EliteCore installs a dedicated &ldquo;Elite Core&rdquo; tab in the Revit ribbon. It contains seven panels grouping core utilities for project setup, automatic syncing, tab color customization, sheet management, batch export, property matching, and view tools. Supports Revit 2022 through 2026.</p>
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.2in;margin-bottom:0.15in;">
                 <div class="col-card" style="border-left:3px solid var(--core);">
                     <h3 style="color:var(--core);">Project Setup panel</h3>
@@ -530,6 +530,15 @@
                     <h3 style="color:var(--core);">Modify panel</h3>
                     <ul class="col-purple">
                         <li><strong>Match Props</strong> &mdash; Copy family type and parameters from one element to others</li>
+                    </ul>
+                </div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr;gap:0.2in;margin-top:0.2in;">
+                <div class="col-card" style="border-left:3px solid var(--core);">
+                    <h3 style="color:var(--core);">View Tools panel</h3>
+                    <ul class="col-purple">
+                        <li><strong>Increase / Decrease Cut Plane</strong> &mdash; Nudge the plan view&rsquo;s cut plane up or down by a step you type in the ribbon box</li>
+                        <li><strong>Category Visibility</strong> &mdash; Split button with six toggles that check/uncheck an entire V/G category group (Model, Annotation, Imported, Analytical, Point Clouds, Revit Links)</li>
                     </ul>
                 </div>
             </div>
@@ -1553,10 +1562,112 @@
     </div>
 
     <!-- ============================================================ -->
-    <!-- SECTION 13: DEFAULT COLOR PALETTE                             -->
+    <!-- SECTION 13: VIEW TOOLS - CUT PLANE                           -->
     <!-- ============================================================ -->
     <div class="slide slide-section">
         <div class="section-label">Section 13</div>
+        <h2>View Tools &mdash; Cut Plane</h2>
+        <div class="section-sub">Nudge the active plan view&rsquo;s cut plane up or down by a step you set &mdash; no more digging through the View Range dialog</div>
+    </div>
+
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>Increase / Decrease Cut Plane</h2>
+            <span class="tab-label">View Tools &gt; Increase / Decrease Cut Plane</span>
+        </div>
+        <div class="slide-body">
+            <p style="color:var(--text-dim);margin-bottom:0.15in;font-size:11pt;">Two stacked buttons that move the active plan view&rsquo;s cut plane up or down by a fixed step, with a small text box below them where you type the step distance. Perfect for stepping through a congested ceiling space or checking what sits just above or below the current cut &mdash; assign keyboard shortcuts and walk the cut plane without ever opening View Range.</p>
+
+            <div class="col-card" style="border-left:3px solid var(--core);margin-bottom:0.15in;">
+                <h3 style="color:var(--core);">Controls</h3>
+                <table class="btn-table">
+                    <tr><td class="key">Increase Cut Plane</td><td class="desc">Raises the cut plane by the step amount.</td></tr>
+                    <tr><td class="key">Decrease Cut Plane</td><td class="desc">Lowers the cut plane by the step amount.</td></tr>
+                    <tr><td class="key">Step box</td><td class="desc">Type a distance and press <span class="btn-pill pill-purple">Enter</span> to set the step. Default is <span class="btn-pill pill-purple">6&quot;</span>. Accepts any format that matches your project units &mdash; <span class="key">6&quot;</span>, <span class="key">1'-6&quot;</span>, <span class="key">150</span> (mm in metric projects). The value is remembered between sessions.</td></tr>
+                </table>
+            </div>
+
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.2in;">
+                <div class="col-card" style="border-left:3px solid var(--scan);">
+                    <h3 style="color:var(--scan);">Behavior</h3>
+                    <ul class="col-cyan">
+                        <li><strong>Only the cut plane moves</strong> &mdash; top clip and view depth stay put</li>
+                        <li><strong>Ceiling plans:</strong> the bottom clip moves with the cut plane so the view range stays valid</li>
+                        <li><strong>Out of range?</strong> You get a message instead of a broken view</li>
+                        <li><strong>One undo step</strong> per press</li>
+                    </ul>
+                </div>
+                <div class="col-card" style="border-left:3px solid var(--danger);">
+                    <h3 style="color:var(--danger);">Requirements</h3>
+                    <ul>
+                        <li>Active plan view (floor plan, ceiling plan, or structural plan)</li>
+                        <li>View range not locked by a view template</li>
+                    </ul>
+                </div>
+            </div>
+
+            <p style="margin-top:0.15in;font-size:10pt;color:var(--text-muted);">Tip: assign keyboard shortcuts to both commands in Revit&rsquo;s Keyboard Shortcuts dialog (search for &ldquo;Increase Cut Plane&rdquo;) and step through a ceiling space one key press at a time. The step box has no label &mdash; look for the double-arrow icon directly under the two buttons.</p>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 14: VIEW TOOLS - CATEGORY VISIBILITY                 -->
+    <!-- ============================================================ -->
+    <div class="slide slide-section">
+        <div class="section-label">Section 14</div>
+        <h2>View Tools &mdash; Category Visibility</h2>
+        <div class="section-sub">Six one-click toggles that check or uncheck an entire Visibility/Graphics category group on the active view</div>
+    </div>
+
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>Category Visibility split button</h2>
+            <span class="tab-label">View Tools &gt; Category Visibility</span>
+        </div>
+        <div class="slide-body">
+            <p style="color:var(--text-dim);margin-bottom:0.15in;font-size:11pt;">One split button holding six toggle commands. Each press flips one of the top-level checkboxes on the Visibility/Graphics dialog for the active view &mdash; the same checkboxes you&rsquo;d otherwise reach through <span class="key">VG</span> &gt; the tab &gt; the &ldquo;Show ... in this view&rdquo; box. The last-used toggle stays on the button&rsquo;s top half, so repeat presses are a single click.</p>
+
+            <div class="col-card" style="border-left:3px solid var(--core);margin-bottom:0.15in;">
+                <h3 style="color:var(--core);">The six toggles</h3>
+                <table class="btn-table">
+                    <tr><td class="key">Model Categories</td><td class="desc">Show/hide all model categories &mdash; walls, ducts, pipes, equipment, everything physical.</td></tr>
+                    <tr><td class="key">Annotation Categories</td><td class="desc">Show/hide all annotation &mdash; tags, dimensions, text, symbols.</td></tr>
+                    <tr><td class="key">Imported Categories</td><td class="desc">Show/hide all imported CAD content in the view.</td></tr>
+                    <tr><td class="key">Analytical Categories</td><td class="desc">Show/hide all analytical model categories.</td></tr>
+                    <tr><td class="key">Point Clouds</td><td class="desc">Show/hide all point clouds in the view.</td></tr>
+                    <tr><td class="key">Revit Links</td><td class="desc">Show/hide every linked Revit model at once. Showing also restores links that were hidden individually, so one press always brings them all back.</td></tr>
+                </table>
+            </div>
+
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.2in;">
+                <div class="col-card" style="border-left:3px solid var(--scan);">
+                    <h3 style="color:var(--scan);">Keyboard shortcuts</h3>
+                    <ul class="col-cyan">
+                        <li>Each toggle is a separate command &mdash; assign each its own shortcut in Revit&rsquo;s Keyboard Shortcuts dialog</li>
+                        <li>Search for &ldquo;Model Categories&rdquo;, &ldquo;Revit Links&rdquo;, etc. under Elite Core</li>
+                        <li>One key press flips a whole category group &mdash; the point of the feature</li>
+                        <li>Each press is a single undo step</li>
+                    </ul>
+                </div>
+                <div class="col-card" style="border-left:3px solid var(--danger);">
+                    <h3 style="color:var(--danger);">Requirements</h3>
+                    <ul>
+                        <li>Active view that supports Visibility/Graphics</li>
+                        <li>View&rsquo;s V/G not controlled by a view template</li>
+                        <li>Revit Links toggle: at least one linked Revit model in the view</li>
+                    </ul>
+                </div>
+            </div>
+
+            <p style="margin-top:0.15in;font-size:10pt;color:var(--text-muted);">Success is silent &mdash; the view just updates. If the view can&rsquo;t be changed (template-controlled V/G, unsupported view type, or no links to hide) you get a message explaining why.</p>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 15: DEFAULT COLOR PALETTE                             -->
+    <!-- ============================================================ -->
+    <div class="slide slide-section">
+        <div class="section-label">Section 15</div>
         <h2>Default color palette</h2>
         <div class="section-sub">The 10 built-in colors used for order-based tab assignment</div>
     </div>
@@ -1619,10 +1730,10 @@
     </div>
 
     <!-- ============================================================ -->
-    <!-- SECTION 14: FILE STORAGE                                     -->
+    <!-- SECTION 16: FILE STORAGE                                     -->
     <!-- ============================================================ -->
     <div class="slide slide-section">
-        <div class="section-label">Section 14</div>
+        <div class="section-label">Section 16</div>
         <h2>File storage locations</h2>
         <div class="section-sub">Where EliteCore stores settings, logs, and shared parameter files</div>
     </div>
@@ -1663,6 +1774,10 @@
                     <td><span class="key">%LOCALAPPDATA%\EliteTools\Global\Core\MatchPropertiesSettings.json</span></td>
                 </tr>
                 <tr>
+                    <td class="btn-name">Cut Plane step</td>
+                    <td><span class="key">%LOCALAPPDATA%\EliteTools\Global\Core\CutPlaneSettings.json</span></td>
+                </tr>
+                <tr>
                     <td class="btn-name">Shared parameters</td>
                     <td><span class="key">%LOCALAPPDATA%\EliteTools\SharedParameters\ECD_SharedParameters.txt</span></td>
                 </tr>
@@ -1677,10 +1792,10 @@
     </div>
 
     <!-- ============================================================ -->
-    <!-- SECTION 15: GETTING STARTED                                  -->
+    <!-- SECTION 17: GETTING STARTED                                  -->
     <!-- ============================================================ -->
     <div class="slide slide-section">
-        <div class="section-label">Section 15</div>
+        <div class="section-label">Section 17</div>
         <h2>Getting started</h2>
         <div class="section-sub">Recommended setup workflow for a new project</div>
     </div>
@@ -1737,6 +1852,16 @@
                     <td class="btn-name">Try Match Properties</td>
                     <td class="desc">Select a few elements, then click <span class="btn-pill pill-purple">Match Props</span> and pick a source element to copy its type and parameters to the selection.</td>
                 </tr>
+                <tr>
+                    <td class="btn-name"><span class="btn-pill pill-purple">9</span></td>
+                    <td class="btn-name">Set your Cut Plane step</td>
+                    <td class="desc">In a plan view, type a step distance in the box under <span class="btn-pill pill-purple">Increase / Decrease Cut Plane</span> and press Enter, then nudge the cut plane with the buttons or shortcuts.</td>
+                </tr>
+                <tr>
+                    <td class="btn-name"><span class="btn-pill pill-purple">10</span></td>
+                    <td class="btn-name">Assign Category Visibility shortcuts</td>
+                    <td class="desc">Open Revit&rsquo;s Keyboard Shortcuts dialog and give each <span class="btn-pill pill-purple">Category Visibility</span> toggle its own key for one-press show/hide of Model, Annotation, Imported, Analytical, Point Cloud, and Revit Link categories.</td>
+                </tr>
             </table>
         </div>
     </div>
@@ -1789,8 +1914,8 @@
         <h2>EliteCore</h2>
         <div class="accent-bar"></div>
         <div class="contact">
-            <strong>Project Setup</strong> &bull; <strong>Auto Sync</strong> &bull; <strong>Tab Colors</strong> &bull; <strong>Batch Export</strong> &bull; <strong>Match Properties</strong> &mdash; Core utilities for Revit<br>
-            Revit 2022&ndash;2026 &bull; .NET 4.8 / .NET 8.0 &bull; v1.0.16
+            <strong>Project Setup</strong> &bull; <strong>Auto Sync</strong> &bull; <strong>Tab Colors</strong> &bull; <strong>Batch Export</strong> &bull; <strong>Match Properties</strong> &bull; <strong>View Tools</strong> &mdash; Core utilities for Revit<br>
+            Revit 2022&ndash;2026 &bull; .NET 4.8 / .NET 8.0 &bull; v1.0.18
         </div>
     </div>
 

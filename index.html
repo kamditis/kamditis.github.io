@@ -1059,6 +1059,9 @@
             { id: 'ToggleColors', group: 'core', path: '<rect x="5" y="7" width="16" height="12" fill="currentColor"/><rect x="5" y="7" width="16" height="50" stroke="white" stroke-width="5" fill="none"/><rect x="24" y="7" width="16" height="12" fill="#5A5A6A"/><rect x="24" y="7" width="16" height="50" stroke="white" stroke-width="5" fill="none"/><rect x="43" y="7" width="16" height="12" fill="currentColor"/><rect x="43" y="7" width="16" height="50" stroke="white" stroke-width="5" fill="none"/>' },
             { id: 'BatchExport', group: 'core', path: '<rect x="3" y="18" width="42" height="42" fill="#222" stroke="currentColor" stroke-width="5"/><rect x="10.5" y="10.5" width="42" height="42" fill="#222" stroke="#5A5A6A" stroke-width="5"/><rect x="18" y="3" width="42" height="42" fill="#222" stroke="white" stroke-width="5"/>' },
             { id: 'MatchProperties', group: 'core', path: '<path d="M 27 27 L 37 37 L 15 51 Z" fill="currentColor"/><line x1="26" y1="28" x2="36" y2="38" stroke="white" stroke-width="6" stroke-linecap="round"/><line x1="55" y1="9" x2="33" y2="31" stroke="white" stroke-width="6" stroke-linecap="round"/><path d="M 11 56 Q 22 50 33 55" stroke="white" stroke-width="5" stroke-linecap="round" fill="none"/>' },
+            { id: 'CutPlaneUp', group: 'core', path: '<path d="M8 46 H56" stroke="white" stroke-width="5" stroke-linecap="round"/><path d="M32 44 V17 M21 28 L32 16 L43 28" stroke="currentColor" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none"/>' },
+            { id: 'CutPlaneDown', group: 'core', path: '<path d="M8 18 H56" stroke="white" stroke-width="5" stroke-linecap="round"/><path d="M32 20 V47 M21 36 L32 48 L43 36" stroke="currentColor" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none"/>' },
+            { id: 'CategoryVisibility', group: 'core', path: '<path d="M32 6 L56 18 V46 L32 58 L8 46 V18 Z" stroke="white" stroke-width="5" stroke-linejoin="round" fill="none"/><path d="M8 18 L32 30 L56 18 M32 30 V58" stroke="currentColor" stroke-width="5" stroke-linejoin="round" fill="none"/>' },
         ];
 
         // MAPPING: Links App Tool IDs to Custom Icon IDs
@@ -1114,7 +1117,10 @@
             'tab_color_settings': 'TabColorSettings',
             'toggle_colors': 'ToggleColors',
             'batch_export': 'BatchExport',
-            'match_properties': 'MatchProperties'
+            'match_properties': 'MatchProperties',
+            'increase_cut_plane': 'CutPlaneUp',
+            'decrease_cut_plane': 'CutPlaneDown',
+            'category_visibility': 'CategoryVisibility'
         };
 
         function createIconSVG(iconId, color) {
@@ -1322,9 +1328,9 @@
                 color: '#A78BFA',
                 colorVar: 'var(--core)',
                 released: true,
-                version: 'v1.0.16',
-                downloadUrl: 'https://github.com/kamditis/kamditis.github.io/releases/download/EliteCore-latest/EliteCore-v1.0.16.zip',
-                downloadFile: 'EliteCore-v1.0.16.zip',
+                version: 'v1.0.18',
+                downloadUrl: 'https://github.com/kamditis/kamditis.github.io/releases/download/EliteCore-latest/EliteCore-v1.0.18.zip',
+                downloadFile: 'EliteCore-v1.0.18.zip',
                 docsUrl: 'docs/EliteCore-Tutorial.html',
                 description: 'Project setup and shared utilities for Autodesk Revit.',
                 installation: [
@@ -1374,6 +1380,14 @@
                         title: 'Modify',
                         tools: [
                             { id: 'match_properties', label: 'Match Props', icon: 'paintbrush', fn: 'AutoCAD-style property copy for Revit. Select the elements you want to change first using Revit\'s own selection tools (window select, right-click > Select Connected, filters), run the command, then pick one element to copy from. A preview dialog shows exactly what will change — family type and instance parameters — before applying everything in a single undo step.', videoRef: '', changelog: 'v1.0.16: New command.', requirements: ['Active Revit project open', 'One or more target elements selected before running the command'] },
+                        ]
+                    },
+                    {
+                        title: 'View Tools',
+                        tools: [
+                            { id: 'increase_cut_plane', label: 'Increase Cut Plane', icon: 'arrow-up', fn: 'Raise the active plan view\'s cut plane by a step you set. Type the step (default 6") in the ribbon box next to the buttons and press Enter — it accepts any distance format that matches your project units (6", 1\'-6", 150 mm). Works in reflected ceiling plans too: the bottom clip moves with the cut plane so the view range stays valid. The step is remembered between sessions.', videoRef: '', changelog: 'v1.0.17: New command.', requirements: ['Active plan view (floor plan, ceiling plan, or structural plan)'] },
+                            { id: 'decrease_cut_plane', label: 'Decrease Cut Plane', icon: 'arrow-down', fn: 'Lower the active plan view\'s cut plane by the same step used by Increase Cut Plane. If a nudge would push the cut plane past the view\'s range, you get a message instead of a broken view.', videoRef: '', changelog: 'v1.0.17: New command.', requirements: ['Active plan view (floor plan, ceiling plan, or structural plan)'] },
+                            { id: 'category_visibility', label: 'Category Visibility', icon: 'eye', fn: 'One split button with six toggle commands that check or uncheck an entire Visibility/Graphics category group on the active view in one click: Model Categories, Annotation Categories, Imported Categories, Analytical Categories, Point Clouds, and Revit Links. Assign each toggle its own keyboard shortcut in Revit\'s Keyboard Shortcuts dialog for one-key show/hide. The last-used toggle stays on the button\'s top half for quick repeat clicks. The Revit Links toggle hides or shows every linked model at once — showing also restores links that were hidden individually.', videoRef: '', changelog: 'v1.0.18: New command.', requirements: ['Active view that supports Visibility/Graphics', 'View\'s V/G not controlled by a view template'] },
                         ]
                     }
                 ]
