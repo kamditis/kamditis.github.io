@@ -468,7 +468,7 @@
         <h1>EliteCore</h1>
         <div class="accent-bar"></div>
         <p class="subtitle">A tutorial walkthrough of every ribbon button, dialog, and workflow in the core utilities plugin for project setup, auto-sync, tab coloring, sheet management, batch export, and property matching</p>
-        <p class="version">v1.0.18 / Tutorial &amp; Reference Guide</p>
+        <p class="version">v1.0.19 / Tutorial &amp; Reference Guide</p>
     </div>
 
     <!-- ============================================================ -->
@@ -539,6 +539,8 @@
                     <ul class="col-purple">
                         <li><strong>Increase / Decrease Cut Plane</strong> &mdash; Nudge the plan view&rsquo;s cut plane up or down by a step you type in the ribbon box</li>
                         <li><strong>Category Visibility</strong> &mdash; Split button with six toggles that check/uncheck an entire V/G category group (Model, Annotation, Imported, Analytical, Point Clouds, Revit Links)</li>
+                        <li><strong>Workset Config</strong> &mdash; Pick which worksets the Toggle Worksets button controls (remembered per project)</li>
+                        <li><strong>Toggle Worksets</strong> &mdash; Hide or show all of the checked worksets in the active view with one click</li>
                     </ul>
                 </div>
             </div>
@@ -1664,10 +1666,61 @@
     </div>
 
     <!-- ============================================================ -->
-    <!-- SECTION 15: DEFAULT COLOR PALETTE                             -->
+    <!-- SECTION 15: VIEW TOOLS - WORKSET TOGGLE                       -->
     <!-- ============================================================ -->
     <div class="slide slide-section">
         <div class="section-label">Section 15</div>
+        <h2>View Tools &mdash; Workset Toggle</h2>
+        <div class="section-sub">Pick a set of worksets once, then hide or show them all in the active view with one click or one key</div>
+    </div>
+
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>Workset Config &amp; Toggle Worksets</h2>
+            <span class="tab-label">View Tools &gt; Workset Config / Toggle Worksets</span>
+        </div>
+        <div class="slide-body">
+            <p style="color:var(--text-dim);margin-bottom:0.15in;font-size:11pt;">Two buttons that work together. <strong>Workset Config</strong> opens a checklist of the project&rsquo;s user worksets &mdash; check the ones you want to control (scaffolding, existing conditions, other trades&rsquo; worksets, etc.). <strong>Toggle Worksets</strong> then hides or shows that whole set in the active view in one press &mdash; the same result as opening Visibility/Graphics &gt; Worksets and flipping each one by hand.</p>
+
+            <div class="col-card" style="border-left:3px solid var(--core);margin-bottom:0.15in;">
+                <h3 style="color:var(--core);">How the toggle decides</h3>
+                <table class="btn-table">
+                    <tr><td class="key">Any checked workset visible</td><td class="desc">Hides them all &mdash; one press cleans up the view.</td></tr>
+                    <tr><td class="key">All checked worksets hidden</td><td class="desc">Shows them all &mdash; the next press brings everything back.</td></tr>
+                    <tr><td class="key">Selection remembered</td><td class="desc">Saved per project by workset name. Worksets added to the project later start unchecked; renamed or deleted worksets are skipped safely.</td></tr>
+                    <tr><td class="key">ALL / NONE</td><td class="desc">Buttons in the config dialog to check or clear the whole list at once.</td></tr>
+                </table>
+            </div>
+
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.2in;">
+                <div class="col-card" style="border-left:3px solid var(--scan);">
+                    <h3 style="color:var(--scan);">Keyboard shortcut</h3>
+                    <ul class="col-cyan">
+                        <li>Assign a shortcut to Toggle Worksets in Revit&rsquo;s Keyboard Shortcuts dialog &mdash; search &ldquo;Toggle Worksets&rdquo; under Elite Core</li>
+                        <li>One key press hides or shows the whole set &mdash; the point of the feature</li>
+                        <li>Each press is a single undo step</li>
+                    </ul>
+                </div>
+                <div class="col-card" style="border-left:3px solid var(--danger);">
+                    <h3 style="color:var(--danger);">Requirements</h3>
+                    <ul>
+                        <li>Worksharing enabled in the project</li>
+                        <li>At least one workset checked in Workset Config</li>
+                        <li>Active graphical view (not a drafting view, legend, or sheet)</li>
+                        <li>View&rsquo;s workset visibility not controlled by a view template &mdash; if it is, the message names the template</li>
+                    </ul>
+                </div>
+            </div>
+
+            <p style="margin-top:0.15in;font-size:10pt;color:var(--text-muted);">Success is silent &mdash; the view just updates. If nothing can be toggled (no configuration yet, all configured worksets renamed, or a template in control) you get a message explaining why.</p>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 16: DEFAULT COLOR PALETTE                             -->
+    <!-- ============================================================ -->
+    <div class="slide slide-section">
+        <div class="section-label">Section 16</div>
         <h2>Default color palette</h2>
         <div class="section-sub">The 10 built-in colors used for order-based tab assignment</div>
     </div>
@@ -1730,10 +1783,10 @@
     </div>
 
     <!-- ============================================================ -->
-    <!-- SECTION 16: FILE STORAGE                                     -->
+    <!-- SECTION 17: FILE STORAGE                                     -->
     <!-- ============================================================ -->
     <div class="slide slide-section">
-        <div class="section-label">Section 16</div>
+        <div class="section-label">Section 17</div>
         <h2>File storage locations</h2>
         <div class="section-sub">Where EliteCore stores settings, logs, and shared parameter files</div>
     </div>
@@ -1778,6 +1831,10 @@
                     <td><span class="key">%LOCALAPPDATA%\EliteTools\Global\Core\CutPlaneSettings.json</span></td>
                 </tr>
                 <tr>
+                    <td class="btn-name">Workset toggle selection</td>
+                    <td><span class="key">%LOCALAPPDATA%\EliteTools\{ProjectName}\Core\WorksetToggleSettings.json</span></td>
+                </tr>
+                <tr>
                     <td class="btn-name">Shared parameters</td>
                     <td><span class="key">%LOCALAPPDATA%\EliteTools\SharedParameters\ECD_SharedParameters.txt</span></td>
                 </tr>
@@ -1792,10 +1849,10 @@
     </div>
 
     <!-- ============================================================ -->
-    <!-- SECTION 17: GETTING STARTED                                  -->
+    <!-- SECTION 18: GETTING STARTED                                  -->
     <!-- ============================================================ -->
     <div class="slide slide-section">
-        <div class="section-label">Section 17</div>
+        <div class="section-label">Section 18</div>
         <h2>Getting started</h2>
         <div class="section-sub">Recommended setup workflow for a new project</div>
     </div>
@@ -1862,6 +1919,11 @@
                     <td class="btn-name">Assign Category Visibility shortcuts</td>
                     <td class="desc">Open Revit&rsquo;s Keyboard Shortcuts dialog and give each <span class="btn-pill pill-purple">Category Visibility</span> toggle its own key for one-press show/hide of Model, Annotation, Imported, Analytical, Point Cloud, and Revit Link categories.</td>
                 </tr>
+                <tr>
+                    <td class="btn-name"><span class="btn-pill pill-purple">11</span></td>
+                    <td class="btn-name">Set up the workset toggle</td>
+                    <td class="desc">In a workshared project, click <span class="btn-pill pill-purple">Workset Config</span> and check the worksets you want to control, then press <span class="btn-pill pill-purple">Toggle Worksets</span> (or its keyboard shortcut) to hide or show them all in the active view.</td>
+                </tr>
             </table>
         </div>
     </div>
@@ -1915,7 +1977,7 @@
         <div class="accent-bar"></div>
         <div class="contact">
             <strong>Project Setup</strong> &bull; <strong>Auto Sync</strong> &bull; <strong>Tab Colors</strong> &bull; <strong>Batch Export</strong> &bull; <strong>Match Properties</strong> &bull; <strong>View Tools</strong> &mdash; Core utilities for Revit<br>
-            Revit 2022&ndash;2026 &bull; .NET 4.8 / .NET 8.0 &bull; v1.0.18
+            Revit 2022&ndash;2026 &bull; .NET 4.8 / .NET 8.0 &bull; v1.0.19
         </div>
     </div>
 

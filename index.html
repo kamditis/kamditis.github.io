@@ -1328,9 +1328,9 @@
                 color: '#A78BFA',
                 colorVar: 'var(--core)',
                 released: true,
-                version: 'v1.0.18',
-                downloadUrl: 'https://github.com/kamditis/kamditis.github.io/releases/download/EliteCore-latest/EliteCore-v1.0.18.zip',
-                downloadFile: 'EliteCore-v1.0.18.zip',
+                version: 'v1.0.19',
+                downloadUrl: 'https://github.com/kamditis/kamditis.github.io/releases/download/EliteCore-latest/EliteCore-v1.0.19.zip',
+                downloadFile: 'EliteCore-v1.0.19.zip',
                 docsUrl: 'docs/EliteCore-Tutorial.html',
                 description: 'Project setup and shared utilities for Autodesk Revit.',
                 installation: [
@@ -1388,6 +1388,8 @@
                             { id: 'increase_cut_plane', label: 'Increase Cut Plane', icon: 'arrow-up', fn: 'Raise the active plan view\'s cut plane by a step you set. Type the step (default 6") in the ribbon box next to the buttons and press Enter — it accepts any distance format that matches your project units (6", 1\'-6", 150 mm). Works in reflected ceiling plans too: the bottom clip moves with the cut plane so the view range stays valid. The step is remembered between sessions.', videoRef: '', changelog: 'v1.0.17: New command.', requirements: ['Active plan view (floor plan, ceiling plan, or structural plan)'] },
                             { id: 'decrease_cut_plane', label: 'Decrease Cut Plane', icon: 'arrow-down', fn: 'Lower the active plan view\'s cut plane by the same step used by Increase Cut Plane. If a nudge would push the cut plane past the view\'s range, you get a message instead of a broken view.', videoRef: '', changelog: 'v1.0.17: New command.', requirements: ['Active plan view (floor plan, ceiling plan, or structural plan)'] },
                             { id: 'category_visibility', label: 'Category Visibility', icon: 'eye', fn: 'One split button with six toggle commands that check or uncheck an entire Visibility/Graphics category group on the active view in one click: Model Categories, Annotation Categories, Imported Categories, Analytical Categories, Point Clouds, and Revit Links. Assign each toggle its own keyboard shortcut in Revit\'s Keyboard Shortcuts dialog for one-key show/hide. The last-used toggle stays on the button\'s top half for quick repeat clicks. The Revit Links toggle hides or shows every linked model at once — showing also restores links that were hidden individually.', videoRef: '', changelog: 'v1.0.18: New command.', requirements: ['Active view that supports Visibility/Graphics', 'View\'s V/G not controlled by a view template'] },
+                            { id: 'workset_config', label: 'Workset Config', icon: 'list-checks', fn: 'Opens a checklist of the project\'s user worksets. Check the ones you want the Toggle Worksets button to control — the selection is remembered per project, and worksets added later start unchecked.', videoRef: '', changelog: 'v1.0.19: New command.', requirements: ['Worksharing enabled in project'] },
+                            { id: 'toggle_worksets', label: 'Toggle Worksets', icon: 'eye-off', fn: 'Hides or shows all of your checked worksets in the active view with one click. If any of them are visible it hides them all; once they\'re all hidden, pressing again brings them all back. Assign it a keyboard shortcut in Revit\'s Keyboard Shortcuts dialog (search "Toggle Worksets") for one-key workset show/hide. If the view\'s template controls workset visibility, the command tells you which template.', videoRef: '', changelog: 'v1.0.19: New command.', requirements: ['Worksharing enabled in project', 'Worksets checked in Workset Config', 'Active graphical view (not a drafting view, legend, or sheet)'] },
                         ]
                     }
                 ]
