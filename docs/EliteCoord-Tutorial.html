@@ -470,7 +470,7 @@
         <h1>EliteCoord</h1>
         <div class="accent-bar"></div>
         <p class="subtitle">A tutorial walkthrough of every ribbon button, dialog, and workflow in the BIM coordination preparation plugin</p>
-        <p class="version">v1.0.18 / Tutorial &amp; Reference Guide</p>
+        <p class="version">v1.0.19 / Tutorial &amp; Reference Guide</p>
     </div>
 
     <!-- ============================================================ -->
@@ -576,12 +576,20 @@
                     <td>Restores the rule list to the built-in defaults. Useful if rules have been accidentally modified.</td>
                 </tr>
                 <tr>
+                    <td><span class="btn-pill pill-purple">Preset dropdown</span></td>
+                    <td>Lists your saved override configurations by name. Selecting one loads its rules into the grid &mdash; the active configuration is not changed until you click SAVE CHANGES. Saved files from earlier versions are moved into the presets folder automatically the first time the window opens.</td>
+                </tr>
+                <tr>
+                    <td><span class="btn-pill pill-green">Save Preset</span></td>
+                    <td>Saves the current rule list as a named preset. Prompts for a name, warns about invalid characters, and asks before overwriting an existing preset. The new preset is selected in the dropdown afterward.</td>
+                </tr>
+                <tr>
                     <td><span class="btn-pill pill-gray">Import / Export</span></td>
                     <td>Import rules from a JSON file or export your current rules to share with other team members.</td>
                 </tr>
                 <tr>
                     <td><span class="btn-pill pill-gray">Open Folder</span></td>
-                    <td>Opens the folder where the preferences JSON file is stored on disk.</td>
+                    <td>Opens the presets folder on disk, where each saved configuration is stored as its own JSON file.</td>
                 </tr>
                 <tr>
                     <td><span class="btn-pill pill-green">Preview</span></td>
@@ -1382,7 +1390,7 @@
         <div class="accent-bar"></div>
         <div class="contact">
             <strong>Prep</strong> &bull; <strong>Views</strong> &bull; <strong>Measure</strong> &bull; <strong>Sleeves</strong> &bull; <strong>Clash</strong> &mdash; BIM coordination tools inside Revit<br>
-            Revit 2022&ndash;2026 &bull; .NET 4.8 / .NET 8.0 &bull; v1.0.18
+            Revit 2022&ndash;2026 &bull; .NET 4.8 / .NET 8.0 &bull; v1.0.19
         </div>
     </div>
 

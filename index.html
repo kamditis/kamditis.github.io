@@ -1269,9 +1269,9 @@
                 color: '#6EE7A8',
                 colorVar: 'var(--coord)',
                 released: true,
-                version: 'v1.0.18',
-                downloadUrl: 'https://github.com/kamditis/kamditis.github.io/releases/download/EliteCoord-latest/EliteCoord-v1.0.18.zip',
-                downloadFile: 'EliteCoord-v1.0.18.zip',
+                version: 'v1.0.19',
+                downloadUrl: 'https://github.com/kamditis/kamditis.github.io/releases/download/EliteCoord-latest/EliteCoord-v1.0.19.zip',
+                downloadFile: 'EliteCoord-v1.0.19.zip',
                 docsUrl: 'docs/EliteCoord-Tutorial.html',
                 description: 'BIM coordination tools for Autodesk Revit.',
                 installation: [
@@ -1286,7 +1286,7 @@
                     {
                         title: 'Prep',
                         tools: [
-                            { id: 'dwg_overrides', label: 'DWG Overrides', icon: 'file-output', fn: 'Define color and visibility rules for imported CAD layers to maintain consistent drawing standards across your project.', videoRef: '', changelog: 'v1.0.4: Ribbon icons now automatically match the Revit UI theme (light/dark).', requirements: [] },
+                            { id: 'dwg_overrides', label: 'DWG Overrides', icon: 'file-output', fn: 'Define color and visibility rules for imported CAD layers to maintain consistent drawing standards across your project.', videoRef: '', changelog: 'v1.0.19: New Preset dropdown lets you switch between saved override configurations in one click, and a Save Preset button stores the current rules under a name of your choice. Existing saved configuration files are organized into a presets folder automatically. v1.0.4: Ribbon icons now automatically match the Revit UI theme (light/dark).', requirements: [] },
                             { id: 'apply_colors', label: 'Apply Colors', icon: 'paintbrush', fn: 'Instantly color-code imported CAD layers in your view based on saved rules, making it easy to distinguish systems.', videoRef: '', changelog: '', requirements: ['DWG imports in active view', 'DWG Overrides configured'] },
                             { id: 'material_mapping', label: 'Material Mapping', icon: 'palette', fn: 'Assign colors to fabrication services that carry through to Navisworks, ensuring consistent clash detection visualization.', videoRef: '', changelog: 'v1.0.14: Fixed a startup-related crash that could appear when opening Material Mapping if other Elite add-ins were installed at mismatched dependency versions. Pinned shared dependencies so future releases can\'t drift apart.', requirements: ['Fabrication configuration loaded in Revit'] },
                             { id: 'apply_materials', label: 'Apply Materials', icon: 'wand', fn: 'Automatically apply configured materials to fabrication parts based on service or filter rules for coordination model consistency.', videoRef: '', changelog: '', requirements: ['Fabrication parts in model', 'Material Mapping configured', 'Shared parameter file set in Revit', 'Param: Navis Material (auto-created if missing)'] },
