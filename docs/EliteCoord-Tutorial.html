@@ -470,7 +470,7 @@
         <h1>EliteCoord</h1>
         <div class="accent-bar"></div>
         <p class="subtitle">A tutorial walkthrough of every ribbon button, dialog, and workflow in the BIM coordination preparation plugin</p>
-        <p class="version">v1.0.19 / Tutorial &amp; Reference Guide</p>
+        <p class="version">v1.0.20 / Tutorial &amp; Reference Guide</p>
     </div>
 
     <!-- ============================================================ -->
@@ -1088,7 +1088,7 @@
                 <tr><th style="width:160px;">Size dialog</th><th>What it does</th></tr>
                 <tr>
                     <td><span class="btn-pill pill-amber">Size list</span></td>
-                    <td>One row per pipe or duct size found in your selection. Round pipe and duct shows as a single diameter; rectangular or oval shows as width &times; height.</td>
+                    <td>One row per pipe or duct size found in your selection. Round pipe and duct shows as a single diameter; rectangular or oval shows as width &times; height. Insulated runs are listed at their overall size including insulation (a 2&Prime; pipe with insulation appears as 2 7/8&Prime;), so the sleeve fits what actually passes through the wall.</td>
                 </tr>
                 <tr>
                     <td><span class="btn-name">Sleeve size</span></td>
@@ -1146,7 +1146,8 @@
                     <ul class="col-amber">
                         <li><strong>One sleeve per wall pierced</strong> &mdash; every wall a run passes through gets its own sleeve at the crossing point</li>
                         <li><strong>Host and linked walls</strong> &mdash; works whether the wall is in the current model or a linked model</li>
-                        <li><strong>Stamped for reference</strong> &mdash; each sleeve records the run's nominal size and its service</li>
+                        <li><strong>Sized including insulation</strong> &mdash; sleeve sizes are based on the run's overall size with insulation, not just the bare pipe or duct size</li>
+                        <li><strong>Stamped for reference</strong> &mdash; each sleeve records the run's nominal size (without insulation) and its service</li>
                         <li><strong>Round family ships with the add-in</strong> &mdash; a rectangular family isn't included yet, so rectangular runs are skipped for now with a note in the summary</li>
                     </ul>
                 </div>
@@ -1390,7 +1391,7 @@
         <div class="accent-bar"></div>
         <div class="contact">
             <strong>Prep</strong> &bull; <strong>Views</strong> &bull; <strong>Measure</strong> &bull; <strong>Sleeves</strong> &bull; <strong>Clash</strong> &mdash; BIM coordination tools inside Revit<br>
-            Revit 2022&ndash;2026 &bull; .NET 4.8 / .NET 8.0 &bull; v1.0.19
+            Revit 2022&ndash;2026 &bull; .NET 4.8 / .NET 8.0 &bull; v1.0.20
         </div>
     </div>
 
