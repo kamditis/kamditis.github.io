@@ -1,0 +1,1440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EliteClashManager User Guide</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        /* ============================================================
+           COLOR PALETTE — matches EliteClashManager Styles.xaml
+           ============================================================ */
+        :root {
+            --bg:           #0F0F12;
+            --surface:      #18181D;
+            --surface2:     #222229;
+            --border:       #2E2E38;
+            --border-light: #3D3D4A;
+            --text:         #E8E8ED;
+            --text-dim:     #9898A8;
+            --text-muted:   #5A5A6A;
+
+            /* Region accents */
+            --scan:   #5ED5DD;   /* Cyan — primary accent */
+            --draft:  #F5B878;   /* Amber — draft/warning */
+            --coord:  #6EE7A8;   /* Green — success/coord */
+            --core:   #A78BFA;   /* Purple — core/special */
+
+            /* Action colors */
+            --success: #4CAF50;
+            --primary: #2196F3;
+            --warning: #FF9800;
+            --danger:  #F44336;
+        }
+
+        @page { size: letter; margin: 0; }
+        @media print {
+            * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; color-adjust: exact !important; }
+            html { background: var(--bg) !important; }
+            body { background: var(--bg) !important; max-width: none; margin: 0; padding: 0.4in 0.6in; }
+            .slide { box-shadow: none !important; }
+            .slide-title { padding: 0.3in 0; }
+            .slide-section { padding: 0.2in 0.4in; }
+            .col-card, .btn-table, .slide-section, .legend-row, .status-row, .shortcut-group, .mockup { break-inside: avoid; page-break-inside: avoid; }
+            .slide-header { break-after: avoid; page-break-after: avoid; }
+            .slide.slide-section { break-before: page; page-break-before: always; }
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html { background: var(--bg); }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+            font-size: 12pt;
+            line-height: 1.5;
+            color: var(--text);
+            background: var(--bg);
+            max-width: 8.5in;
+            margin: 0 auto;
+            padding: 0.5in 0.7in;
+        }
+
+        .slide { background: var(--bg); margin-bottom: 0.15in; padding: 0.1in 0; }
+
+        /* TITLE SLIDE */
+        .slide-title {
+            display: flex; flex-direction: column; align-items: center; text-align: center;
+            padding: 0.4in 0.5in 0.3in; background: var(--bg);
+            background-image:
+                linear-gradient(rgba(94,213,221,0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(94,213,221,0.03) 1px, transparent 1px);
+            background-size: 20px 20px;
+            border-bottom: 2px solid var(--border);
+        }
+        .slide-title .tag {
+            font-family: 'Fira Code', Consolas, monospace; font-size: 11pt; font-weight: 500;
+            letter-spacing: 0.15em; text-transform: uppercase; color: var(--scan);
+            margin-bottom: 0.15in; border: 1px solid var(--border-light);
+            padding: 0.06in 0.2in; border-radius: 3px; background: var(--surface2);
+        }
+        .slide-title h1 { font-size: 32pt; font-weight: 800; line-height: 1.1; margin-bottom: 0.15in; color: var(--text); }
+        .slide-title .accent-bar { width: 1in; height: 3px; background: var(--scan); margin: 0.08in 0 0.12in; }
+        .slide-title .subtitle { font-size: 13pt; color: var(--text-dim); max-width: 7in; }
+        .slide-title .version { font-family: 'Fira Code', Consolas, monospace; font-size: 10pt; color: var(--text-muted); margin-top: 0.15in; }
+
+        /* SECTION DIVIDER */
+        .slide-section {
+            display: flex; flex-direction: column; padding: 0.2in 0.4in;
+            background: var(--surface); border-left: 6px solid var(--scan); border-radius: 4px;
+        }
+        .slide-section .section-label {
+            font-family: 'Fira Code', Consolas, monospace; font-size: 11pt; color: var(--text-muted);
+            text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.15in;
+        }
+        .slide-section h2 { font-size: 24pt; font-weight: 800; color: var(--text); }
+        .slide-section .section-sub { font-size: 12pt; color: var(--text-dim); margin-top: 0.1in; }
+
+        /* CONTENT SLIDE */
+        .slide-content { padding: 0.05in 0; }
+        .slide-header {
+            margin-bottom: 0.12in; padding-bottom: 0.06in; border-bottom: 2px solid var(--border);
+            display: flex; align-items: baseline; gap: 0.15in;
+        }
+        .slide-header h2 { font-size: 18pt; font-weight: 700; color: var(--text); }
+        .slide-header .tab-label {
+            font-family: 'Fira Code', Consolas, monospace; font-size: 11pt; color: var(--scan);
+            background: var(--surface2); border: 1px solid var(--border); padding: 2px 10px; border-radius: 3px;
+        }
+        .slide-body { font-size: 12pt; }
+
+        /* BUTTON REFERENCE TABLE */
+        .btn-table { width: 100%; border-collapse: collapse; break-inside: avoid; }
+        .btn-table th {
+            text-align: left; font-family: 'Fira Code', Consolas, monospace; font-size: 10pt;
+            color: var(--text-muted); padding: 0.06in 0.12in; border-bottom: 1px solid var(--border);
+            text-transform: uppercase; letter-spacing: 0.05em;
+        }
+        .btn-table td { padding: 0.05in 0.1in; border-bottom: 1px solid var(--border); vertical-align: top; font-size: 11pt; }
+        .btn-table tr:last-child td { border-bottom: none; }
+        .btn-name { font-weight: 600; white-space: nowrap; }
+        .btn-pill {
+            display: inline-block; font-family: 'Fira Code', Consolas, monospace; font-size: 10pt;
+            font-weight: 600; padding: 2px 8px; border-radius: 3px; white-space: nowrap;
+        }
+        .pill-cyan   { background: rgba(94,213,221,0.15); color: var(--scan); border: 1px solid rgba(94,213,221,0.3); }
+        .pill-green  { background: rgba(110,231,168,0.15); color: var(--coord); border: 1px solid rgba(110,231,168,0.3); }
+        .pill-amber  { background: rgba(245,184,120,0.15); color: var(--draft); border: 1px solid rgba(245,184,120,0.3); }
+        .pill-purple { background: rgba(167,139,250,0.15); color: var(--core); border: 1px solid rgba(167,139,250,0.3); }
+        .pill-blue   { background: rgba(33,150,243,0.15); color: var(--primary); border: 1px solid rgba(33,150,243,0.3); }
+        .pill-red    { background: rgba(244,67,54,0.15); color: var(--danger); border: 1px solid rgba(244,67,54,0.3); }
+        .pill-gray   { background: var(--surface2); color: var(--text-dim); border: 1px solid var(--border); }
+
+        .key {
+            font-family: 'Fira Code', Consolas, monospace; font-size: 10pt; font-weight: 600;
+            background: var(--surface2); color: var(--scan); padding: 1px 6px;
+            border-radius: 3px; border: 1px solid var(--border);
+        }
+        .desc { color: var(--text-dim); font-size: 10pt; }
+
+        /* TWO COLUMN */
+        .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 0.15in; }
+        .col-card { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 0.15in; break-inside: avoid; }
+        .col-card h3 { font-size: 13pt; font-weight: 700; margin-bottom: 0.1in; padding-bottom: 0.05in; border-bottom: 2px solid var(--border); }
+        .col-card ul { list-style: none; padding: 0; }
+        .col-card li { font-size: 11pt; padding: 0.03in 0; padding-left: 0.25in; position: relative; color: var(--text-dim); }
+        .col-card li::before { content: ''; position: absolute; left: 0; top: 0.16in; width: 0.08in; height: 0.08in; border-radius: 50%; }
+        .col-cyan li::before  { background: var(--scan); }
+        .col-green li::before { background: var(--coord); }
+        .col-amber li::before { background: var(--draft); }
+        .col-purple li::before { background: var(--core); }
+        .col-card li strong { color: var(--text); }
+
+        /* KEYBOARD SHORTCUTS GRID */
+        .shortcut-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.12in; }
+        .shortcut-group h4 {
+            font-family: 'Fira Code', Consolas, monospace; font-size: 11pt; color: var(--coord);
+            text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.1in;
+        }
+        .shortcut-item { display: flex; gap: 0.1in; align-items: baseline; padding: 0.03in 0; }
+        .shortcut-item .desc { font-size: 9pt; }
+
+        /* STATUS COLORS ROW */
+        .status-row { display: flex; gap: 0.15in; flex-wrap: wrap; }
+        .status-chip { display: inline-flex; align-items: center; gap: 6px; font-size: 12pt; padding: 4px 12px; border-radius: 4px; border: 2px solid; }
+        .status-chip .dot { width: 8px; height: 8px; border-radius: 50%; }
+
+        /* LEGEND */
+        .legend-row { display: flex; gap: 0.25in; align-items: center; }
+        .legend-item { display: flex; align-items: center; gap: 8px; }
+        .legend-swatch { width: 24px; height: 24px; border-radius: 4px; }
+
+        /* END SLIDE */
+        .slide-end {
+            display: flex; flex-direction: column; align-items: center; text-align: center;
+            padding: 0.5in; background: var(--surface);
+            background-image:
+                linear-gradient(rgba(94,213,221,0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(94,213,221,0.03) 1px, transparent 1px);
+            background-size: 20px 20px; border-radius: 4px;
+        }
+        .slide-end h2 { font-size: 24pt; font-weight: 800; margin-bottom: 0.1in; }
+        .slide-end .accent-bar { width: 0.6in; height: 3px; background: var(--scan); margin-bottom: 0.2in; }
+        .slide-end .contact { font-size: 12pt; color: var(--text-dim); line-height: 1.8; }
+        .slide-end .contact strong { color: var(--scan); }
+
+        /* UI MOCKUPS */
+        .mockup {
+            background: #0F0F12; border: 1px solid #2E2E38; border-radius: 4px; overflow: hidden;
+            font-family: 'Inter', 'Segoe UI', sans-serif; font-size: 9pt; color: #E8E8ED;
+            margin: 0.08in 0; position: relative;
+        }
+        .mockup-row {
+            display: flex; align-items: center; padding: 4px 8px; gap: 5px;
+            border-bottom: 1px solid #2E2E38; position: relative; flex-wrap: wrap;
+        }
+        .mockup-row.dark { background: #222229; }
+        .mockup-row.mid  { background: #18181D; }
+        .mock-btn {
+            display: inline-block; padding: 2px 6px; border-radius: 2px; font-size: 8pt; font-weight: 600;
+            white-space: nowrap; background: #3D3D4A; color: #E8E8ED; border: 1px solid #4D4D5A; line-height: 1.3;
+        }
+        .mock-cb { display: inline-flex; align-items: center; gap: 3px; font-size: 8pt; color: #9898A8; white-space: nowrap; }
+        .mock-input {
+            display: inline-block; padding: 1px 4px; background: #222229; border: 1px solid #3D3D4A;
+            border-radius: 2px; color: #5A5A6A; font-size: 8pt; line-height: 1.4;
+        }
+        .mock-grid { width: 100%; border-collapse: collapse; font-size: 8pt; }
+        .mock-grid th {
+            background: #222229; color: #9898A8; padding: 3px 5px; text-align: left; font-weight: 600;
+            font-size: 7pt; border-bottom: 1px solid #2E2E38; border-right: 1px solid #2E2E38;
+        }
+        .mock-grid td { padding: 3px 5px; border-bottom: 1px solid #2E2E38; border-right: 1px solid #2E2E38; font-size: 8pt; }
+        .mock-grid tr:nth-child(even) td { background: #18181D; }
+        .mock-grid tr:nth-child(odd) td  { background: #0F0F12; }
+
+        .callout {
+            display: inline-flex; align-items: center; justify-content: center; min-width: 16px; height: 16px;
+            border-radius: 50%; background: var(--scan); color: #0F0F12; font-size: 8pt; font-weight: 800;
+            flex-shrink: 0; padding: 0 2px; line-height: 1;
+        }
+        .callout-sm { min-width: 14px; height: 14px; font-size: 7pt; }
+
+        .mockup-ctx {
+            background: #1E1E2A; border: 1px solid #3D3D4A; border-radius: 2px; padding: 3px 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.5); display: inline-block;
+        }
+        .mockup-ctx div { padding: 3px 12px; font-size: 8pt; white-space: nowrap; }
+        .mockup-ctx .ctx-sep { border-top: 1px solid #2E2E38; margin: 2px 0; padding: 0; }
+        .mockup-ctx .ctx-dis { color: #5A5A6A; }
+
+        .callout-legend { display: flex; flex-wrap: wrap; gap: 0.06in 0.2in; margin-top: 0.08in; font-size: 9pt; color: var(--text-dim); }
+        .callout-legend span { display: inline-flex; align-items: center; gap: 4px; }
+
+        .note-box {
+            background: rgba(245,184,120,0.08); border: 1px solid rgba(245,184,120,0.3);
+            border-radius: 4px; padding: 0.08in 0.12in; margin: 0.1in 0; font-size: 10pt; color: var(--text-dim);
+        }
+        .note-box strong { color: var(--draft); }
+        .info-box {
+            background: rgba(94,213,221,0.06); border: 1px solid rgba(94,213,221,0.25);
+            border-radius: 4px; padding: 0.08in 0.12in; margin: 0.1in 0; font-size: 10pt; color: var(--text-dim);
+        }
+        .info-box strong { color: var(--scan); }
+        .path {
+            font-family: 'Fira Code', Consolas, monospace; font-size: 9pt; color: var(--scan);
+            background: var(--surface2); padding: 1px 5px; border-radius: 2px; word-break: break-all;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ============================================================ -->
+    <!-- TITLE                                                        -->
+    <!-- ============================================================ -->
+    <div class="slide slide-title">
+        <div class="tag">Navisworks Manage 2026 Plugin</div>
+        <h1>EliteClashManager</h1>
+        <div class="accent-bar"></div>
+        <p class="subtitle">Complete user guide -- every ribbon button, tab, dialog, and workflow for clash triage, spatial mapping, and ACC/BIM 360 issue publishing</p>
+        <p class="version">User Guide &bull; v1.16.1 &bull; July 2026</p>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- BIG PICTURE                                                  -->
+    <!-- ============================================================ -->
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>What EliteClashManager does</h2>
+        </div>
+        <div class="slide-body">
+            <p style="color:var(--text-dim);margin-bottom:0.12in;font-size:11pt;">EliteClashManager extends Navisworks Clash Detective with the capabilities coordination teams actually run their meetings on:</p>
+            <div class="two-col" style="gap:0.2in;">
+                <div class="col-card" style="border-left:3px solid var(--scan);">
+                    <h3 style="color:var(--scan);">Triage &amp; organize</h3>
+                    <ul class="col-cyan">
+                        <li><strong>Split / Distribute / Group</strong> clash groups by distance, level, or elevation</li>
+                        <li><strong>Bulk rename</strong> with find/replace and room-name placeholders</li>
+                        <li><strong>Status management</strong> with preview-then-push commits</li>
+                        <li><strong>Sort</strong> alphabetically, by spatial proximity, or by clash severity</li>
+                        <li><strong>Filter</strong> by status, viewpoint, issue, column text, or 3D selection</li>
+                    </ul>
+                </div>
+                <div class="col-card" style="border-left:3px solid var(--coord);">
+                    <h3 style="color:var(--coord);">Publish &amp; sync</h3>
+                    <ul class="col-green">
+                        <li><strong>One-click issue publishing</strong> to ACC / BIM 360 with screenshots, pushpins, and deep links</li>
+                        <li><strong>Status sync</strong> both directions between Clash Detective and cloud issues</li>
+                        <li><strong>Auto Issue pipeline</strong> -- a nine-phase automated triage run</li>
+                        <li><strong>Trade &amp; level mappings</strong> that auto-fill issue type, subtype, assignee, and location</li>
+                    </ul>
+                </div>
+                <div class="col-card" style="border-left:3px solid var(--core);">
+                    <h3 style="color:var(--core);">Spatial intelligence</h3>
+                    <ul class="col-purple">
+                        <li><strong>Room Atlas</strong> -- maps every clash to its Revit room automatically</li>
+                        <li><strong>Room overlay &amp; 3D markers</strong> rendered live in the viewport</li>
+                        <li><strong>Viewpoint generation</strong> with configurable section boxes and baked redlines</li>
+                        <li><strong>Persistent data</strong> -- issue numbers and room names survive file save/reopen</li>
+                    </ul>
+                </div>
+                <div class="col-card" style="border-left:3px solid var(--draft);">
+                    <h3 style="color:var(--draft);">Analyze &amp; report</h3>
+                    <ul class="col-amber">
+                        <li><strong>Worst Offender</strong> heat-coloring of high-frequency clash elements</li>
+                        <li><strong>Penetrations</strong> -- MEP-through-slab detection with size extraction</li>
+                        <li><strong>HTML clash reports</strong> with screenshots and configurable columns</li>
+                        <li><strong>Per-level publishing</strong> of NWD/NWF files with clash sidecar data</li>
+                    </ul>
+                </div>
+            </div>
+            <p style="margin-top:0.12in;font-size:10pt;color:var(--text-muted);">The plugin runs as a dockable panel with three tabs -- <strong style="color:var(--scan);">Triage</strong>, <strong style="color:var(--draft);">Analysis</strong>, and <strong style="color:var(--core);">Settings</strong> -- plus ribbon commands and modal dialogs for project setup, publishing, and file tools.</p>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 00: GETTING STARTED                                  -->
+    <!-- ============================================================ -->
+    <div class="slide slide-section">
+        <div class="section-label">Section 00</div>
+        <h2>Getting started</h2>
+        <div class="section-sub">The ribbon, the setup wizard, cloud sign-in, and the active project system</div>
+    </div>
+
+    <!-- RIBBON -->
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>The Elite ribbon tab</h2>
+            <span class="tab-label">Ribbon</span>
+        </div>
+        <div class="slide-body">
+            <p style="color:var(--text-dim);margin-bottom:0.08in;font-size:11pt;">All entry points live on the <strong>Elite</strong> ribbon tab, organized into four panels:</p>
+
+            <div class="mockup">
+                <div class="mockup-row dark" style="border-bottom:1px solid #2E2E38;padding:2px 8px;">
+                    <span style="font-size:8pt;color:#5ED5DD;font-weight:700;border-bottom:2px solid #5ED5DD;padding:0 4px 1px;">Elite</span>
+                </div>
+                <div class="mockup-row mid" style="gap:0;border-bottom:none;align-items:stretch;">
+                    <div style="display:flex;flex-direction:column;border-right:1px solid #2E2E38;padding:4px 8px;">
+                        <div style="display:flex;gap:5px;">
+                            <span class="mock-btn" style="padding:4px 8px;color:#5ED5DD;">Open<br>Manager</span>
+                            <span class="mock-btn" style="padding:4px 8px;">Setup<br>Wizard</span>
+                        </div>
+                        <div style="font-size:7pt;color:#5A5A6A;text-align:center;margin-top:3px;">Manager</div>
+                    </div>
+                    <div style="display:flex;flex-direction:column;border-right:1px solid #2E2E38;padding:4px 8px;">
+                        <span class="mock-btn" style="padding:4px 8px;color:#6EE7A8;">Sign<br>In</span>
+                        <div style="font-size:7pt;color:#5A5A6A;text-align:center;margin-top:3px;">Account</div>
+                    </div>
+                    <div style="display:flex;flex-direction:column;border-right:1px solid #2E2E38;padding:4px 8px;">
+                        <span class="mock-btn" style="padding:4px 8px;color:#A78BFA;">Active<br>Project</span>
+                        <div style="font-size:7pt;color:#5A5A6A;text-align:center;margin-top:3px;">Project</div>
+                    </div>
+                    <div style="display:flex;flex-direction:column;padding:4px 8px;">
+                        <div style="display:flex;gap:5px;">
+                            <span class="mock-btn" style="padding:4px 8px;">Publish<br>Levels</span>
+                            <span class="mock-btn" style="padding:4px 8px;">Consolidate</span>
+                            <span class="mock-btn" style="padding:4px 8px;">Rewrite<br>Tests</span>
+                            <span class="mock-btn" style="padding:4px 8px;">Export<br>Model Tree</span>
+                        </div>
+                        <div style="font-size:7pt;color:#5A5A6A;text-align:center;margin-top:3px;">Tools</div>
+                    </div>
+                </div>
+            </div>
+
+            <table class="btn-table" style="margin-top:0.08in;">
+                <tr><th style="width:150px;">Button</th><th style="width:80px;">Panel</th><th>What it does</th></tr>
+                <tr><td><span class="btn-pill pill-cyan">Open Manager</span></td><td class="desc">Manager</td><td>Shows or hides the dockable panel. On a fresh install (no credentials, no projects), the first click offers a one-time prompt to open the Setup Wizard.</td></tr>
+                <tr><td><span class="btn-pill pill-gray">Setup Wizard</span></td><td class="desc">Manager</td><td>Opens the four-step getting-started checklist directly (see next page).</td></tr>
+                <tr><td><span class="btn-pill pill-green">Sign In</span></td><td class="desc">Account</td><td>Opens the Sign In dialog: edit the Client ID / Client Secret, see live auth status, and sign in or out of Autodesk Construction Cloud.</td></tr>
+                <tr><td><span class="btn-pill pill-purple">Active Project</span></td><td class="desc">Project</td><td>Opens the Active Project dialog to create, select, switch, or configure projects.</td></tr>
+                <tr><td><span class="btn-pill pill-gray">Publish Levels</span></td><td class="desc">Tools</td><td>Exports the federated model as one NWD/NWF per level (see Section 04).</td></tr>
+                <tr><td><span class="btn-pill pill-gray">Consolidate</span></td><td class="desc">Tools</td><td>Detects and merges duplicate clash tests, search sets, and viewpoints left over from appended NWF files.</td></tr>
+                <tr><td><span class="btn-pill pill-gray">Rewrite Tests</span></td><td class="desc">Tools</td><td>Repoints existing clash tests at freshly imported XML search sets.</td></tr>
+                <tr><td><span class="btn-pill pill-gray">Export Model Tree</span></td><td class="desc">Tools</td><td>Dumps the full model tree and property catalog to JSON for the Clash Configuration Builder companion app.</td></tr>
+            </table>
+
+            <div class="info-box"><strong>Panel header.</strong> The top of the dockable panel shows <em>Project: [name]</em> -- or an amber <em>No project detected</em> warning. The header is clickable and opens the same Active Project dialog as the ribbon button.</div>
+        </div>
+    </div>
+
+    <!-- SETUP WIZARD -->
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>Setup Wizard</h2>
+            <span class="tab-label">Ribbon &gt; Setup Wizard</span>
+        </div>
+        <div class="slide-body">
+            <p style="color:var(--text-dim);margin-bottom:0.08in;font-size:11pt;">A one-time checklist that walks through everything needed before first triage. Each step opens the normal dialog or action and re-checks itself when you return. Launch it from the ribbon, from Settings &gt; Getting Started, or accept the first-run prompt.</p>
+
+            <div class="mockup" style="max-width:5.2in;">
+                <div class="mockup-row dark" style="border-bottom:1px solid #2E2E38;"><span style="font-weight:700;font-size:9pt;">Setup wizard</span></div>
+                <div style="padding:6px 10px;display:flex;flex-direction:column;gap:6px;">
+                    <div style="display:flex;align-items:center;gap:6px;">
+                        <span style="width:10px;height:10px;border-radius:50%;background:#6EE7A8;flex-shrink:0;"></span>
+                        <div><div style="font-size:8pt;font-weight:700;">1. Sign in to Autodesk Construction Cloud</div>
+                        <div style="font-size:7pt;color:#9898A8;">Signed in to Autodesk Construction Cloud.</div></div>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:6px;">
+                        <span style="width:10px;height:10px;border-radius:50%;background:#6EE7A8;flex-shrink:0;"></span>
+                        <div style="flex:1;"><div style="font-size:8pt;font-weight:700;">2. Set the active project</div>
+                        <div style="font-size:7pt;color:#9898A8;">Active project: Tower A Coordination</div></div>
+                        <span class="mock-btn">Select project...</span>
+                    </div>
+                    <div style="display:flex;align-items:flex-start;gap:6px;">
+                        <span style="width:10px;height:10px;border-radius:50%;background:#F5B878;flex-shrink:0;margin-top:2px;"></span>
+                        <div style="flex:1;">
+                            <div style="font-size:8pt;font-weight:700;">3. Configure the project</div>
+                            <div style="font-size:7pt;color:#9898A8;padding-left:6px;">
+                                <span style="color:#6EE7A8;">&#9679;</span> Levels: 12 defined<br>
+                                <span style="color:#6EE7A8;">&#9679;</span> Filename pattern: set<br>
+                                <span style="color:#F5B878;">&#9679;</span> Trade mappings: 3 of 5 linked to ACC issue types<br>
+                                <span style="color:#6EE7A8;">&#9679;</span> Current file: Tower-A-Master.nwf is registered
+                            </div>
+                        </div>
+                        <span class="mock-btn">Configure project...</span>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:6px;">
+                        <span style="width:10px;height:10px;border-radius:50%;background:#F5B878;flex-shrink:0;"></span>
+                        <div style="flex:1;"><div style="font-size:8pt;font-weight:700;">4. Build the room atlas</div>
+                        <div style="font-size:7pt;color:#9898A8;">Room atlas not built. Building scans the model for Revit rooms and can take a minute on large models.</div></div>
+                        <span class="mock-btn">Build room atlas</span>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:6px;border-top:1px solid #2E2E38;padding-top:5px;">
+                        <span style="font-size:8pt;font-weight:700;">2 of 4 steps remaining.</span>
+                        <span style="flex:1;"></span>
+                        <span class="mock-btn">Re-check</span>
+                        <span class="mock-btn">Close</span>
+                    </div>
+                </div>
+            </div>
+
+            <table class="btn-table" style="margin-top:0.08in;">
+                <tr><th style="width:180px;">Step</th><th>Details</th></tr>
+                <tr><td><span class="btn-name">1. Sign in</span></td><td>When signed out, the step shows <em>Client ID</em> and <em>Client secret</em> fields plus a <em>Sign in</em> button -- credentials save to settings and the browser OAuth flow launches.</td></tr>
+                <tr><td><span class="btn-name">2. Active project</span></td><td><em>Select project...</em> opens the Active Project dialog. Green once any project is active.</td></tr>
+                <tr><td><span class="btn-name">3. Configure project</span></td><td>Blocked until step 2 completes. Four sub-checks with their own dots: levels defined, filename pattern set, trade mappings linked to ACC issue types, and current file registered. <em>Configure project...</em> opens the Project Editor; <em>Register current file</em> appears when the open file isn't registered yet.</td></tr>
+                <tr><td><span class="btn-name">4. Room atlas</span></td><td>Blocked until a model is open. <em>Build room atlas</em> scans the model for Revit rooms -- allow a minute on large models.</td></tr>
+            </table>
+
+            <p style="margin-top:0.08in;font-size:10pt;color:var(--text-muted);">Status dots: <span style="color:#6EE7A8;">green</span> = complete, <span style="color:#F5B878;">amber</span> = incomplete, gray = blocked by an earlier step. When all four are green the summary reads "Setup complete. You're ready to run triage."</p>
+        </div>
+    </div>
+
+    <!-- SIGN IN -->
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>Signing in to ACC / BIM 360</h2>
+            <span class="tab-label">Ribbon &gt; Sign In</span>
+        </div>
+        <div class="slide-body">
+            <p style="color:var(--text-dim);margin-bottom:0.1in;font-size:11pt;">Cloud publishing uses an Autodesk Platform Services (APS) app with a Client ID and Client Secret. Enter both once -- in the Sign In dialog, in the Settings tab under <em>Autodesk Cloud Authentication</em>, or in Setup Wizard step 1 -- then sign in from anywhere.</p>
+            <div class="info-box"><strong>Don't have credentials yet?</strong> Someone on your team creates the APS app once at <span class="path">aps.autodesk.com</span>: register a new app (Traditional Web App type), set its callback URL to <span class="path">http://localhost:8080/callback</span>, enable the Data Management, Model Derivative, ACC/BIM 360, and Issues APIs, and share the resulting Client ID and Client Secret with the team. The app must also be added as a custom integration in the ACC/BIM 360 account admin console.</div>
+            <table class="btn-table">
+                <tr><th style="width:190px;">Where</th><th>Behavior</th></tr>
+                <tr><td><span class="btn-pill pill-green">Sign In</span> <span class="desc">(ribbon)</span></td><td>Opens the Sign In dialog: editable Client ID and Client Secret (Show/Hide toggle on the secret), a status dot (green = signed in, red = not), and a Sign In or Sign Out button. Sign In saves the credentials, then opens your default browser to Autodesk's login page and listens on <span class="path">http://localhost:8080/callback</span> for the redirect. Failures show the exact reason in the dialog.</td></tr>
+                <tr><td><span class="btn-pill pill-gray">Person icon</span> <span class="desc">(Triage quick actions)</span></td><td>Live auth indicator to the left of Auto Issue: green person = signed in, grey person with a slash = signed out. Clicking it opens the same Sign In dialog.</td></tr>
+                <tr><td><span class="btn-pill pill-green">Login</span> / <span class="btn-pill pill-gray">Logout</span> <span class="desc">(Settings tab)</span></td><td>Same flow. A status dot shows green = authenticated, red = not authenticated, gray = checking.</td></tr>
+            </table>
+            <div class="note-box"><strong>Session persistence.</strong> After a successful sign-in the refresh token is stored in <span class="path">%LOCALAPPDATA%\EliteClashManager\auth.json</span>, so you stay signed in across Navisworks restarts. Temporary network failures never log you out -- only a genuinely revoked/expired session does.</div>
+            <table class="btn-table" style="margin-top:0.08in;">
+                <tr><th style="width:280px;">If you see...</th><th>It means / do this</th></tr>
+                <tr><td class="desc">"Client Secret is missing. Please configure it in Settings."</td><td>Enter the secret in Settings &gt; Autodesk Cloud Authentication (use the Show toggle to verify it).</td></tr>
+                <tr><td class="desc">"Port 8080 is in use by another application..."</td><td>Another app owns the sign-in callback port -- commonly a dev tool or another add-in. Close it (or its host application) and retry.</td></tr>
+                <tr><td class="desc">"A previous sign-in attempt is still pending. Retry once; if it persists, restart Navisworks."</td><td>An earlier sign-in was abandoned mid-flow. New attempts automatically take over -- one retry normally clears it.</td></tr>
+                <tr><td class="desc">"Token exchange with Autodesk failed..."</td><td>The browser step worked but the secret is likely wrong. Verify the Client Secret and check the diagnostic log.</td></tr>
+            </table>
+        </div>
+    </div>
+
+    <!-- ACTIVE PROJECT -->
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>Active Project dialog</h2>
+            <span class="tab-label">Ribbon &gt; Active Project</span>
+        </div>
+        <div class="slide-body">
+            <p style="color:var(--text-dim);margin-bottom:0.08in;font-size:11pt;">Projects hold everything file-independent: level definitions, filename parsing patterns, trade mappings, and registered NWF files. The plugin auto-detects the right project when you open a file; this dialog is for creating, switching, and configuring them.</p>
+
+            <div class="mockup" style="max-width:4.6in;">
+                <div class="mockup-row dark" style="border-bottom:1px solid #2E2E38;"><span style="font-weight:700;font-size:9pt;">Active Project</span></div>
+                <div style="padding:8px 10px;">
+                    <div style="font-size:8pt;color:#F5B878;margin-bottom:6px;">No project matched this file.<br>Select a project or create a new one.</div>
+                    <div class="mock-input" style="width:100%;margin-bottom:6px;color:#E8E8ED;">Tower A Coordination &#x25BE;</div>
+                    <div class="mock-cb" style="margin-bottom:8px;">&#9745; Register this file to selected project</div>
+                    <div style="display:flex;gap:5px;justify-content:flex-end;">
+                        <span class="mock-btn">New Project</span>
+                        <span class="mock-btn" style="color:#A78BFA;">Configure...</span>
+                        <span class="mock-btn" style="background:#5ED5DD;color:#0F0F12;border-color:#5ED5DD;font-weight:700;">Select</span>
+                        <span class="mock-btn">Skip</span>
+                    </div>
+                </div>
+            </div>
+
+            <table class="btn-table" style="margin-top:0.08in;">
+                <tr><th style="width:170px;">Control</th><th>Behavior</th></tr>
+                <tr><td><span class="btn-name">Project dropdown</span></td><td>All existing projects. The prompt above it tells you whether a project is already active for this file.</td></tr>
+                <tr><td><span class="btn-pill pill-gray">New Project</span></td><td>Swaps the dropdown for a <em>New project name</em> box. Duplicate names are blocked (case-insensitive) with a message telling you to pick the existing one from the list instead.</td></tr>
+                <tr><td><span class="btn-pill pill-purple">Configure...</span></td><td>Opens the Project Editor for the selected (or new) project. A brand-new project is <strong>not saved to disk until you click Save inside the editor</strong> -- cancelling leaves nothing behind.</td></tr>
+                <tr><td><span class="btn-pill pill-cyan">Select</span></td><td>Default button (Enter). Activates the chosen project; creates and activates the new one in new-project mode. Same duplicate-name guard.</td></tr>
+                <tr><td><span class="btn-pill pill-gray">Skip</span></td><td>Closes without changing anything.</td></tr>
+                <tr><td><span class="btn-name">Register this file...</span></td><td>Checked by default. On Select, records the current NWF's filename in the project so it auto-activates next time you open this file.</td></tr>
+            </table>
+
+            <div class="info-box"><strong>Auto-detection order.</strong> When a file opens, the plugin first matches the ACC project ID parsed from any <span class="path">nwacc://</span> model path against your projects' stored ACC IDs; failing that, it matches the document filename against each project's registered files list. No match = amber "No project detected" header. Projects are stored in <span class="path">%LOCALAPPDATA%\EliteClashManager\ECM_Projects\</span>.</div>
+        </div>
+    </div>
+
+    <!-- PROJECT EDITOR -->
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>Project Editor</h2>
+            <span class="tab-label">Active Project &gt; Configure...</span>
+        </div>
+        <div class="slide-body">
+            <p style="color:var(--text-dim);margin-bottom:0.1in;font-size:11pt;">A resizable three-tab editor. The <em>Project Name</em> box sits at the top -- renaming here safely moves the whole project folder, caches included. Nothing persists until <span class="btn-pill pill-green" style="font-size:9pt;">Save</span>.</p>
+
+            <table class="btn-table">
+                <tr><th style="width:200px;">Tab / section</th><th>What you configure</th></tr>
+                <tr><td><span class="btn-name" style="color:var(--scan);">General</span></td><td><em>ACC Project ID</em> (read-only, auto-detected from cloud models) and the <em>Registered NWF Files</em> list with <em>Register Current File</em> / <em>Remove Selected</em> buttons.</td></tr>
+                <tr><td><span class="btn-name" style="color:var(--coord);">Levels</span></td><td>Pick a <em>Grid System</em>, click <em>Pull Levels</em> to import level names and elevations from the loaded models, then <em>Sync ACC Locations</em> to enable per-level ACC location dropdowns. Grid columns: Order, Navis Levels, Display Name (editable), Elevation, Z Max, ACC Location. Footer shows "<em>N levels, M mapped to ACC</em>".</td></tr>
+                <tr><td><span class="btn-name" style="color:var(--core);">Filename / Correlations</span><br><span class="desc">Segment Builder</span></td><td>Paste a <em>Sample Filename</em> (e.g. <span class="path">E82-L28-SM.nwc</span>) and click <em>Parse</em>. Each hyphen-delimited token becomes a card where you assign its role -- Ignore, Level, Trade, or Extension, plus any custom types you add. A <em>Strip L</em> checkbox drops the "L" prefix from level tokens. The generated regex pattern is visible under the <em>Generated Pattern (Advanced)</em> expander.</td></tr>
+                <tr><td><span class="desc" style="padding-left:12px;">Level Aliases</span></td><td>Map parsed level codes to display names (e.g. RF &rarr; Roof).</td></tr>
+                <tr><td><span class="desc" style="padding-left:12px;">Preview</span></td><td>Live parse of every loaded model name -- "Level: 28 | Trade: SM" -- with non-matching names in red. Click <em>Refresh</em> after changing segments.</td></tr>
+                <tr><td><span class="desc" style="padding-left:12px;">Trade mappings</span></td><td>Trade abbreviations (SM, PL, EL...) and their downstream publishing defaults. After <em>Sync cloud data</em>, each row gets Issue Type, Subtype, and Assignee dropdowns. New projects are seeded with 5 default trade rows -- they still need linking to ACC issue types.</td></tr>
+                <tr><td><span class="desc" style="padding-left:12px;">Location Mappings</span></td><td>Read-only view of parsed value &rarr; ACC location pairs accumulated by the publishing workflow, with per-row delete.</td></tr>
+            </table>
+
+            <div class="info-box"><strong>Why this matters downstream.</strong> The filename pattern powers <em>Group By Level</em> in Triage and level-based location mapping when publishing. Trade mappings auto-fill issue type/subtype/assignee for every published issue. Level definitions power <em>Group By Elevation</em> and Z-based location assignment.</div>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 01: TRIAGE                                           -->
+    <!-- ============================================================ -->
+    <div class="slide slide-section">
+        <div class="section-label">Section 01</div>
+        <h2>Triage tab</h2>
+        <div class="section-sub">The main workspace: load, filter, sort, split, distribute, comment, and manage statuses. The grid shows the clash tests already in Clash Detective -- run them (or import a setup) before triaging.</div>
+    </div>
+
+    <!-- TRIAGE ZONE OVERVIEW -->
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>Triage tab -- zone overview</h2>
+            <span class="tab-label">Triage</span>
+        </div>
+        <div class="slide-body">
+            <p style="color:var(--text-dim);margin-bottom:0.08in;font-size:10pt;">Each colored zone is detailed on the pages that follow. The panel runs top-to-bottom; a display-toggle strip for room overlays and 3D markers sits above it all.</p>
+
+            <div class="mockup">
+                <!-- Display toggles -->
+                <div class="mockup-row dark" style="border-bottom:1px solid #2E2E38;">
+                    <span style="font-size:8pt;color:#9898A8;">Display Rooms</span>
+                    <span class="mock-input" style="width:60px;">Level 28 &#x25BE;</span>
+                    <span style="display:inline-block;width:22px;height:11px;border-radius:6px;background:#5ED5DD;position:relative;"><span style="position:absolute;right:1px;top:1px;width:9px;height:9px;border-radius:50%;background:#0F0F12;"></span></span>
+                    <span style="width:10px;"></span>
+                    <span style="font-size:8pt;color:#9898A8;">Display Markers</span>
+                    <span style="display:inline-block;width:22px;height:11px;border-radius:6px;background:#3D3D4A;position:relative;"><span style="position:absolute;left:1px;top:1px;width:9px;height:9px;border-radius:50%;background:#9898A8;"></span></span>
+                </div>
+
+                <!-- ZONE A -->
+                <div style="border:2px solid rgba(94,213,221,0.6);background:rgba(94,213,221,0.08);position:relative;border-radius:3px;margin:2px;">
+                    <span style="position:absolute;top:-10px;left:8px;font-family:'Fira Code',Consolas,monospace;font-size:8pt;font-weight:700;color:#0F0F12;background:#5ED5DD;padding:0 5px;border-radius:2px;z-index:2;">A</span>
+                    <div class="mockup-row dark" style="border-bottom:none;">
+                        <span class="mock-btn">ALL</span>
+                        <span class="mock-btn">NONE</span>
+                        <span style="width:6px;"></span>
+                        <span class="mock-cb">&#9745; New</span>
+                        <span class="mock-cb">&#9745; Active</span>
+                        <span class="mock-cb">&#9745; Reviewed</span>
+                        <span class="mock-cb">&#9745; Approved</span>
+                        <span class="mock-cb">&#9744; Resolved</span>
+                        <span style="flex:1;"></span>
+                        <span style="font-size:9pt;color:#9898A8;">&#x1F4F7;</span>
+                        <span class="mock-input" style="width:38px;">All &#x25BE;</span>
+                        <span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#FFA600;"></span>
+                        <span class="mock-input" style="width:38px;">All &#x25BE;</span>
+                    </div>
+                </div>
+
+                <!-- ZONE B -->
+                <div style="border:2px solid rgba(245,184,120,0.6);background:rgba(245,184,120,0.08);position:relative;border-radius:3px;margin:2px;">
+                    <span style="position:absolute;top:-10px;left:8px;font-family:'Fira Code',Consolas,monospace;font-size:8pt;font-weight:700;color:#0F0F12;background:#F5B878;padding:0 5px;border-radius:2px;z-index:2;">B</span>
+                    <div class="mockup-row mid" style="border-bottom:none;">
+                        <span style="font-weight:700;font-size:9pt;">12 group(s) selected</span>
+                        <span style="color:#5A5A6A;font-size:8pt;">(48 Total)</span>
+                        <span style="flex:1;"></span>
+                        <span class="mock-input" style="width:60px;">Active &#x25BE;</span>
+                        <span class="mock-btn" style="color:#5ED5DD;">SET</span>
+                        <span class="mock-btn" style="color:#F5B878;font-weight:700;">PUSH</span>
+                        <span style="width:6px;"></span>
+                        <span class="mock-btn">&#x229C;</span>
+                        <span class="mock-btn">&#x21A7;</span>
+                        <span class="mock-btn">&#x2B09;</span>
+                        <span class="mock-btn">&#x229F;</span>
+                        <span class="mock-btn" style="color:#6EE7A8;">&#x25B6;</span>
+                        <span class="mock-btn">&#x21BB;</span>
+                    </div>
+                </div>
+
+                <!-- ZONE C -->
+                <div style="border:2px solid rgba(110,231,168,0.6);background:rgba(110,231,168,0.08);position:relative;border-radius:3px;margin:2px;">
+                    <span style="position:absolute;top:-10px;left:8px;font-family:'Fira Code',Consolas,monospace;font-size:8pt;font-weight:700;color:#0F0F12;background:#6EE7A8;padding:0 5px;border-radius:2px;z-index:2;">C</span>
+                    <div>
+                        <div class="mockup-row" style="background:#1A1A22;padding:3px 8px;border-bottom:none;">
+                            <span style="color:#5ED5DD;font-size:8pt;">&#x29E9;</span>
+                            <span class="mock-input" style="flex:1;">Name...</span>
+                            <span class="mock-input" style="width:42px;">Issue...</span>
+                            <span class="mock-input" style="width:56px;">Comment...</span>
+                            <span class="mock-input" style="width:56px;">Assigned...</span>
+                            <span class="mock-input" style="width:44px;">Room...</span>
+                            <span class="mock-btn" style="color:#E53935;font-size:8pt;">&#x2715;</span>
+                        </div>
+                        <table class="mock-grid">
+                            <tr>
+                                <th style="width:20px;">&#9744;</th>
+                                <th>Group Name</th>
+                                <th style="width:50px;">Status</th>
+                                <th style="width:40px;">Issue</th>
+                                <th style="width:56px;">Comment</th>
+                                <th style="width:56px;">Assigned</th>
+                                <th style="width:44px;">Room</th>
+                                <th style="width:34px;">Count</th>
+                                <th style="width:34px;">X</th>
+                                <th style="width:34px;">Y</th>
+                                <th style="width:34px;">Z</th>
+                            </tr>
+                            <tr>
+                                <td colspan="11" style="background:#222229 !important;font-weight:700;border-right:none;">
+                                    &#x25BE; SM vs PL <span style="color:#9898A8;font-style:italic;font-weight:400;">(3 Groups)</span>
+                                    <span style="color:#F5B878;font-size:7pt;border:1px solid #F5B878;border-radius:2px;padding:0 3px;margin-left:4px;">4 ungrouped</span>
+                                    <span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#6EE7A8;margin-left:4px;vertical-align:middle;"></span>
+                                </td>
+                            </tr>
+                            <tr style="background:rgba(94,213,221,0.15) !important;">
+                                <td style="background:transparent !important;">&#9745;</td>
+                                <td style="background:transparent !important;">&#x1F4F7; SM vs PL - L28 Mech Room</td>
+                                <td style="background:transparent !important;"><span style="border:1px solid #F5B878;border-radius:2px;padding:0 3px;font-size:7pt;">Active</span></td>
+                                <td style="background:transparent !important;"><span style="border-left:2px solid #FFA600;border-right:2px solid #FFA600;border-radius:2px;padding:0 3px;font-size:7pt;">#42</span></td>
+                                <td style="background:transparent !important;font-size:7pt;">Reroute per RFI</td>
+                                <td style="background:transparent !important;font-size:7pt;">J. Smith</td>
+                                <td style="background:transparent !important;font-size:7pt;">Mech Rm</td>
+                                <td style="background:transparent !important;font-size:7pt;">6 / 8</td>
+                                <td style="background:transparent !important;color:#5A5A6A;">-12.3</td>
+                                <td style="background:transparent !important;color:#5A5A6A;">45.1</td>
+                                <td style="background:transparent !important;color:#5A5A6A;">28.0</td>
+                            </tr>
+                            <tr style="background:rgba(245,184,120,0.31) !important;">
+                                <td style="background:transparent !important;">&#9744;</td>
+                                <td style="background:transparent !important;font-weight:700;">SM vs PL - L28 Corridor</td>
+                                <td style="background:transparent !important;"><span style="border:1px solid #E53935;border-radius:2px;padding:0 3px;font-size:7pt;">New</span></td>
+                                <td style="background:transparent !important;"></td>
+                                <td style="background:transparent !important;"></td>
+                                <td style="background:transparent !important;"></td>
+                                <td style="background:transparent !important;font-size:7pt;">Corridor</td>
+                                <td style="background:transparent !important;font-size:7pt;">3 / 3</td>
+                                <td style="background:transparent !important;color:#5A5A6A;">-8.7</td>
+                                <td style="background:transparent !important;color:#5A5A6A;">22.4</td>
+                                <td style="background:transparent !important;color:#5A5A6A;">28.0</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- ZONE D -->
+                <div style="border:2px solid rgba(94,213,221,0.6);background:rgba(94,213,221,0.08);position:relative;border-radius:3px;margin:2px;">
+                    <span style="position:absolute;top:-10px;left:8px;font-family:'Fira Code',Consolas,monospace;font-size:8pt;font-weight:700;color:#0F0F12;background:#5ED5DD;padding:0 5px;border-radius:2px;z-index:2;">D</span>
+                    <div class="mockup-row mid" style="border-bottom:none;">
+                        <span class="mock-cb">&#9745; Sync</span>
+                        <span class="mock-btn" style="color:#5ED5DD;">Focus</span>
+                        <span style="color:#9898A8;font-size:8pt;">Dist:</span>
+                        <span class="mock-input" style="width:20px;text-align:center;color:#E8E8ED;">5</span>
+                        <span class="mock-btn">Reset</span>
+                        <span style="flex:1;"></span>
+                        <span style="color:#9898A8;font-size:8pt;">Top:</span>
+                        <span class="mock-input" style="width:18px;text-align:center;color:#E8E8ED;">2</span>
+                        <span style="color:#9898A8;font-size:7pt;">"</span>
+                        <span style="color:#9898A8;font-size:8pt;">Lg:</span>
+                        <span class="mock-input" style="width:18px;text-align:center;color:#E8E8ED;">12</span>
+                        <span style="color:#9898A8;font-size:7pt;">"</span>
+                        <span class="mock-input" style="width:70px;">NoOverride &#x25BE;</span>
+                        <span class="mock-btn">Apply</span>
+                    </div>
+                </div>
+
+                <!-- ZONE E -->
+                <div style="border:2px solid rgba(167,139,250,0.6);background:rgba(167,139,250,0.08);position:relative;border-radius:3px;margin:2px;">
+                    <span style="position:absolute;top:-10px;left:8px;font-family:'Fira Code',Consolas,monospace;font-size:8pt;font-weight:700;color:#0F0F12;background:#A78BFA;padding:0 5px;border-radius:2px;z-index:2;">E</span>
+                    <div class="mockup-row mid" style="border-bottom:none;">
+                        <span style="color:#9898A8;font-size:8pt;">Split:</span>
+                        <span class="mock-input" style="width:22px;text-align:center;color:#E8E8ED;">5</span>
+                        <span style="color:#5A5A6A;font-size:7pt;">ft</span>
+                        <span class="mock-btn" style="color:#5ED5DD;">Split</span>
+                        <span style="width:4px;"></span>
+                        <span style="color:#9898A8;font-size:8pt;">Distribute:</span>
+                        <span class="mock-input" style="width:22px;text-align:center;color:#E8E8ED;">2</span>
+                        <span style="color:#5A5A6A;font-size:7pt;">ft</span>
+                        <span class="mock-btn" style="color:#6EE7A8;">Distribute</span>
+                        <span class="mock-btn" style="color:#B8C4FF;">Group By Level</span>
+                        <span class="mock-btn" style="color:#B8C4FF;">Group By Elevation</span>
+                    </div>
+                </div>
+
+                <!-- ZONE F -->
+                <div style="border:2px solid rgba(110,231,168,0.6);background:rgba(110,231,168,0.08);position:relative;border-radius:3px;margin:2px;">
+                    <span style="position:absolute;top:-10px;left:8px;font-family:'Fira Code',Consolas,monospace;font-size:8pt;font-weight:700;color:#0F0F12;background:#6EE7A8;padding:0 5px;border-radius:2px;z-index:2;">F</span>
+                    <div class="mockup-row dark" style="justify-content:center;gap:4px;border-bottom:none;">
+                        <span class="mock-btn" style="color:#5ED5DD;">Auto Issue</span>
+                        <span class="mock-btn" style="background:#4CAF50;color:white;border-color:#4CAF50;">Sync</span>
+                        <span class="mock-btn" style="background:#2196F3;color:white;border-color:#2196F3;">Issues (12)</span>
+                        <span class="mock-btn">Cleanup</span>
+                        <span class="mock-btn" style="background:#FF5722;color:white;border-color:#FF5722;">Export (12)</span>
+                    </div>
+                </div>
+            </div>
+
+            <div style="display:flex;flex-wrap:wrap;gap:8px 16px;margin-top:0.08in;font-family:'Fira Code',Consolas,monospace;font-size:9pt;">
+                <span style="color:#5ED5DD;">A. Filters</span>
+                <span style="color:#F5B878;">B. Header &amp; toolbar</span>
+                <span style="color:#6EE7A8;">C. Column filters + DataGrid</span>
+                <span style="color:#5ED5DD;">D. View navigation</span>
+                <span style="color:#A78BFA;">E. Split / Distribute / Group</span>
+                <span style="color:#6EE7A8;">F. Quick actions</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ZONE A -->
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>Zone A: Filters &amp; selection</h2>
+            <span class="tab-label">Triage</span>
+        </div>
+        <div class="slide-body">
+            <table class="btn-table">
+                <tr><th style="width:170px;">Control</th><th>What it does</th></tr>
+                <tr><td><span class="btn-pill pill-gray">ALL</span> / <span class="btn-pill pill-gray">NONE</span></td><td>Check or uncheck every visible group at once. Checked groups are the target set for most bulk operations.</td></tr>
+                <tr><td><span class="btn-name">Status checkboxes</span></td><td>New, Active, Reviewed, Approved, Resolved -- all on by default. Unchecking a status hides its groups from the grid. A common working setup: uncheck Resolved to focus the live workload.</td></tr>
+                <tr><td><span class="btn-name">Viewpoint filter</span> <span class="desc">(camera icon)</span></td><td>All / Yes / No -- show only groups with (or without) a saved viewpoint.</td></tr>
+                <tr><td><span class="btn-name">Issue filter</span> <span class="desc">(orange dot)</span></td><td>All / Yes / No -- show only groups with (or without) a linked cloud issue.</td></tr>
+            </table>
+            <div class="info-box"><strong>Display toggles</strong> (above the filters): <em>Display Rooms</em> draws Room Atlas footprints for a chosen level as a live viewport overlay; <em>Display Markers</em> draws 3D spheres/rings at clash points. Both are render-only overlays -- they never modify the model, and their size, color, and opacity are configurable in Settings.</div>
+        </div>
+    </div>
+
+    <!-- ZONE B -->
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>Zone B: Header &amp; toolbar</h2>
+            <span class="tab-label">Triage</span>
+        </div>
+        <div class="slide-body">
+            <table class="btn-table">
+                <tr><th style="width:180px;">Control</th><th>What it does</th></tr>
+                <tr><td><span class="btn-name">"N group(s) selected"</span></td><td>Live count of checked groups, with the loaded total beside it.</td></tr>
+                <tr><td><span class="btn-name">Status dropdown</span> + <span class="btn-pill pill-cyan">SET</span></td><td>Applies the chosen status to all checked groups -- <strong>in memory only</strong>. Modified rows highlight orange until pushed. (<span class="key">A</span> is a one-key version: it sets the highlighted row to Approved.)</td></tr>
+                <tr><td><span class="btn-pill pill-amber">PUSH</span></td><td>Commits every pending status change to Clash Detective in one operation. Until you push, nothing has changed in the document. Shortcut: <span class="key">Space</span>.</td></tr>
+                <tr><td><span class="btn-pill pill-gray">&#x229C;</span> <span class="desc">Proximity sort</span></td><td>Toggle: orders groups within each test by a nearest-neighbor spatial walk, so adjacent rows are physically adjacent clashes. View-only -- nothing is written to the document.</td></tr>
+                <tr><td><span class="btn-pill pill-gray">&#x21A7;</span> <span class="desc">Severity sort</span></td><td>Toggle: orders groups within each test by clash severity -- deepest penetration first. Mutually exclusive with proximity sort; both off = alphabetical. Every row's tooltip shows its deepest penetration.</td></tr>
+                <tr><td><span class="btn-pill pill-gray">&#x2B09;</span> <span class="desc">Filter by selection</span></td><td>Select elements in the Navisworks 3D scene first, then click: the grid filters to only the clash groups involving those elements. An info bar appears above the grid with the match count and an X to clear.</td></tr>
+                <tr><td><span class="btn-pill pill-gray">&#x229F;</span> <span class="desc">Collapse all</span></td><td>Collapses every test's group header.</td></tr>
+                <tr><td><span class="btn-pill pill-green">&#x25B6;</span> <span class="desc">Run tests</span></td><td>Opens the Run Clash Tests dialog (later in this section).</td></tr>
+                <tr><td><span class="btn-pill pill-gray">&#x21BB;</span> <span class="desc">Refresh</span></td><td>Reloads all clash groups from the document. Shortcut: <span class="key">`</span> (backtick).</td></tr>
+            </table>
+        </div>
+    </div>
+
+    <!-- ZONE C -->
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>Zone C: Column filters &amp; the DataGrid</h2>
+            <span class="tab-label">Triage</span>
+        </div>
+        <div class="slide-body">
+            <p style="color:var(--text-dim);margin-bottom:0.08in;font-size:11pt;">An always-visible filter strip sits above the grid: type into <em>Name</em>, <em>Issue</em>, <em>Comment</em>, <em>Assigned</em>, or <em>Room</em> for a case-insensitive "contains" match. The <span style="color:#E53935;">&#x2715;</span> button -- or <span class="key">Esc</span> -- clears all column filters.</p>
+            <table class="btn-table">
+                <tr><th style="width:130px;">Column</th><th>Contents</th></tr>
+                <tr><td><span class="btn-name">Checkbox</span></td><td>Selects the group for bulk operations. The checkbox on a test header toggles the whole test.</td></tr>
+                <tr><td><span class="btn-name">Group Name</span></td><td>Editable in place. A camera icon marks groups with a saved viewpoint. Sorting is natural ("Cluster 2" before "Cluster 10").</td></tr>
+                <tr><td><span class="btn-name">Status</span></td><td>Dropdown, color-coded: <span style="color:#E53935;">New</span>, <span style="color:#F5B878;">Active</span>, <span style="color:#5ED5DD;">Reviewed</span>, <span style="color:#6EE7A8;">Approved</span>, <span style="color:#FFEB3B;">Resolved</span>. Changing it marks the row orange (unsaved) until PUSH.</td></tr>
+                <tr><td><span class="btn-name">Issue</span></td><td>The linked cloud issue number, bordered in the issue's live status color (next page). Empty until published or manually linked.</td></tr>
+                <tr><td><span class="btn-name">Comment</span></td><td>The latest user note on the group (added via Add Comment or written by teammates).</td></tr>
+                <tr><td><span class="btn-name">Assigned To</span></td><td>The assignee of the published issue, when available.</td></tr>
+                <tr><td><span class="btn-name">Room</span></td><td>The Revit room from Map Rooms. Persists across save/reopen.</td></tr>
+                <tr><td><span class="btn-name">Count</span></td><td>Active / total clashes in the group (resolved clashes excluded from the active count).</td></tr>
+                <tr><td><span class="btn-name">X, Y, Z</span></td><td>Group center coordinates in feet. Z doubles as elevation.</td></tr>
+            </table>
+            <div class="two-col" style="margin-top:0.1in;gap:0.15in;">
+                <div class="col-card">
+                    <h3 style="color:var(--text);">Row highlights</h3>
+                    <ul class="col-amber">
+                        <li><strong style="color:#F5B878;">Orange + bold</strong> -- status changed, not yet pushed</li>
+                        <li><strong style="color:#4DA8FF;">Blue + bold</strong> -- pending Distribute preview</li>
+                        <li><strong style="color:#5ED5DD;">Cyan</strong> -- checked (part of the target set)</li>
+                    </ul>
+                </div>
+                <div class="col-card">
+                    <h3 style="color:var(--text);">Test group headers</h3>
+                    <ul class="col-green">
+                        <li>Test name + <strong>(N Groups)</strong> count</li>
+                        <li><strong style="color:#F5B878;">"N ungrouped"</strong> chip -- clashes in the test that belong to no group (targets for Distribute / Group By)</li>
+                        <li>Status dot: green = Complete, cyan = New, orange = Old, yellow-green = Partial</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ISSUE STATUS COLORS -->
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>Issue column status colors</h2>
+            <span class="tab-label">Triage</span>
+        </div>
+        <div class="slide-body">
+            <p style="color:var(--text-dim);margin-bottom:0.1in;font-size:11pt;">After a cloud sync, each Issue chip's border reflects the issue's live status in ACC/BIM 360. Hover the chip for the status name.</p>
+            <div class="status-row" style="flex-wrap:wrap;gap:0.08in;">
+                <span class="status-chip" style="border-color:#FFA600;font-size:10pt;padding:2px 8px;"><span class="dot" style="background:#FFA600;"></span>Open</span>
+                <span class="status-chip" style="border-color:#0696D7;font-size:10pt;padding:2px 8px;"><span class="dot" style="background:#0696D7;"></span>Pending</span>
+                <span class="status-chip" style="border-color:#A3BCDC;font-size:10pt;padding:2px 8px;"><span class="dot" style="background:#A3BCDC;"></span>In Progress</span>
+                <span class="status-chip" style="border-color:#B7D78C;font-size:10pt;padding:2px 8px;"><span class="dot" style="background:#B7D78C;"></span>Completed</span>
+                <span class="status-chip" style="border-color:#A76EF5;font-size:10pt;padding:2px 8px;"><span class="dot" style="background:#A76EF5;"></span>In Review</span>
+                <span class="status-chip" style="border-color:#EC4A41;font-size:10pt;padding:2px 8px;"><span class="dot" style="background:#EC4A41;"></span>In Dispute</span>
+                <span class="status-chip" style="border-color:#087CD9;font-size:10pt;padding:2px 8px;"><span class="dot" style="background:#087CD9;"></span>Work Completed</span>
+                <span class="status-chip" style="border-color:#7A77D9;font-size:10pt;padding:2px 8px;"><span class="dot" style="background:#7A77D9;"></span>Ready to Inspect</span>
+                <span class="status-chip" style="border-color:#FF495C;font-size:10pt;padding:2px 8px;"><span class="dot" style="background:#FF495C;"></span>Not Approved</span>
+                <span class="status-chip" style="border-color:#6B7280;font-size:10pt;padding:2px 8px;"><span class="dot" style="background:#6B7280;"></span>Closed</span>
+                <span class="status-chip" style="border-color:#4B5563;font-size:10pt;padding:2px 8px;"><span class="dot" style="background:#4B5563;"></span><s>Void</s></span>
+            </div>
+            <p style="margin-top:0.1in;font-size:10pt;color:var(--text-muted);">Colors match the Autodesk Construction Cloud palette. Void issues show with strikethrough text. Colors update when you Sync, publish, close/void, or link an issue. After reopening a saved file the issue <em>numbers</em> come back automatically -- click Sync to refresh the live status colors.</p>
+        </div>
+    </div>
+
+    <!-- CONTEXT MENU -->
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>Right-click context menu</h2>
+            <span class="tab-label">Triage</span>
+        </div>
+        <div class="slide-body">
+            <div style="display:flex;gap:0.2in;align-items:flex-start;">
+                <div class="mockup-ctx" style="flex-shrink:0;">
+                    <div>Add Issue&#8230;</div>
+                    <div>Remove Issue</div>
+                    <div>Map Rooms</div>
+                    <div class="ctx-sep"></div>
+                    <div>Break Out</div>
+                    <div>Merge Into</div>
+                    <div>&#x1F4A5; Explode Group</div>
+                    <div class="ctx-sep"></div>
+                    <div>Prep Views</div>
+                    <div>Update Viewpoint</div>
+                    <div>Redlines</div>
+                    <div>Remove Viewpoint</div>
+                    <div class="ctx-sep"></div>
+                    <div>Find / Replace&#8230;</div>
+                    <div>Add Text&#8230;</div>
+                    <div class="ctx-sep"></div>
+                    <div>Add Comment</div>
+                    <div>Edit Comment</div>
+                    <div>Remove Comment</div>
+                </div>
+                <div style="flex:1;">
+                    <p style="color:var(--text-dim);font-size:10pt;margin-bottom:0.08in;"><strong style="color:var(--scan);">Selection contract:</strong> menu actions target the <strong>checked groups</strong> if any are checked, otherwise the <strong>right-clicked row</strong>. Four deliberate exceptions:</p>
+                    <ul style="list-style:none;font-size:10pt;color:var(--text-dim);display:flex;flex-direction:column;gap:4px;">
+                        <li><strong style="color:var(--text);">Update Viewpoint</strong> -- single row only (it overwrites a saved camera).</li>
+                        <li><strong style="color:var(--text);">Merge Into</strong> -- needs 2+ checked groups.</li>
+                        <li><strong style="color:var(--text);">Break Out</strong> -- reads the 3D scene selection, not the grid.</li>
+                        <li><strong style="color:var(--text);">Remove Issue / Remove Viewpoint</strong> -- single row only (destructive).</li>
+                    </ul>
+                </div>
+            </div>
+
+            <table class="btn-table" style="margin-top:0.1in;">
+                <tr><th style="width:160px;">Menu item</th><th>What it does</th></tr>
+                <tr><td><span class="btn-name">Add Issue&#8230;</span></td><td>Link an existing ACC issue to a group by typing its number. Requires a completed cloud sync. If the group already links a different issue, you're asked to confirm the replacement.</td></tr>
+                <tr><td><span class="btn-name">Remove Issue</span></td><td>Removes the issue link and its Issue # record from the right-clicked group. User comments are kept.</td></tr>
+                <tr><td><span class="btn-name">Map Rooms</span></td><td>Looks up each target group's clash location in the Room Atlas and writes the room name into the Room column (persists across save/reopen).</td></tr>
+                <tr><td><span class="btn-name">Break Out</span></td><td>Extracts the clashes matching the current Navisworks scene selection into a new group. Shortcut: <span class="key">B</span>.</td></tr>
+                <tr><td><span class="btn-name">Merge Into</span></td><td>Absorbs 2+ checked groups into the one that has an Issue # or viewpoint (name, issue link, and viewpoint are preserved). Anchor priority: linked issue &gt; viewpoint &gt; highlighted row.</td></tr>
+                <tr><td><span class="btn-name">Explode Group</span></td><td>Dissolves target groups back into ungrouped clashes, after a confirmation dialog showing clash counts. Empty groups and issue-linked groups are skipped automatically.</td></tr>
+                <tr><td><span class="btn-name">Prep Views</span></td><td>Creates a saved viewpoint (with section box and baked redlines) for each target group, under <em>Clash Prep &gt; [Test Name]</em> in Saved Viewpoints.</td></tr>
+                <tr><td><span class="btn-name">Update Viewpoint</span></td><td>Overwrites this row's saved viewpoint with the current camera and section box. Shortcut: <span class="key">R</span>.</td></tr>
+                <tr><td><span class="btn-name">Redlines</span></td><td>Bakes redline markers (circle + label) onto target groups' existing viewpoints. Shortcut: <span class="key">T</span>.</td></tr>
+                <tr><td><span class="btn-name">Remove Viewpoint</span></td><td>Deletes this row's saved viewpoint. The camera icon disappears from the row.</td></tr>
+                <tr><td><span class="btn-name">Find / Replace&#8230;</span> / <span class="btn-name">Add Text&#8230;</span></td><td>Open the Rename Groups dialog on the corresponding tab (next page).</td></tr>
+                <tr><td><span class="btn-name">Add / Edit / Remove Comment</span></td><td>Manage the manager's own note on a group (shown in the Comment column). Edit and Remove only touch notes added through the manager -- native Navisworks comments and the issue record are never affected.</td></tr>
+            </table>
+        </div>
+    </div>
+
+    <!-- RENAME DIALOG -->
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>Rename Groups dialog</h2>
+            <span class="tab-label">Triage &gt; right-click</span>
+        </div>
+        <div class="slide-body">
+            <p style="color:var(--text-dim);margin-bottom:0.1in;font-size:11pt;">Opened from <em>Add Text&#8230;</em> or <em>Find / Replace&#8230;</em> in the row menu. Both tabs preview every change before anything is written.</p>
+            <div class="two-col" style="gap:0.2in;">
+                <div class="col-card">
+                    <h3 style="color:var(--scan);">Add Text tab</h3>
+                    <ul class="col-cyan">
+                        <li>Choose <strong>Append</strong> or <strong>Prepend</strong></li>
+                        <li>Type the text -- use the <strong>[Room]</strong> placeholder to insert each group's mapped room name</li>
+                        <li>Example: appending " - [Room]" turns "Duct Clash 1" into "Duct Clash 1 - Mech Room 2-114"</li>
+                    </ul>
+                </div>
+                <div class="col-card">
+                    <h3 style="color:var(--coord);">Find/Replace tab</h3>
+                    <ul class="col-green">
+                        <li><strong>Find</strong> text and its <strong>Replace</strong> value (leave Replace empty to delete)</li>
+                        <li>Optional <strong>Case Sensitive</strong> matching</li>
+                    </ul>
+                </div>
+            </div>
+            <p style="margin-top:0.1in;font-size:10pt;color:var(--text-dim);"><span class="btn-pill pill-gray">Preview</span> fills the Original &rarr; New Name &rarr; Status list (rows with problems get a warning). <span class="btn-pill pill-green">Apply</span> commits, <span class="btn-pill pill-gray">Clear</span> resets. Names stay unique within each test -- duplicates are auto-numbered.</p>
+        </div>
+    </div>
+
+    <!-- ZONE D -->
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>Zone D: View navigation &amp; background</h2>
+            <span class="tab-label">Triage</span>
+        </div>
+        <div class="slide-body">
+            <table class="btn-table">
+                <tr><th style="width:170px;">Control</th><th>What it does</th></tr>
+                <tr><td><span class="btn-name">Sync</span> <span class="desc">checkbox</span></td><td>When on, clicking a grid row automatically navigates the camera to that clash.</td></tr>
+                <tr><td><span class="btn-pill pill-cyan">Focus</span></td><td>Centers the camera on the current clash. The <span class="key">F</span> key does the equivalent for the highlighted row.</td></tr>
+                <tr><td><span class="btn-name">Dist:</span></td><td>Camera distance offset from the clash (in document units) used when focusing.</td></tr>
+                <tr><td><span class="btn-pill pill-gray">Reset</span></td><td>Resets the section box to the clash group's bounds (with your configured padding).</td></tr>
+                <tr><td><span class="btn-name">Top:</span> / <span class="btn-name">Lg:</span></td><td>Section-plane nudge increments in inches. <span class="key">Q</span>/<span class="key">E</span> move the top plane up/down by the small (Top:) amount; <span class="key">Shift+Q</span>/<span class="key">Shift+E</span> use the large (Lg:) amount. Handy for shaving a slab to see the clash below.</td></tr>
+                <tr><td><span class="btn-name">Background mode</span></td><td>How non-clash items render during navigation: <strong>NoOverride</strong> (<span class="key">1</span>), <strong>Grey</strong> (<span class="key">2</span>), <strong>Dimmed</strong> (<span class="key">3</span>, grey + transparent), <strong>Hidden</strong> (<span class="key">4</span>). Click <span class="btn-pill pill-gray">Apply</span> to activate; NoOverride + Apply clears overrides.</td></tr>
+                <tr><td><span class="btn-name">Highlight</span> <span class="desc">checkbox</span></td><td>Appears only when Sync is <em>off</em>. Check groups, enable Highlight, and Apply: each checked group gets a distinct color in the viewport, and its name in the grid matches its viewport color. Turning Sync back on clears all highlights.</td></tr>
+            </table>
+        </div>
+    </div>
+
+    <!-- ZONE E -->
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>Zone E: Split, Distribute, and Group By</h2>
+            <span class="tab-label">Triage</span>
+        </div>
+        <div class="slide-body">
+            <table class="btn-table">
+                <tr><th style="width:200px;">Control</th><th>What it does</th></tr>
+                <tr><td><span class="btn-name">Split:</span> [ft] <span class="btn-pill pill-cyan">Split</span></td><td>Splits the checked groups into spatial clusters -- clashes farther apart than the gap tolerance become separate groups, named "Base Name - Cluster N". Note the difference in scope: the button splits <em>all checked groups</em>, while the <span class="key">S</span> shortcut splits <em>only the highlighted row</em>.</td></tr>
+                <tr><td><span class="btn-name">Distribute:</span> [ft] <span class="btn-pill pill-green">Distribute</span></td><td>Routes clashes from <em>uncurated</em> groups (no viewpoint) into the nearest <em>curated</em> group (has a viewpoint) within the distance limit. Runs as a <strong>preview first</strong>: affected rows highlight blue, and <span class="btn-pill pill-amber">Push</span> / <span class="btn-pill pill-gray">Cancel</span> buttons appear to commit or discard.</td></tr>
+                <tr><td><span class="btn-pill pill-gray">Group By Level</span></td><td>Groups a test's <em>ungrouped</em> clashes by the level parsed from model filenames, using the active project's filename pattern.</td></tr>
+                <tr><td><span class="btn-pill pill-gray">Group By Elevation</span></td><td>Groups ungrouped clashes by Z elevation, using the active project's level definitions (elevation bands). Works even when filenames carry no level token.</td></tr>
+            </table>
+            <div class="info-box"><strong>Typical flow:</strong> run tests &rarr; Group By Level/Elevation to give every clash a coarse home &rarr; Split oversized groups into workable clusters &rarr; curate viewpoints &rarr; on later reruns, Distribute routes new clashes into your existing curated groups instead of regrouping from scratch.</div>
+        </div>
+    </div>
+
+    <!-- ZONE F -->
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>Zone F: Quick actions</h2>
+            <span class="tab-label">Triage</span>
+        </div>
+        <div class="slide-body">
+            <table class="btn-table">
+                <tr><th style="width:150px;">Button</th><th>What it does</th></tr>
+                <tr><td><span class="btn-pill pill-gray">Person icon</span></td><td>Auth-status indicator: green person = signed in to ACC, grey person with a slash = signed out. Click to open the Sign In dialog (same as the ribbon Sign In button).</td></tr>
+                <tr><td><span class="btn-pill pill-cyan">Auto Issue</span></td><td>Runs the full automated pipeline -- group, distribute, split, cloud sync, close resolved, rebake redlines, create viewpoints -- then opens the Publish dialog (detailed in Section 03). Requires cloud sign-in.</td></tr>
+                <tr><td><span class="btn-pill pill-green">Sync</span></td><td>Syncs cloud context from ACC/BIM 360: users, issue types, locations, and live issue statuses. Also refreshes the Issue column colors and Assigned To values. Requires sign-in.</td></tr>
+                <tr><td><span class="btn-pill pill-blue">Issues (N)</span></td><td>Opens the Publish dialog with the N checked groups queued as new issues. Requires sign-in.</td></tr>
+                <tr><td><span class="btn-pill pill-gray">Cleanup</span></td><td>Clears resolved clash groups, removes empty group containers, and deletes orphaned viewpoints that no longer match any group.</td></tr>
+                <tr><td><span class="btn-pill pill-red">Export (N)</span></td><td>Opens the Export dialog for the checked groups -- XML for EliteCoord and/or an HTML clash report (next page).</td></tr>
+            </table>
+            <p style="margin-top:0.08in;font-size:10pt;color:var(--text-muted);">Cloud-dependent buttons (Auto Issue, Sync, Issues) dim when signed out; their tooltip changes to "Sign in via the EliteClashManager ribbon (Sign In) to enable cloud actions".</p>
+        </div>
+    </div>
+
+    <!-- RUN TESTS + EXPORT DIALOGS -->
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>Run Clash Tests &amp; Export dialogs</h2>
+            <span class="tab-label">Triage</span>
+        </div>
+        <div class="slide-body">
+            <div class="two-col" style="gap:0.2in;">
+                <div class="col-card">
+                    <h3 style="color:var(--coord);">Run Clash Tests</h3>
+                    <ul class="col-green">
+                        <li>Checkbox list of every clash test with its status -- tests marked <strong>Complete</strong> are skipped unless results are cleared first</li>
+                        <li><strong>Select All / Select None</strong>, then <strong>Run Selected</strong> or <strong>Run All</strong></li>
+                        <li>Each test row has a <strong>gear button</strong> that opens its Auto-Group Rule (below)</li>
+                    </ul>
+                    <p style="font-size:10pt;color:var(--text-dim);margin-top:0.08in;"><strong style="color:var(--text);">Auto-Group Rule dialog:</strong> per-test automation config -- a Group Name, a Status, a tri-state search-set tree choosing which search sets feed auto-grouping, and a "Detect orthogonal penetrations (group expected slab clashes)" option. <em>Clear Rule</em> removes it.</p>
+                </div>
+                <div class="col-card">
+                    <h3 style="color:var(--draft);">Export clash data</h3>
+                    <ul class="col-amber">
+                        <li><strong>XML (EliteCoord)</strong> -- for the ClashViewer in the EliteCoord Revit add-in</li>
+                        <li><strong>HTML report</strong> -- a print-ready (US Letter) report, one card per clash group, with an overview metrics grid up top</li>
+                    </ul>
+                    <p style="font-size:10pt;color:var(--text-dim);margin-top:0.08in;"><strong style="color:var(--text);">Report columns</strong> (toggles appear when HTML is checked): Screenshot, Clash name (always included), Test name, Room / location, Level, Status, Clash count, Assigned to, Comments / issue ID, Coordinates, Clashing items. Screenshots use the saved viewpoints -- baked redlines included.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- COMMENTS & PERSISTENCE -->
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>What survives save &amp; reopen</h2>
+            <span class="tab-label">Triage</span>
+        </div>
+        <div class="slide-body">
+            <p style="color:var(--text-dim);margin-bottom:0.1in;font-size:11pt;">EliteClashManager stores its durable data as structured comments on each clash group, so the important columns come back automatically when a saved file is reopened -- even on machines running older plugin versions.</p>
+            <table class="btn-table">
+                <tr><th style="width:190px;">Data</th><th>Persistence</th></tr>
+                <tr><td><span class="btn-name" style="color:var(--coord);">Issue number</span></td><td><strong>Persists.</strong> Stored as an "Issue #N" record; the Issue column repopulates on open, and the next cloud sync relinks it live.</td></tr>
+                <tr><td><span class="btn-name" style="color:var(--coord);">Room name</span></td><td><strong>Persists.</strong> Written by Map Rooms as its own record -- no need to re-run Map Rooms after reopening.</td></tr>
+                <tr><td><span class="btn-name" style="color:var(--coord);">Manager comments</span></td><td><strong>Persist.</strong> Notes added via Add Comment are stored per group and shown in the Comment column.</td></tr>
+                <tr><td><span class="btn-name" style="color:var(--coord);">Viewpoints, names, statuses</span></td><td><strong>Persist</strong> natively in the NWF (viewpoints under Clash Prep; statuses once pushed).</td></tr>
+                <tr><td><span class="btn-name" style="color:var(--draft);">Issue status colors</span></td><td>Re-fetched from the cloud -- click <span class="btn-pill pill-green" style="font-size:9pt;">Sync</span> after opening to refresh chips and assignees.</td></tr>
+            </table>
+            <div class="note-box"><strong>Don't delete the structured comments.</strong> In native Navisworks UI these appear as comments like "Issue #465" or "Room: 2-114" on clash groups. They are the plugin's persistent storage -- removing them by hand disconnects the group from its issue or room. Use the plugin's Remove Issue / Remove Comment actions instead.</div>
+        </div>
+    </div>
+
+    <!-- KEYBOARD SHORTCUTS -->
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>Keyboard shortcuts</h2>
+            <span class="tab-label">Triage</span>
+        </div>
+        <div class="slide-body">
+            <div class="shortcut-grid">
+                <div class="shortcut-group">
+                    <h4>Navigation &amp; camera</h4>
+                    <div class="shortcut-item"><span class="key">F</span> <span class="desc">Focus camera on selected clash</span></div>
+                    <div class="shortcut-item"><span class="key">R</span> <span class="desc">Save/update viewpoint for selected row</span></div>
+                    <div class="shortcut-item"><span class="key">Q</span> / <span class="key">E</span> <span class="desc">Top section plane up / down (small)</span></div>
+                    <div class="shortcut-item"><span class="key">Shift+Q</span> / <span class="key">Shift+E</span> <span class="desc">Top plane up / down (large)</span></div>
+                    <h4 style="margin-top:0.1in;">Background</h4>
+                    <div class="shortcut-item"><span class="key">1</span> <span class="desc">NoOverride</span></div>
+                    <div class="shortcut-item"><span class="key">2</span> <span class="desc">Grey</span></div>
+                    <div class="shortcut-item"><span class="key">3</span> <span class="desc">Dimmed</span></div>
+                    <div class="shortcut-item"><span class="key">4</span> <span class="desc">Hidden</span></div>
+                </div>
+                <div class="shortcut-group">
+                    <h4>Group operations</h4>
+                    <div class="shortcut-item"><span class="key">S</span> <span class="desc">Split highlighted group</span></div>
+                    <div class="shortcut-item"><span class="key">B</span> <span class="desc">Break out by scene selection</span></div>
+                    <div class="shortcut-item"><span class="key">T</span> <span class="desc">Bake redlines on highlighted group</span></div>
+                    <h4 style="margin-top:0.1in;">Status</h4>
+                    <div class="shortcut-item"><span class="key">A</span> <span class="desc">Set highlighted group to Approved</span></div>
+                    <div class="shortcut-item"><span class="key">Space</span> <span class="desc">Push status changes</span></div>
+                </div>
+                <div class="shortcut-group">
+                    <h4>List</h4>
+                    <div class="shortcut-item"><span class="key">Enter</span> <span class="desc">Toggle highlighted row's checkbox</span></div>
+                    <div class="shortcut-item"><span class="key">`</span> <span class="desc">Refresh the list</span></div>
+                    <div class="shortcut-item"><span class="key">Esc</span> <span class="desc">Clear column filters (when active)</span></div>
+                    <h4 style="margin-top:0.1in;">Tips</h4>
+                    <p style="font-size:10pt;color:var(--text-dim);line-height:1.5;">All shortcuts are suspended while any text box has focus -- including the digit keys. Click a row in the grid to get them back. This list is also available in-app: Settings &gt; Help &amp; Reference &gt; View Keyboard Shortcuts.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 02: ANALYSIS                                         -->
+    <!-- ============================================================ -->
+    <div class="slide slide-section" style="border-left-color:var(--draft);">
+        <div class="section-label">Section 02</div>
+        <h2>Analysis tab</h2>
+        <div class="section-sub">Worst Offender heat coloring and MEP penetration detection</div>
+    </div>
+
+    <!-- WORST OFFENDER -->
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>Worst Offender analysis</h2>
+            <span class="tab-label">Analysis &gt; Worst Offender</span>
+        </div>
+        <div class="slide-body">
+            <p style="color:var(--text-dim);margin-bottom:0.1in;font-size:11pt;">Identifies the model elements involved in the most clashes and heat-colors them in the viewport. A shared <em>Tests to Include</em> checklist at the top of the Analysis tab (with All / None / Refresh) feeds both sub-tabs.</p>
+            <div class="two-col" style="gap:0.4in;">
+                <div>
+                    <table class="btn-table">
+                        <tr><th>Control</th><th>Action</th></tr>
+                        <tr><td><span class="btn-pill pill-gray">Background</span></td><td>How non-clashing items render: NoOverride, Grey, Dimmed, or Hidden.</td></tr>
+                        <tr><td><span class="btn-pill pill-cyan">Run Analysis</span></td><td>Counts clash frequency per element across the checked tests and applies the color tiers.</td></tr>
+                        <tr><td><span class="btn-pill pill-gray">Clear &amp; Reset</span></td><td>Removes the analysis colors and restores the original appearance. Uses temporary overrides throughout, so Appearance Profiler settings are preserved.</td></tr>
+                    </table>
+                </div>
+                <div>
+                    <div class="col-card">
+                        <h3 style="color:var(--text);">Legend (clash count)</h3>
+                        <div style="display:flex;flex-direction:column;gap:8px;margin-top:0.1in;">
+                            <div class="legend-item"><div class="legend-swatch" style="background:#de2d26;"></div><span style="font-size:10pt;">Critical -- 21+ clashes</span></div>
+                            <div class="legend-item"><div class="legend-swatch" style="background:#ee5f4c;"></div><span style="font-size:10pt;">Severe -- 11-20 clashes</span></div>
+                            <div class="legend-item"><div class="legend-swatch" style="background:#fc9272;"></div><span style="font-size:10pt;">High -- 6-10 clashes</span></div>
+                            <div class="legend-item"><div class="legend-swatch" style="background:#fdba9f;"></div><span style="font-size:10pt;">Moderate -- 3-5 clashes</span></div>
+                            <div class="legend-item"><div class="legend-swatch" style="background:#fee0d2;"></div><span style="font-size:10pt;">Minor -- 1-2 clashes</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PENETRATIONS -->
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>Penetrations analysis</h2>
+            <span class="tab-label">Analysis &gt; Penetrations</span>
+        </div>
+        <div class="slide-body">
+            <p style="color:var(--text-dim);margin-bottom:0.12in;font-size:11pt;">Identifies MEP elements (pipe, duct, conduit, cable tray) penetrating slabs and extracts their cross-section sizes for IFC coordination or downstream tools like EliteIFC.</p>
+            <table class="btn-table">
+                <tr><th style="width:130px;">Button</th><th>What it does</th></tr>
+                <tr><td><span class="btn-pill pill-cyan">Analyze</span></td><td>Scans the checked tests for slab clashes, classifies each MEP element, and parses sizes from properties, names/layers, or bounding-box geometry. Results show in a 3-level tree: Clash Group &gt; Source Model &gt; Item. Clicking an item auto-selects that element in the Navisworks scene.</td></tr>
+                <tr><td><span class="btn-pill pill-gray">Export JSON</span></td><td>Exports the <em>checked</em> items to JSON (element, model, classification, cross-section in inches, penetration point) -- the input format for slab-penetration workflows.</td></tr>
+                <tr><td><span class="btn-pill pill-gray">Dump</span></td><td>Writes every Navisworks property of the highlighted item to a text file -- for debugging misclassifications.</td></tr>
+                <tr><td><span class="btn-pill pill-gray">Correct</span></td><td>Opens the correction panel: fix Category (Pipe/Duct/Conduit/CableTray/Generic), SubType, and Shape (Round/Rectangular) manually. Applies to all highlighted rows and re-derives the cross-section.</td></tr>
+                <tr><td><span class="btn-pill pill-gray">Clear</span></td><td>Clears all results.</td></tr>
+            </table>
+            <p style="margin-top:0.12in;font-size:10pt;color:var(--text-muted);">Detection confidence dots (with live counts): <span style="color:#4CAF50;">green</span> = Properties (from element properties or manual correction), <span style="color:#FFEB3B;">yellow</span> = Name/Layer parsing, <span style="color:var(--text-muted);">gray</span> = Fallback (bounding box). Item columns: Name, Layer, Type (e.g. "Duct-Round"), Size (e.g. "12 Round", "24x18").</p>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 03: CLOUD PUBLISHING                                 -->
+    <!-- ============================================================ -->
+    <div class="slide slide-section" style="border-left-color:var(--coord);">
+        <div class="section-label">Section 03</div>
+        <h2>Cloud publishing</h2>
+        <div class="section-sub">The Publish dialog, status sync, mappings, and the Auto Issue pipeline</div>
+    </div>
+
+    <!-- PUBLISH OVERVIEW -->
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>Publish dialog -- New Issue tab</h2>
+            <span class="tab-label">Triage &gt; Issues (N)</span>
+        </div>
+        <div class="slide-body">
+            <p style="color:var(--text-dim);margin-bottom:0.1in;font-size:11pt;">Opened via <span class="btn-pill pill-blue">Issues (N)</span> with your checked groups queued. A status bar at the top confirms the cloud project connection; if the model has no ACC/BIM 360 linkage you'll see "This model is not connected to ACC/BIM 360. Publishing is not available."</p>
+            <table class="btn-table">
+                <tr><th style="width:190px;">Control</th><th>Details</th></tr>
+                <tr><td><span class="btn-name">Issue Queue</span></td><td>Dropdown of every queued group -- step through to review each issue before publishing. Groups that would <em>update</em> an existing issue (already linked) show in orange. A <em>Remove</em> button drops the current group from the queue.</td></tr>
+                <tr><td><span class="btn-name">Screenshot Style</span></td><td>A global screenshot mode for the batch, plus a per-group override ("This group:") and a <em>Preview</em> button to check the capture before publishing.</td></tr>
+                <tr><td><span class="btn-name">Title / Description</span></td><td>Auto-populated from the group name and clash data; editable per issue.</td></tr>
+                <tr><td><span class="btn-name">Location</span></td><td>Hierarchical tree dropdown of the ACC location structure -- auto-matched from level/room mapping where configured.</td></tr>
+                <tr><td><span class="btn-name">Issue Type / Subtype</span></td><td>From the cloud project. Auto-filled from trade mappings when the test name carries trade codes (e.g. "SM vs PL").</td></tr>
+                <tr><td><span class="btn-name">Assignee</span></td><td>Searchable list of project users, roles, and companies. Auto-filled from trade mappings. Roles publish by role -- any member of the role sees the issue.</td></tr>
+                <tr><td><span class="btn-name">Due Date</span></td><td>One date picker -- applies to all issues in the queue.</td></tr>
+                <tr><td><span class="btn-pill pill-green">Publish Selected</span> / <span class="btn-pill pill-cyan">Publish All (N)</span></td><td>Publish just the visible issue, or the whole queue. Each issue gets a screenshot (with redlines), a pushpin at the clash point, a deep-linked 3D view, and a link back to the clash group.</td></tr>
+            </table>
+            <div class="note-box"><strong>"Some groups need attention"</strong> -- an amber banner appears when queued groups have unmapped locations or issue types. Click <em>Configure Mappings</em> to fill the gaps before publishing.</div>
+        </div>
+    </div>
+
+    <!-- UPDATE STATUS -->
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>Publish dialog -- Update Status tab</h2>
+            <span class="tab-label">Publish dialog</span>
+        </div>
+        <div class="slide-body">
+            <p style="color:var(--text-dim);margin-bottom:0.1in;font-size:11pt;">Pushes Navisworks clash statuses to the linked cloud issues. Only groups with an issue reference are included.</p>
+            <table class="btn-table">
+                <tr><th style="width:190px;">Control</th><th>How to use it</th></tr>
+                <tr><td><span class="btn-pill pill-cyan">Load Preview</span></td><td>Fetches live issue data and builds the comparison grid: Group, Issue #, Location, Assignee, Type, Subtype, Clash status, Current cloud status &rarr; proposed New status. Location, Assignee, Type, and Subtype are editable per row before syncing.</td></tr>
+                <tr><td><span class="btn-name">Filters</span></td><td>Status filter dropdown, <em>Show Voided</em> / <em>Show Closed</em> checkboxes, and a search box.</td></tr>
+                <tr><td><span class="btn-name">Select All / Deselect All</span></td><td>Batch row selection. A <em>Resize</em> toggle widens the window for the full grid.</td></tr>
+                <tr><td><span class="btn-pill pill-gray">Close</span> / <span class="btn-pill pill-purple">Void</span></td><td>With rows selected: set those issues to Closed, or Void (BIM 360 only -- ACC projects use Close).</td></tr>
+                <tr><td><span class="btn-pill pill-amber">Sync Selected</span></td><td>Pushes the proposed status changes. The summary line reports Total / To Sync / Skipped / <strong style="color:var(--core);">Floating</strong> -- floating means cloud issues that no longer match any local clash group.</td></tr>
+            </table>
+        </div>
+    </div>
+
+    <!-- PUBLISH SETTINGS -->
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>Publish dialog -- Settings tab</h2>
+            <span class="tab-label">Publish dialog</span>
+        </div>
+        <div class="slide-body">
+            <table class="btn-table">
+                <tr><th style="width:200px;">Section</th><th>What you configure</th></tr>
+                <tr><td><span class="btn-name" style="color:var(--scan);">Status Mappings</span></td><td>How each Navisworks status maps to a cloud issue status (e.g. Approved &rarr; Closed). The platform (ACC vs BIM 360) is auto-detected and shown. Enable a mapping with its checkbox, pick the target status, then <em>Save Mappings</em>.</td></tr>
+                <tr><td><span class="btn-name" style="color:var(--coord);">Level Mapping Status</span></td><td>Shows every level parsed from your model filenames and the ACC location it maps to, with group counts. Check <em>Use Project Configuration Template</em> to assign locations by Z-elevation lookup from the active project's level definitions instead of filename parsing. Unmapped levels get a picker dropdown.</td></tr>
+                <tr><td><span class="btn-name" style="color:var(--core);">Trade Mapping Status</span></td><td>Trade codes extracted from test names ("SM vs PL" &rarr; SM, PL) and the issue type each maps to, with group counts. Unmapped trades get a picker. Mappings live on the active project (Project Editor &gt; Trade mappings) -- this view resolves gaps for the current publish run via <em>Save New Mappings</em>.</td></tr>
+            </table>
+            <div class="info-box"><strong>Where the durable issue reference lives.</strong> Publishing writes both a live issue link and an "Issue #N" record on the clash group. The record is what survives file save/reopen -- so the Issue column always comes back, and the next Sync reconnects live status colors automatically.</div>
+        </div>
+    </div>
+
+    <!-- AUTO ISSUE -->
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>Auto Issue pipeline</h2>
+            <span class="tab-label">Triage &gt; Auto Issue</span>
+        </div>
+        <div class="slide-body">
+            <p style="color:var(--text-dim);margin-bottom:0.1in;font-size:11pt;">One button that runs a full triage cycle -- ideal after refreshing models and re-running tests. The dialog lists each phase with a live status indicator and a scrolling log; press <span class="btn-pill pill-green">Start</span> and watch it work. When it finishes, the Publish dialog opens with any new groups queued.</p>
+            <div class="two-col" style="gap:0.25in;">
+                <div class="col-card">
+                    <h3 style="color:var(--scan);">Phases 1-5: organize</h3>
+                    <ul class="col-cyan">
+                        <li><strong>Group by Elevation</strong> -- ungrouped clashes get level-band groups</li>
+                        <li><strong>Distribute to Existing</strong> -- new clashes route to nearby curated groups</li>
+                        <li><strong>Absorb into Existing</strong> -- clashes inside an existing group's extents join it</li>
+                        <li><strong>Split Undistributed</strong> -- what's left splits into spatial clusters</li>
+                        <li><strong>Sync Cloud Context</strong> -- users, types, locations, issue statuses</li>
+                    </ul>
+                </div>
+                <div class="col-card">
+                    <h3 style="color:var(--coord);">Phases 6-9: reconcile</h3>
+                    <ul class="col-green">
+                        <li><strong>Close Resolved Issues</strong> -- cloud issues whose clashes resolved get closed</li>
+                        <li><strong>Clean Up Resolved</strong> -- resolved groups and empty containers removed</li>
+                        <li><strong>Update Modified Viewpoints</strong> -- refreshed for groups that changed</li>
+                        <li><strong>Create New Viewpoints</strong> -- generated for new groups, redlines baked</li>
+                    </ul>
+                </div>
+            </div>
+            <p style="margin-top:0.1in;font-size:10pt;color:var(--text-muted);">Configure per-test grouping beforehand via the gear button in Run Clash Tests (Auto-Group Rules). The pipeline needs cloud sign-in and an active project.</p>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 04: RIBBON TOOLS                                     -->
+    <!-- ============================================================ -->
+    <div class="slide slide-section" style="border-left-color:var(--core);">
+        <div class="section-label">Section 04</div>
+        <h2>File tools</h2>
+        <div class="section-sub">Publish Levels, Consolidate, Rewrite Tests, and Export Model Tree</div>
+    </div>
+
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>Publish Levels</h2>
+            <span class="tab-label">Ribbon &gt; Tools</span>
+        </div>
+        <div class="slide-body">
+            <p style="color:var(--text-dim);margin-bottom:0.1in;font-size:11pt;">Exports the federated model as one file per level -- for field crews and per-floor coordination sets. Models are matched to levels via the filename standard (the level token in each model name).</p>
+            <table class="btn-table">
+                <tr><th style="width:210px;">Control</th><th>Details</th></tr>
+                <tr><td><span class="btn-name">Filename Pattern</span></td><td><em>Project Name</em> + (Level) + optional <em>Suffix</em> -- a live Output Preview shows the resulting filenames and count.</td></tr>
+                <tr><td><span class="btn-name">Export Format</span></td><td>NWD or NWF, with a format-version dropdown.</td></tr>
+                <tr><td><span class="btn-name">Export clash sidecar files</span></td><td>Optionally writes a <span class="path">.clashes.json</span> beside each exported file. Choose which clash statuses to include (New/Active/Reviewed/Approved/Resolved) and the scope: <em>Linked Issues Only</em> or <em>All Groups</em>.</td></tr>
+                <tr><td><span class="btn-pill pill-green">Publish</span></td><td>Runs the export. Cloud (<span class="path">nwacc://</span>) connectivity is preserved in NWF exports since the linkage lives in the file itself.</td></tr>
+            </table>
+            <p style="margin-top:0.08in;font-size:10pt;color:var(--text-muted);">If no models match the naming standard you'll see "No models matched the naming standard (Index 1 is Level)." -- check the level token position in your filenames.</p>
+        </div>
+    </div>
+
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>Consolidate &amp; Rewrite Tests</h2>
+            <span class="tab-label">Ribbon &gt; Tools</span>
+        </div>
+        <div class="slide-body">
+            <div class="two-col" style="gap:0.2in;">
+                <div class="col-card">
+                    <h3 style="color:var(--scan);">Consolidate Appended Files</h3>
+                    <ul class="col-cyan">
+                        <li>Detects duplicates created by appending NWFs -- clash tests, search sets, and viewpoints suffixed "(filename.nwf)"</li>
+                        <li>Shows the detected files and a full action preview grouped into <strong>Clash Tests</strong>, <strong>Saved Viewpoints</strong>, and <strong>Search Sets</strong></li>
+                        <li>Nothing changes until you click <strong>Consolidate</strong></li>
+                    </ul>
+                </div>
+                <div class="col-card">
+                    <h3 style="color:var(--core);">Rewrite Clash Tests</h3>
+                    <ul class="col-purple">
+                        <li>After importing updated search sets from XML (suffixed "(filename.xml)"), pick which imported sets to apply</li>
+                        <li>The dialog lists every <strong>affected clash test</strong> that will be rewritten to use them</li>
+                        <li>Review the warning text, then <strong>Rewrite</strong> -- existing results are rebuilt against the new sets</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="info-box" style="margin-top:0.12in;"><strong>Export Model Tree</strong> (also on the Tools panel) scans every loaded model and writes a JSON dump -- files, elements, full property catalogs, layers, and an aggregated property index. This is the input for the standalone <strong>Clash Configuration Builder</strong> app, where clash test matrices and search sets are designed visually.</div>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 05: SETTINGS                                         -->
+    <!-- ============================================================ -->
+    <div class="slide slide-section">
+        <div class="section-label">Section 05</div>
+        <h2>Settings tab</h2>
+        <div class="section-sub">Authentication, tolerances, viewpoints, overlays, markers, redlines, and diagnostics</div>
+    </div>
+
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>Settings reference</h2>
+            <span class="tab-label">Settings</span>
+        </div>
+        <div class="slide-body">
+            <table class="btn-table">
+                <tr><th style="width:210px;">Group</th><th>Controls</th></tr>
+                <tr><td><span class="btn-name" style="color:var(--scan);">Getting Started</span></td><td><span class="btn-pill pill-cyan" style="font-size:9pt;">Open setup wizard</span> -- the four-step checklist from Section 00.</td></tr>
+                <tr><td><span class="btn-name" style="color:var(--coord);">Autodesk Cloud Authentication</span></td><td>Client ID, Client Secret (masked, with a Show toggle), status dot, and Login / Logout.</td></tr>
+                <tr><td><span class="btn-name">General Settings</span></td><td>Default Gap Tolerance (ft, default 5.0) -- seeds the Split distance; Default Merge Tolerance (ft, default 2.0) -- seeds the Distribute distance, including the Auto Issue pipeline's distribute phase; Proximity Sort Threshold (ft); and the plugin version display.</td></tr>
+                <tr><td><span class="btn-name">Viewpoint Settings</span></td><td>Section-box padding for Prep Views: Side (XY, default 3.0 ft), Top (Z+, 0.5 ft), Bottom (Z-, 2.0 ft). Section plane checkboxes -- Top, Bottom, Left, Right, Front, Back -- choose which planes generated viewpoints enable (Top on by default).</td></tr>
+                <tr><td><span class="btn-name" style="color:var(--core);">Clash Marker Settings</span></td><td>The 3D markers from the <em>Display Markers</em> toggle: sphere (enable, radius, opacity, color) and ring (enable, radius, line width, opacity, color), plus a Depth Test option (uncheck to render markers through geometry). <em>Apply Marker Settings</em> refreshes the viewport.</td></tr>
+                <tr><td><span class="btn-name" style="color:var(--core);">Room Overlay Settings</span></td><td>The <em>Display Rooms</em> overlay: offset, fill opacity, fill color, label text size and color. <em>Apply Room Overlay Settings</em> refreshes the viewport.</td></tr>
+                <tr><td><span class="btn-name" style="color:var(--draft);">Redline Markup Settings</span></td><td>The 2D annotations baked during Prep Views: ellipse thickness, circle size, ellipse color, text color. Changes apply the next time Prep Views runs.</td></tr>
+                <tr><td><span class="btn-name">Location Mapping</span></td><td><span class="btn-pill pill-purple" style="font-size:9pt;">View Location Mapping Data</span> -- diagnostic view of rooms, model names, and levels extracted from filenames, for troubleshooting parsing.</td></tr>
+                <tr><td><span class="btn-name">Diagnostic Logging</span></td><td><em>Enable Diagnostic Logging</em> checkbox + <span class="btn-pill pill-cyan" style="font-size:9pt;">Open Log Folder</span>. Logs land in <span class="path">%LOCALAPPDATA%\EliteClashManager\Logs\</span>.</td></tr>
+                <tr><td><span class="btn-name" style="color:var(--coord);">Help &amp; Reference</span></td><td><span class="btn-pill pill-green" style="font-size:9pt;">View Keyboard Shortcuts</span> -- the in-app shortcut reference.</td></tr>
+                <tr><td><span class="btn-name" style="color:var(--draft);">Diagnostics &amp; Data Dumps</span></td><td><span class="btn-pill pill-amber" style="font-size:9pt;">Rebuild Room Index</span> (force-rescan the Room Atlas), Dump Room Atlas, Dump Clash Groups, Dump Model Roots (Project ID), Dump Current Selection -- files go to the project's Clash Dumps folder.</td></tr>
+            </table>
+            <p style="margin-top:0.08in;font-size:10pt;color:var(--text-muted);">Click <strong>Save Settings</strong> (bottom right) to persist. Settings live in <span class="path">%LOCALAPPDATA%\EliteClashManager\settings.json</span>.</p>
+        </div>
+    </div>
+
+    <!-- ROOM ATLAS -->
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>The Room Atlas</h2>
+            <span class="tab-label">Spatial engine</span>
+        </div>
+        <div class="slide-body">
+            <p style="color:var(--text-dim);margin-bottom:0.1in;font-size:11pt;">The Room Atlas is the spatial index behind Map Rooms, the room overlay, and location auto-matching. Building it scans the model for Revit rooms, extracts each room's 2D footprint, and computes vertical extents from the project levels (floor to next level, so plenum space above a ceiling still counts as the room below).</p>
+            <table class="btn-table">
+                <tr><th style="width:190px;">Topic</th><th>Details</th></tr>
+                <tr><td><span class="btn-name">Building it</span></td><td>Setup Wizard step 4, or Settings &gt; <em>Rebuild Room Index</em>. Takes up to a minute on large models; results cache per federated file to <span class="path">%LOCALAPPDATA%\EliteClashManager\ECM_Projects\[Project]\[NWF name]\RoomAtlas.json</span> so later sessions load instantly.</td></tr>
+                <tr><td><span class="btn-name">When to rebuild</span></td><td>After room geometry or level structure changes in the Revit models. Day-to-day model refreshes that don't move rooms don't need one.</td></tr>
+                <tr><td><span class="btn-name">Blank room results</span></td><td>The clash point sits outside every room footprint (shafts, plenums without rooms, exterior), its elevation falls in no level band, or the atlas is stale -- rebuild and re-run Map Rooms. Each Map Rooms run also writes a timestamped <span class="path">RoomMapping_*.log</span> for diagnosis.</td></tr>
+                <tr><td><span class="btn-name">Multi-model projects</span></td><td>Rooms are matched by physical Z elevation, not level names -- so combined federated models with mismatched level naming still map correctly.</td></tr>
+            </table>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 06: REFERENCE                                        -->
+    <!-- ============================================================ -->
+    <div class="slide slide-section" style="border-left-color:var(--draft);">
+        <div class="section-label">Section 06</div>
+        <h2>Reference</h2>
+        <div class="section-sub">Workflows, troubleshooting, and data locations</div>
+    </div>
+
+    <!-- RECOMMENDED WORKFLOW -->
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>Recommended coordination cycle</h2>
+        </div>
+        <div class="slide-body">
+            <div class="two-col" style="gap:0.2in;">
+                <div class="col-card">
+                    <h3 style="color:var(--scan);">First session on a project</h3>
+                    <ul class="col-cyan">
+                        <li>Run the <strong>Setup Wizard</strong>: sign in, create the project, configure levels + filename pattern + trades, build the Room Atlas</li>
+                        <li>Run clash tests, then <strong>Group By Level</strong> or <strong>Group By Elevation</strong></li>
+                        <li><strong>Split</strong> oversized groups, <strong>Map Rooms</strong>, rename with <strong>[Room]</strong></li>
+                        <li><strong>Prep Views</strong>, then review each group and refine cameras with <strong>Update Viewpoint</strong></li>
+                        <li><strong>Issues (N)</strong> to publish the first batch</li>
+                    </ul>
+                </div>
+                <div class="col-card">
+                    <h3 style="color:var(--coord);">Every model refresh after that</h3>
+                    <ul class="col-green">
+                        <li>Open the file -- project auto-activates, Issue and Room columns restore</li>
+                        <li>Click <strong>Sync</strong> to refresh cloud statuses and assignees</li>
+                        <li>Run <strong>Auto Issue</strong> -- it re-runs grouping, distributes new clashes into your curated groups, closes resolved issues, refreshes viewpoints, and queues anything new for publishing</li>
+                        <li>Review the queue, publish, and <strong>PUSH</strong> any status changes</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TROUBLESHOOTING -->
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>Troubleshooting</h2>
+        </div>
+        <div class="slide-body">
+            <table class="btn-table">
+                <tr><th style="width:250px;">Symptom</th><th>Cause / fix</th></tr>
+                <tr><td class="desc">"No project detected" in the panel header</td><td>The open file matches no project by ACC ID or registered filename. Click the header (or ribbon Active Project), pick or create the project, and leave "Register this file" checked.</td></tr>
+                <tr><td class="desc">"This model is not connected to ACC/BIM 360..."</td><td>The model lacks cloud linkage -- open it through the ACC/BIM 360 project (so model paths carry <span class="path">nwacc://</span>), not from a plain local copy.</td></tr>
+                <tr><td class="desc">Status changes don't stick</td><td>SET only stages changes -- orange rows are unsaved. Click <strong>PUSH</strong> (or press <span class="key">Space</span>), then save the file.</td></tr>
+                <tr><td class="desc">Room column blank for some groups</td><td>See "Blank room results" on the Room Atlas page -- usually a shaft/plenum location or a stale atlas.</td></tr>
+                <tr><td class="desc">Sign-in fails with a port 8080 message</td><td>Another application owns the OAuth callback port. Close the conflicting app (dev tools and other add-ins are the usual suspects) and retry; a "previous attempt still pending" message just needs one retry.</td></tr>
+                <tr><td class="desc">Shortcuts stopped responding</td><td>A text box has focus -- all shortcuts (including 1-4) suspend during typing. Click a grid row.</td></tr>
+                <tr><td class="desc">Published pushpins missing in the Coordination Issues add-in</td><td>Autodesk-side cache: after refreshing models, close and reopen the file to see newly published pushpins.</td></tr>
+                <tr><td class="desc">Navisworks "Out of disk space" on NWD publish</td><td>Usually a stale Navisworks temp cache, not real disk space -- clear the Navisworks temp folder and retry.</td></tr>
+                <tr><td class="desc">Anything odd -- gather evidence</td><td>Enable Diagnostic Logging in Settings, reproduce, then Open Log Folder and check today's <span class="path">EliteClash_YYYYMMDD.log</span>.</td></tr>
+            </table>
+        </div>
+    </div>
+
+    <!-- DATA LOCATIONS -->
+    <div class="slide slide-content">
+        <div class="slide-header">
+            <h2>Where your data lives</h2>
+        </div>
+        <div class="slide-body">
+            <table class="btn-table">
+                <tr><th style="width:300px;">Path</th><th>Contents</th></tr>
+                <tr><td><span class="path">%APPDATA%\Autodesk\ApplicationPlugins\EliteClashManager.bundle\</span></td><td>The installed plugin.</td></tr>
+                <tr><td><span class="path">%LOCALAPPDATA%\EliteClashManager\settings.json</span></td><td>All preferences: tolerances, padding, marker/overlay/redline styles, credentials.</td></tr>
+                <tr><td><span class="path">%LOCALAPPDATA%\EliteClashManager\auth.json</span></td><td>The cloud session (refresh token). Delete to force a fresh sign-in.</td></tr>
+                <tr><td><span class="path">%LOCALAPPDATA%\EliteClashManager\ECM_Projects\[Project]\</span></td><td>Each project's configuration (levels, filename pattern, trades, registered files), plus a subfolder per registered NWF holding its Room Atlas cache (<span class="path">RoomAtlas.json</span>).</td></tr>
+                <tr><td><span class="path">%LOCALAPPDATA%\EliteClashManager\Logs\</span></td><td>Daily diagnostic logs (<span class="path">EliteClash_YYYYMMDD.log</span>) and per-run room-mapping logs.</td></tr>
+                <tr><td><span class="path">%LOCALAPPDATA%\EliteClashManager\PenetrationTests\</span></td><td>Default output folder for Penetrations JSON exports.</td></tr>
+            </table>
+
+            <h3 style="font-size:13pt;font-weight:700;margin:0.15in 0 0.08in;">Glossary</h3>
+            <table class="btn-table">
+                <tr><td style="width:170px;"><span class="btn-name">Clash group</span></td><td>A named collection of related clashes inside a clash test -- the unit everything in this plugin operates on.</td></tr>
+                <tr><td><span class="btn-name">Curated group</span></td><td>A group you've refined and given a saved viewpoint -- Distribute treats these as routing targets.</td></tr>
+                <tr><td><span class="btn-name">Ungrouped clashes</span></td><td>Clashes in a test that belong to no group (the amber chip on test headers). Group By and Auto Issue sweep these up.</td></tr>
+                <tr><td><span class="btn-name">Room Atlas</span></td><td>The cached spatial index of Revit room footprints and level bands.</td></tr>
+                <tr><td><span class="btn-name">Floating issue</span></td><td>A cloud issue with no matching local clash group (reported during status sync).</td></tr>
+                <tr><td><span class="btn-name">Structured comment</span></td><td>The plugin's persistent per-group storage -- "Issue #N", "Room: ...", and manager notes -- visible as ordinary comments in native Navisworks UI.</td></tr>
+                <tr><td><span class="btn-name">ACC / APS</span></td><td>Autodesk Construction Cloud / Autodesk Platform Services (the API platform behind it).</td></tr>
+            </table>
+        </div>
+    </div>
+
+    <!-- END -->
+    <div class="slide slide-end">
+        <h2>EliteClashManager</h2>
+        <div class="accent-bar"></div>
+        <div class="contact">
+            <strong>Triage</strong> &bull; <strong>Analyze</strong> &bull; <strong>Publish</strong> &mdash; all from one dockable panel<br>
+            Autodesk Navisworks Manage 2026 &bull; v1.16.1
+        </div>
+    </div>
+
+</body>
+</html>

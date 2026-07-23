@@ -27,6 +27,8 @@
             --coord-dim: rgba(110, 231, 168, 0.12);
             --core: #A78BFA;
             --core-dim: rgba(167, 139, 250, 0.12);
+            --clash: #F87171;
+            --clash-dim: rgba(248, 113, 113, 0.12);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -199,6 +201,8 @@
         .tab.active[data-region="coord"]::before { background: var(--coord); }
         .tab.active[data-region="core"] { color: var(--core); }
         .tab.active[data-region="core"]::before { background: var(--core); }
+        .tab.active[data-region="clash"] { color: var(--clash); }
+        .tab.active[data-region="clash"]::before { background: var(--clash); }
 
         /* Ribbon */
         .ribbon {
@@ -321,6 +325,7 @@
         [data-active-region="draft"] .tool-btn:hover { box-shadow: 0 2px 12px rgba(245, 184, 120, 0.15); }
         [data-active-region="coord"] .tool-btn:hover { box-shadow: 0 2px 12px rgba(110, 231, 168, 0.15); }
         [data-active-region="core"] .tool-btn:hover { box-shadow: 0 2px 12px rgba(167, 139, 250, 0.15); }
+        [data-active-region="clash"] .tool-btn:hover { box-shadow: 0 2px 12px rgba(248, 113, 113, 0.15); }
 
         /* Selected states by region */
         [data-active-region="scan"] .tool-btn.selected { background: var(--scan-dim); border-color: var(--scan); box-shadow: 0 0 12px rgba(94, 213, 221, 0.2); }
@@ -338,6 +343,10 @@
         [data-active-region="core"] .tool-btn.selected { background: var(--core-dim); border-color: var(--core); box-shadow: 0 0 12px rgba(167, 139, 250, 0.2); }
         [data-active-region="core"] .tool-btn.selected .icon { color: var(--core); }
         [data-active-region="core"] .tool-btn.selected .label { color: var(--core); }
+
+        [data-active-region="clash"] .tool-btn.selected { background: var(--clash-dim); border-color: var(--clash); box-shadow: 0 0 12px rgba(248, 113, 113, 0.2); }
+        [data-active-region="clash"] .tool-btn.selected .icon { color: var(--clash); }
+        [data-active-region="clash"] .tool-btn.selected .label { color: var(--clash); }
 
         /* Main Content */
         .main-content {
@@ -419,6 +428,7 @@
         [data-active-region="draft"] .detail-icon { box-shadow: 0 0 20px rgba(245, 184, 120, 0.1); }
         [data-active-region="coord"] .detail-icon { box-shadow: 0 0 20px rgba(110, 231, 168, 0.1); }
         [data-active-region="core"] .detail-icon { box-shadow: 0 0 20px rgba(167, 139, 250, 0.1); }
+        [data-active-region="clash"] .detail-icon { box-shadow: 0 0 20px rgba(248, 113, 113, 0.1); }
 
         .detail-icon svg {
             width: 100%;
@@ -461,6 +471,7 @@
         [data-active-region="draft"] .badge.active { background: var(--draft-dim); color: var(--draft); }
         [data-active-region="coord"] .badge.active { background: var(--coord-dim); color: var(--coord); }
         [data-active-region="core"] .badge.active { background: var(--core-dim); color: var(--core); }
+        [data-active-region="clash"] .badge.active { background: var(--clash-dim); color: var(--clash); }
 
         .detail-section {
             margin-bottom: 24px;
@@ -536,6 +547,7 @@
         [data-active-region="draft"] .detail-box { border-left-color: var(--draft); }
         [data-active-region="coord"] .detail-box { border-left-color: var(--coord); }
         [data-active-region="core"] .detail-box { border-left-color: var(--core); }
+        [data-active-region="clash"] .detail-box { border-left-color: var(--clash); }
 
         .detail-box p {
             font-size: 14px;
@@ -669,10 +681,12 @@
         [data-active-region="draft"] .download-btn:hover { box-shadow: 0 4px 16px rgba(245, 184, 120, 0.3); }
         [data-active-region="coord"] .download-btn:hover { box-shadow: 0 4px 16px rgba(110, 231, 168, 0.3); }
         [data-active-region="core"] .download-btn:hover { box-shadow: 0 4px 16px rgba(167, 139, 250, 0.3); }
+        [data-active-region="clash"] .download-btn:hover { box-shadow: 0 4px 16px rgba(248, 113, 113, 0.3); }
 
         [data-active-region="draft"] .download-btn { background: var(--draft); }
         [data-active-region="coord"] .download-btn { background: var(--coord); }
         [data-active-region="core"] .download-btn { background: var(--core); }
+        [data-active-region="clash"] .download-btn { background: var(--clash); }
 
         .download-btn i {
             width: 18px;
@@ -748,6 +762,8 @@
         [data-active-region="coord"] .docs-btn:hover { background: var(--coord-dim); box-shadow: 0 4px 16px rgba(110, 231, 168, 0.2); }
         [data-active-region="core"] .docs-btn { color: var(--core); border-color: var(--core); }
         [data-active-region="core"] .docs-btn:hover { background: var(--core-dim); box-shadow: 0 4px 16px rgba(167, 139, 250, 0.2); }
+        [data-active-region="clash"] .docs-btn { color: var(--clash); border-color: var(--clash); }
+        [data-active-region="clash"] .docs-btn:hover { background: var(--clash-dim); box-shadow: 0 4px 16px rgba(248, 113, 113, 0.2); }
 
         /* Requirements Section */
         .requirements-section {
@@ -944,6 +960,7 @@
             <button class="tab" data-region="draft">ELITE DRAFT</button>
             <button class="tab" data-region="coord">ELITE COORD</button>
             <button class="tab" data-region="core">ELITE CORE</button>
+            <button class="tab" data-region="clash">CLASH MANAGER</button>
         </div>
 
         <!-- Ribbon -->
@@ -975,8 +992,8 @@
                                 <span class="value" id="sidebar-addin">EliteScan</span>
                             </div>
                             <div class="prop">
-                                <span class="label">Revit Versions</span>
-                                <span class="value">2022 - 2026</span>
+                                <span class="label" id="sidebar-platform-label">Revit Versions</span>
+                                <span class="value" id="sidebar-platform-versions">2022 - 2026</span>
                             </div>
                         </div>
 
@@ -1399,6 +1416,63 @@
                         ]
                     }
                 ]
+            },
+            clash: {
+                id: 'clash',
+                name: 'EliteClashManager',
+                label: 'CLASH MANAGER',
+                color: '#F87171',
+                colorVar: 'var(--clash)',
+                released: true,
+                version: 'v1.16.1',
+                downloadUrl: 'https://github.com/kamditis/kamditis.github.io/releases/download/EliteClashManager-latest/EliteClashManager-v1.16.1.zip',
+                downloadFile: 'EliteClashManager-v1.16.1.zip',
+                docsUrl: 'docs/EliteClashManager-User-Guide.html',
+                platformLabel: 'Navisworks Versions',
+                platformVersions: '2023 - 2026',
+                description: 'Advanced clash management, triage, and cloud issue publishing for Autodesk Navisworks Manage. Extends the native Clash Detective with automated grouping, room mapping, viewpoint generation, and one-click ACC / BIM 360 issue publishing with pushpins and screenshots.',
+                supportedVersions: '<strong>Supported Navisworks Versions:</strong> 2023, 2024, 2025, 2026 (Manage and Simulate)',
+                installation: [
+                    'Download the ZIP file.',
+                    'Extract the ZIP to <strong>%APPDATA%\\Autodesk\\ApplicationPlugins\\EliteClashManager.bundle\\</strong>.',
+                    'Restart Navisworks.',
+                    'Run the <strong>Setup Wizard</strong> from the EliteCADDesigns ribbon tab to connect your ACC account and project.'
+                ],
+                addinRequirements: [
+                    'Autodesk Navisworks Manage or Simulate 2023-2026',
+                    'For cloud publishing: an Autodesk Platform Services app (Client ID + Secret) and an ACC / BIM 360 account with Model Coordination'
+                ],
+                changelog: 'v1.16.1 Sign In: The ribbon Sign In button now opens a proper credential dialog (editable Client ID / Secret, live status, Sign In / Sign Out) instead of blind-toggling login. New auth-status person icon in the Triage quick actions shows signed-in state at a glance.\nv1.16.1 Approved groups: Approved clash groups are now untouchable in every clash-routing path (absorb, distribute, auto issue) — new clashes form new groups instead of reopening approved work.\nv1.16.0 Structured comments: Issue numbers and room names now persist inside the saved NWF as structured comments, so they survive save/reopen and repopulate the Triage grid automatically.\nv1.16.0 Triage: New severity sort (deepest penetration first) and always-visible column filters (Name, Issue, Comment, Assigned To, Room).\nv1.15.8 ExternalLink issue tracking: Published issues render natively in the Clash Detective Related Info column with status colors, plus a manual Add Issue row action for linking existing cloud issues.',
+                panels: [
+                    {
+                        title: 'Manager',
+                        tools: [
+                            { id: 'open_manager', label: 'Open Manager', icon: 'layout-dashboard', fn: 'Opens the dockable Clash Manager panel — the main workspace. The Triage tab lists every clash group across your tests with issue status, assignee, room, and comments; from there you group, split, merge, and rename clashes, map rooms, prep viewpoints, and publish coordination issues to ACC. The Analysis tab holds Worst Offender rankings and slab penetration reports, and the Settings tab covers preferences and the Room Atlas.', videoRef: '', changelog: 'v1.16.1: Auth-status person icon added to the quick actions row. v1.16.0: Severity sort and always-visible column filters. v1.15.8: Issue links render in the Clash Detective Related Info column.', requirements: ['A Navisworks file open with Clash Detective tests'] },
+                            { id: 'setup_wizard', label: 'Setup Wizard', icon: 'list-checks', fn: 'Step-by-step first-time setup checklist: sign in to Autodesk Construction Cloud, create or select the active project, complete the project configuration (levels, filename pattern, trade mappings), and build the Room Atlas. Each step re-validates as you complete it, so you can see exactly what is left before the tool is ready to publish issues.', videoRef: '', changelog: 'v1.15.8: New command.', requirements: [] },
+                        ]
+                    },
+                    {
+                        title: 'Account',
+                        tools: [
+                            { id: 'sign_in', label: 'Sign In', icon: 'user-check', fn: 'Sign in or out of Autodesk Construction Cloud and edit the app credentials in one dialog: Client ID, masked Client Secret with Show/Hide, a live connection status dot, and Sign In / Sign Out buttons. Credentials save before login, so a corrected secret takes effect on the very next attempt. Sign-in failures show the actual error instead of failing silently.', videoRef: '', changelog: 'v1.16.1: New dialog — replaces the old login/logout toggle button.', requirements: ['An Autodesk Platform Services app (Client ID + Secret)'] },
+                        ]
+                    },
+                    {
+                        title: 'Project',
+                        tools: [
+                            { id: 'active_project', label: 'Active Project', icon: 'folder-cog', fn: 'Create, select, or switch the active EliteClashManager project. Each project stores its level definitions, filename pattern, and trade mappings (trade code to issue type, subtype, and assignee), and is auto-detected when you open a matching NWF. The Configure button opens the full project editor with tabs for General, Levels, and Filename & Correlations.', videoRef: '', changelog: 'v1.15.8: Duplicate-name guards on Select and Configure prevent silently overwriting an existing project. v1.15.7: New command — single entry point for all project configuration.', requirements: [] },
+                        ]
+                    },
+                    {
+                        title: 'Tools',
+                        tools: [
+                            { id: 'publish_levels', label: 'Publish Levels', icon: 'upload', fn: 'Export and publish NWDs grouped by level. Pick which levels to export and the tool produces one file per level from the federated model, keeping cloud connectivity intact — useful for issuing lighter per-floor coordination models to field teams.', videoRef: '', changelog: '', requirements: ['A federated NWF open', 'Project level definitions configured'] },
+                            { id: 'consolidate', label: 'Consolidate', icon: 'combine', fn: 'Clean up after appending NWF files: finds duplicate Clash Tests, Search Sets, and Saved Viewpoints created by the append and merges or removes them, so the combined model behaves like a single clean file.', videoRef: '', changelog: '', requirements: ['A Navisworks file with appended NWFs'] },
+                            { id: 'rewrite_tests', label: 'Rewrite Tests', icon: 'file-cog', fn: 'Overwrite the file\'s search sets from an imported Search Sets XML and re-path the clash tests that reference them. Lets you roll out an updated clash configuration (from the Clash Configuration Builder or another project) without rebuilding tests by hand — affected tests are listed before anything is changed.', videoRef: '', changelog: '', requirements: ['A Search Sets XML exported from Navisworks or the Clash Configuration Builder'] },
+                            { id: 'export_model_tree', label: 'Export Model Tree', icon: 'file-json', fn: 'Scans all loaded models and writes a JSON dump of the full property catalog — every element with its property categories, values, and data types, plus per-file layer names and an aggregated property index. This file feeds the standalone Clash Configuration Builder for building search sets and clash test matrices outside Navisworks.', videoRef: '', changelog: '', requirements: ['Models loaded in the current file'] },
+                        ]
+                    }
+                ]
             }
         };
 
@@ -1580,7 +1654,7 @@
                 <div class="release-info">
                     <h2>${region.name} ${version}</h2>
                     <p class="release-description">${region.description || ''}</p>
-                    <p><strong>Supported Revit Versions:</strong> 2022, 2023, 2024, 2025, 2026</p>
+                    <p>${region.supportedVersions || '<strong>Supported Revit Versions:</strong> 2022, 2023, 2024, 2025, 2026'}</p>
                     <h3>Installation</h3>
                     <ol>${(region.installation || []).map(s => `<li>${s}</li>`).join('')}</ol>
                     ${reqsHtml}
@@ -1605,6 +1679,8 @@
             breadcrumbRegion.textContent = region.label;
             breadcrumbTool.textContent = 'Overview';
             sidebarAddin.textContent = region.name;
+            document.getElementById('sidebar-platform-label').textContent = region.platformLabel || 'Revit Versions';
+            document.getElementById('sidebar-platform-versions').textContent = region.platformVersions || '2022 - 2026';
             statusDot.style.background = region.colorVar;
 
             // Download buttons removed - downloads no longer public
